@@ -221,6 +221,46 @@
   }
 }
 
+.brands-menu__panel {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  z-index: 50;
+  width: min(640px, calc(100vw - 48px));
+  padding-top: 12px;
+  transform: translateX(-50%);
+}
+
+.brands-menu__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 8px;
+  max-height: min(440px, calc(100dvh - 260px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.brands-menu--mobile .brands-menu__panel {
+  position: static;
+  width: 100%;
+  transform: none;
+}
+
+.brands-menu--mobile .brands-menu__panel > div {
+  padding: 8px;
+  box-shadow: none;
+}
+
+.brands-menu--mobile .brands-menu__list {
+  grid-template-columns: 1fr;
+  max-height: 240px;
+}
+
+.brands-menu > button:focus-visible {
+  outline: 2px solid #c65325;
+  outline-offset: 4px;
+}
+
 .font-serif {
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 400;
