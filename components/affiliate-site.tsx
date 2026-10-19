@@ -75,8 +75,8 @@ export function SiteHeader() {
           </Link>
         </div>
         <nav aria-label="Shop shoe categories" className="mx-auto hidden max-w-[1380px] items-center gap-8 px-10 pb-3 lg:flex">
-          {navItems.map((item) => <Link key={item.href} href={item.href} className={`whitespace-nowrap text-sm font-bold transition hover:text-[#e86d35] ${item.label === 'Deals' ? 'text-[#d94331]' : 'text-[#242424]'}`}>{item.label}</Link>)}
-          <Link href="/blog" className="whitespace-nowrap text-sm font-bold text-[#242424] transition hover:text-[#e86d35]">Shoe Advice</Link>
+          {navItems.map((item) => <Link key={item.href} href={item.href} className={`category-nav-link whitespace-nowrap text-sm font-bold ${item.label === 'Deals' ? 'text-[#d94331]' : 'text-[#242424]'}`}>{item.label}</Link>)}
+          <Link href="/blog" className="category-nav-link whitespace-nowrap text-sm font-bold text-[#242424]">Shoe Advice</Link>
         </nav>
         <div className="px-4 pb-3 sm:px-6 md:hidden">
           <SearchBar />
