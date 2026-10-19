@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import HeroSlider from '@/components/hero-slider'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { blogPosts } from '@/data/blog'
@@ -9,31 +10,10 @@ import { products } from '@/data/products'
 import { affiliateUrl } from '@/lib/content'
 import { CategoryCard, ComparisonCard, GuideCard, SectionHeading, TrustBar } from '@/components/affiliate-site'
 
-const imageBase = 'https://images.unsplash.com/'
-
 export default function SolemartHome() {
   return (
     <main id="top" className="min-h-screen bg-[#fafaf8] text-[#161616]">
-      <section className="px-3 pt-3 sm:px-5">
-        <div className="home-hero relative isolate min-h-[590px] overflow-hidden rounded-[1.75rem] bg-[#080808] sm:min-h-[650px] lg:min-h-[700px]">
-          <Image src={`${imageBase}photo-1542291026-7eec264c27ff?w=2200&q=90`} alt="Red Nike running shoe against a dark studio backdrop" fill priority sizes="100vw" className="home-hero__image -z-20 object-cover object-[68%_54%]" />
-          <div aria-hidden="true" className="home-hero__shade absolute inset-0 -z-10" />
-          <div aria-hidden="true" className="home-hero__orbit absolute -right-20 top-12 -z-10 size-80 rounded-full border border-white/10 sm:right-[12%] sm:top-20 sm:size-[34rem]" />
-          <div className="relative flex min-h-[590px] max-w-[1380px] flex-col items-start justify-center px-6 py-14 sm:min-h-[650px] sm:px-10 lg:min-h-[700px] lg:px-16">
-            <div className="home-hero__copy max-w-2xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-[11px] font-bold tracking-[0.18em] text-white/90 backdrop-blur-md"><span className="size-2 rounded-full bg-[#f36e35]" /> THE SHOE EDIT / MADE FOR YOUR NEXT MOVE</span>
-              <h1 className="mt-7 max-w-[780px] font-sans text-5xl font-black leading-[0.96] tracking-[-0.055em] text-white sm:text-7xl lg:text-[6.25rem]">Find your next <span className="text-[#f47a45]">favorite</span>.</h1>
-              <p className="mt-6 max-w-lg text-base leading-7 text-white/75 sm:text-lg sm:leading-8">Good shoes make a difference. Find your fit with independent reviews, practical guides, and picks worth a closer look.</p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/shoes-for-standing-all-day" className="group inline-flex min-h-14 items-center gap-3 rounded-full bg-white px-7 text-sm font-bold text-[#111] transition duration-300 hover:-translate-y-0.5 hover:bg-[#f47a45] hover:text-white">Find your shoes <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1" /></Link>
-                <Link href="/best-shoes/best-shoes-for-standing-all-day" className="inline-flex min-h-14 items-center rounded-full border border-white/35 bg-black/20 px-7 text-sm font-bold text-white backdrop-blur-sm transition hover:border-white hover:bg-white/10">Explore buying guides</Link>
-              </div>
-              <div className="mt-11 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-white/20 pt-5 text-[11px] font-bold tracking-[0.16em] text-white/70 sm:text-xs"><span>WALKING</span><span aria-hidden="true" className="size-1.5 rounded-full bg-[#f47a45]" /><span>RUNNING</span><span aria-hidden="true" className="size-1.5 rounded-full bg-[#f47a45]" /><span>EVERYDAY</span></div>
-            </div>
-            <div className="home-hero__note absolute bottom-7 right-7 hidden items-center gap-3 rounded-full border border-white/15 bg-black/45 px-4 py-3 text-xs font-semibold text-white/90 backdrop-blur-md sm:flex lg:bottom-9 lg:right-10"><span className="flex size-8 items-center justify-center rounded-full bg-[#f47a45] text-sm font-black">01</span> Find a pair that fits your day</div>
-          </div>
-        </div>
-      </section>
+      <HeroSlider />
       <TrustBar />
 
       <section aria-label="Featured shoe brands" className="overflow-hidden border-b border-[#e8e7e2] bg-[#f3f2ee] py-8 sm:py-10">
