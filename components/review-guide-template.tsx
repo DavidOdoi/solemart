@@ -96,7 +96,6 @@ function StickyReviewNav() {
   ]
   return <nav aria-label="On this page" className="sticky top-[112px] z-30 -mx-5 mt-10 border-y border-[#e5e4df] bg-[#fafaf8]/95 px-5 backdrop-blur md:top-[76px] lg:mx-0 lg:rounded-xl lg:border">
     <ul className="mx-auto flex max-w-7xl snap-x gap-6 overflow-x-auto py-3 text-[15px] font-semibold [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{items.map(([label, href]) => <li key={href} className="shrink-0 snap-start border-r border-[#d9d8d2] pr-6 last:border-0 last:pr-0"><a href={href} className="whitespace-nowrap text-[#4f4e49] hover:text-[#c65325]">{label}</a></li>)}</ul>
-    <div aria-hidden="true" className="h-1 bg-[#161616]"><span className="ml-[45%] block h-full w-[22%] bg-[#e86d35]" /></div>
   </nav>
 }
 

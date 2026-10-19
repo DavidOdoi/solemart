@@ -17,6 +17,7 @@ import { categories } from '@/data/categories'
 import { guides } from '@/data/guides'
 import { affiliateUrl } from '@/lib/content'
 import { BrandsMenu } from '@/components/brands-menu'
+import { ReadingProgress } from '@/components/reading-progress'
 
 export function SearchBar({ className = '' }: { className?: string }) {
   return (
@@ -83,6 +84,7 @@ export function SiteHeader() {
         <div className="px-4 pb-3 sm:px-6 md:hidden">
           <SearchBar />
         </div>
+        <ReadingProgress />
       </header>
     </>
   )
