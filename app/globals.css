@@ -515,7 +515,7 @@
   .editorial-promise__number, .editorial-promise__toggle { transition: none; }
 }
 
-.needs-carousel__track {
+.image-carousel__track {
   display: flex;
   gap: 24px;
   overflow-x: auto;
@@ -527,30 +527,30 @@
   scroll-padding-inline: 0;
 }
 
-.needs-carousel__item {
-  flex: 0 0 calc((100% - 72px) / 4);
+.image-carousel__item {
+  flex: 0 0 calc((100% - var(--carousel-gaps, 72px)) / var(--carousel-columns, 4));
   min-width: 280px;
   scroll-snap-align: start;
 }
 
-.needs-carousel__link {
+.image-carousel__link {
   display: block;
 }
 
-.needs-carousel__image {
+.image-carousel__image {
   transition: transform 350ms ease;
 }
 
-.needs-carousel__link:hover .needs-carousel__image {
+.image-carousel__link:hover .image-carousel__image {
   transform: scale(1.035);
 }
 
-.needs-carousel__link:hover h3 {
+.image-carousel__link:hover h3 {
   text-decoration: underline;
   text-underline-offset: 5px;
 }
 
-.needs-carousel__ribbon {
+.image-carousel__ribbon {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -569,7 +569,7 @@
   writing-mode: vertical-rl;
 }
 
-.needs-carousel__control {
+.image-carousel__control {
   display: inline-flex;
   width: 44px;
   height: 44px;
@@ -581,24 +581,24 @@
   transition: background-color 180ms ease, color 180ms ease;
 }
 
-.needs-carousel__control:hover:not(:disabled) {
+.image-carousel__control:hover:not(:disabled) {
   background: #161616;
   color: white;
 }
 
-.needs-carousel__control:disabled {
+.image-carousel__control:disabled {
   opacity: .3;
   cursor: default;
 }
 
-#needs :is(a, button, ul):focus-visible {
+.image-carousel :is(a, button, ul):focus-visible {
   outline: 2px solid #c65325;
   outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .needs-carousel__image, .needs-carousel__control { transition: none; }
-  .needs-carousel__link:hover .needs-carousel__image { transform: none; }
+  .image-carousel__image, .image-carousel__control { transition: none; }
+  .image-carousel__link:hover .image-carousel__image { transform: none; }
 }
 
 .top-picks-ribbon {

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import HeroSlider from '@/components/hero-slider'
 import { NeedsCarousel } from '@/components/needs-carousel'
+import { ImageCarousel } from '@/components/image-carousel'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { blogPosts } from '@/data/blog'
@@ -9,7 +10,7 @@ import { comparisons } from '@/data/comparisons'
 import { guides } from '@/data/guides'
 import { products } from '@/data/products'
 import { affiliateUrl } from '@/lib/content'
-import { ComparisonCard, GuideCard, SectionHeading, TrustBar } from '@/components/affiliate-site'
+import { ComparisonCard, SectionHeading, TrustBar } from '@/components/affiliate-site'
 
 export default function SolemartHome() {
   return (
@@ -107,12 +108,20 @@ export default function SolemartHome() {
 
       <NeedsCarousel categories={categories.map(({ title, slug, image, imageAlt }) => ({ title, slug, image, imageAlt }))} />
 
-      <section id="guides" className="bg-[#efeee9]">
-        <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-          <SectionHeading eyebrow="FROM THE EDITORS" title="Popular shoe buying guides" href="/best-shoes/best-shoes-for-standing-all-day" linkLabel="See all guides" />
-          <div className="grid gap-5 lg:grid-cols-3">{guides.map((guide) => <GuideCard key={guide.slug} guide={guide} />)}</div>
-        </div>
-      </section>
+      <ImageCarousel
+        id="guides"
+        title="Popular shoe buying guides"
+        eyebrow="FROM THE EDITORS"
+        browseLabel="Explore buying guides"
+        itemLabel="Buying guides"
+        items={guides.map((guide) => ({
+          title: guide.title,
+          href: `/best-shoes/${guide.slug}`,
+          image: guide.image,
+          imageAlt: guide.imageAlt,
+          ribbon: guide.category,
+        }))}
+      />
 
       <section className="border-y border-[#e8e7e2] bg-white">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
