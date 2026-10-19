@@ -66,7 +66,7 @@ function FullReviewCard({ product, index }: { product: Product; index: number })
         <div>
           <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#c65325]">#{index + 1} · {product.badge || `Pick ${index + 1}`} · {product.bestFor}</span>
           <h3 className="mt-2 font-serif text-2xl leading-tight sm:text-3xl">{product.name}</h3>
-          <div className="mt-4 space-y-3 font-serif text-base leading-8 text-[#4f4e49]">{product.review.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+          <div className="mt-4 space-y-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{product.review.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
           <p className="mt-3 text-xs leading-5 text-[#77766f]">Sample editorial profile. Confirm current model details, fit, and availability with the retailer.</p>
         </div>
       </div>
@@ -95,7 +95,7 @@ function StickyReviewNav() {
     ['Top Picks', '#top-picks'], ['How We Chose', '#how-we-chose'], ['Full Reviews', '#full-reviews'], ['Buying Guide', '#buying-guide'], ['FAQs', '#faqs'],
   ]
   return <nav aria-label="On this page" className="sticky top-[112px] z-30 -mx-5 mt-10 border-y border-[#e5e4df] bg-[#fafaf8]/95 px-5 backdrop-blur md:top-[76px] lg:mx-0 lg:rounded-xl lg:border">
-    <ul className="mx-auto flex max-w-7xl snap-x gap-6 overflow-x-auto py-3 text-sm font-semibold [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{items.map(([label, href]) => <li key={href} className="shrink-0 snap-start border-r border-[#d9d8d2] pr-6 last:border-0 last:pr-0"><a href={href} className="whitespace-nowrap text-[#4f4e49] hover:text-[#c65325]">{label}</a></li>)}</ul>
+    <ul className="mx-auto flex max-w-7xl snap-x gap-6 overflow-x-auto py-3 text-[15px] font-semibold [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{items.map(([label, href]) => <li key={href} className="shrink-0 snap-start border-r border-[#d9d8d2] pr-6 last:border-0 last:pr-0"><a href={href} className="whitespace-nowrap text-[#4f4e49] hover:text-[#c65325]">{label}</a></li>)}</ul>
     <div aria-hidden="true" className="h-1 bg-[#161616]"><span className="ml-[45%] block h-full w-[22%] bg-[#e86d35]" /></div>
   </nav>
 }
@@ -135,7 +135,7 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
         {picks.length > 0 && <section aria-labelledby="comparison-heading" className="mx-auto mt-8 max-w-5xl">
           <h2 id="comparison-heading" className="font-sans text-2xl font-black tracking-tight sm:text-3xl">Compare the top picks</h2>
           <div className="mt-4 hidden overflow-x-auto rounded-xl border border-[#e5e4df] bg-white md:block">
-            <table className="w-full min-w-[760px] table-fixed text-left text-sm">
+            <table className="w-full min-w-[760px] table-fixed text-left text-[15px]">
               <caption className="sr-only">Comparison of the recommended shoe picks</caption>
               <thead className="bg-[#f3f2ee]"><tr>{['Pick', 'Best For', 'Cushioning', 'Width Options', 'Main Strength', 'Check Price'].map((heading) => <th key={heading} scope="col" className="p-3 font-bold">{heading}</th>)}</tr></thead>
               <tbody className="divide-y divide-[#e5e4df]">{picks.map((pick) => {
@@ -148,7 +148,7 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
             const comparison = guide.topPicks?.find(({ productSlug }) => productSlug === pick.slug)
             return <article key={pick.slug} className="rounded-xl border border-[#e5e4df] bg-white p-4">
             <h3 className="font-bold"><Link href={`/reviews/${pick.slug}`} className="hover:text-[#c65325]">{pick.name}</Link></h3>
-            <dl className="mt-3 grid grid-cols-[minmax(6.5rem,0.8fr)_minmax(0,1.2fr)] gap-x-3 gap-y-2 text-sm"><dt className="font-semibold">Best for</dt><dd className="break-words text-[#68675f]">{pick.bestFor}</dd><dt className="font-semibold">Cushioning</dt><dd className="break-words text-[#68675f]">{comparison?.cushioning || 'Check product specifications'}</dd><dt className="font-semibold">Width options</dt><dd className="break-words text-[#68675f]">{comparison?.widthOptions || 'Check available sizing'}</dd><dt className="font-semibold">Main strength</dt><dd className="break-words text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</dd></dl>
+            <dl className="mt-3 grid grid-cols-[minmax(6.5rem,0.8fr)_minmax(0,1.2fr)] gap-x-3 gap-y-2 text-[15px]"><dt className="font-semibold">Best for</dt><dd className="break-words text-[#68675f]">{pick.bestFor}</dd><dt className="font-semibold">Cushioning</dt><dd className="break-words text-[#68675f]">{comparison?.cushioning || 'Check product specifications'}</dd><dt className="font-semibold">Width options</dt><dd className="break-words text-[#68675f]">{comparison?.widthOptions || 'Check available sizing'}</dd><dt className="font-semibold">Main strength</dt><dd className="break-words text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</dd></dl>
             <a href={pick.affiliateUrl || affiliateUrl} target="_blank" rel="sponsored nofollow noopener noreferrer" className="mt-3 inline-block text-sm font-bold text-[#c65325] underline underline-offset-2">See Latest Price</a>
           </article>})}</div>
         </section>}
@@ -159,7 +159,7 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
           <div className="min-w-0 space-y-14">
             <section id="how-we-chose" className="scroll-mt-36">
               <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">OUR APPROACH</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">How We Chose These Shoes</h2>
-              <ul className="mt-5 space-y-3 font-serif text-base leading-8 text-[#4f4e49] sm:text-lg">{(guide.howWeChose || guide.advice).map((item) => <li key={item} className="flex gap-3"><Check aria-hidden="true" className="mt-2 size-4 shrink-0 text-[#46705e]" />{item}</li>)}</ul>
+              <ul className="mt-5 space-y-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{(guide.howWeChose || guide.advice).map((item) => <li key={item} className="flex gap-3"><Check aria-hidden="true" className="mt-2 size-4 shrink-0 text-[#46705e]" />{item}</li>)}</ul>
             </section>
 
             <section id="full-reviews" className="scroll-mt-36">
@@ -169,33 +169,33 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
 
             <section id="buying-guide" className="scroll-mt-36">
               <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">BUYING GUIDE</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">What to Look For Before Buying</h2>
-              {guide.buyingGuideSections?.length ? <div className="mt-5 space-y-6">{guide.buyingGuideSections.map((section) => <section key={section.heading}><h3 className="text-lg font-bold">{section.heading}</h3><div className="mt-2 space-y-3 font-serif text-base leading-8 text-[#4f4e49] sm:text-lg">{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>)}</div> : <ul className="mt-5 list-disc space-y-3 pl-5 font-serif text-base leading-8 text-[#4f4e49] sm:text-lg">{guide.advice.map((tip) => <li key={tip}>{tip}</li>)}</ul>}
+              {guide.buyingGuideSections?.length ? <div className="mt-5 space-y-6">{guide.buyingGuideSections.map((section) => <section key={section.heading}><h3 className="text-lg font-bold">{section.heading}</h3><div className="mt-2 space-y-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>)}</div> : <ul className="mt-5 list-disc space-y-3 pl-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{guide.advice.map((tip) => <li key={tip}>{tip}</li>)}</ul>}
             </section>
 
             <section aria-labelledby="who-heading">
               <h2 id="who-heading" className="font-sans text-3xl font-black tracking-tight">Who This Guide Is For</h2>
-              <ul className="mt-4 list-disc space-y-2 pl-5 font-serif text-base leading-8 text-[#4f4e49] sm:text-lg">{(guide.whoItsFor || ['Readers comparing shoes for the needs described in this guide.']).map((item) => <li key={item}>{item}</li>)}</ul>
+              <ul className="mt-4 list-disc space-y-2 pl-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{(guide.whoItsFor || ['Readers comparing shoes for the needs described in this guide.']).map((item) => <li key={item}>{item}</li>)}</ul>
             </section>
 
             <section aria-labelledby="mistakes-heading">
               <h2 id="mistakes-heading" className="font-sans text-3xl font-black tracking-tight">Common Mistakes to Avoid</h2>
-              <ul className="mt-4 list-disc space-y-2 pl-5 font-serif text-base leading-8 text-[#4f4e49] sm:text-lg">{(guide.mistakesToAvoid || ['Choosing by appearance alone before checking fit and intended use.', 'Assuming price, stock, or product details stay the same over time.']).map((item) => <li key={item}>{item}</li>)}</ul>
+              <ul className="mt-4 list-disc space-y-2 pl-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{(guide.mistakesToAvoid || ['Choosing by appearance alone before checking fit and intended use.', 'Assuming price, stock, or product details stay the same over time.']).map((item) => <li key={item}>{item}</li>)}</ul>
             </section>
 
             <section id="faqs" className="scroll-mt-36">
               <h2 className="font-sans text-4xl font-black leading-tight tracking-tight sm:text-5xl">{guide.title} FAQs</h2>
-              <div className="mt-4 border-t border-[#d9d8d2]">{guide.faqs.map(({ question, answer }) => <details key={question} className="group border-b border-[#d9d8d2] py-4 sm:py-5"><summary className="flex cursor-pointer list-none items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e86d35] [&::-webkit-details-marker]:hidden"><span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#898880] text-[#161616]"><ArrowDown aria-hidden="true" className="size-5 transition-transform duration-200 group-open:rotate-180" /></span><span className="text-base font-black leading-snug sm:text-lg">{question}</span></summary><p className="ml-14 mt-4 font-serif text-base leading-8 text-[#4f4e49] sm:text-lg">{answer}</p></details>)}</div>
+              <div className="mt-4 border-t border-[#d9d8d2]">{guide.faqs.map(({ question, answer }) => <details key={question} className="group border-b border-[#d9d8d2] py-4 sm:py-5"><summary className="flex cursor-pointer list-none items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e86d35] [&::-webkit-details-marker]:hidden"><span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#898880] text-[#161616]"><ArrowDown aria-hidden="true" className="size-5 transition-transform duration-200 group-open:rotate-180" /></span><span className="text-base font-black leading-snug sm:text-lg">{question}</span></summary><p className="ml-14 mt-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{answer}</p></details>)}</div>
             </section>
 
             <section aria-labelledby="verdict-heading" className="rounded-2xl bg-[#f3f2ee] p-6 sm:p-8">
-              <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">OUR TAKE</p><h2 id="verdict-heading" className="mt-2 font-sans text-3xl font-black tracking-tight">Final Verdict</h2><p className="mt-3 font-serif text-base leading-8 text-[#4f4e49] sm:text-lg">{guide.finalVerdict || guide.quickAnswerBody}</p>
+              <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">OUR TAKE</p><h2 id="verdict-heading" className="mt-2 font-sans text-3xl font-black tracking-tight">Final Verdict</h2><p className="mt-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{guide.finalVerdict || guide.quickAnswerBody}</p>
             </section>
           </div>
 
           <aside className="hidden lg:block">
             <div className="sticky top-36 rounded-xl border border-[#e5e4df] bg-white p-5">
               <p className="text-xs font-bold tracking-[0.14em] text-[#c65325]">IN THIS GUIDE</p>
-              <nav aria-label="Buying guide contents" className="mt-4 flex flex-col gap-3 text-sm font-semibold text-[#4f4e49]">{[['Top Picks', '#top-picks'], ['How We Chose', '#how-we-chose'], ['Full Reviews', '#full-reviews'], ['Buying Guide', '#buying-guide'], ['FAQs', '#faqs']].map(([label, href]) => <a key={href} href={href} className="hover:text-[#c65325]">{label}</a>)}</nav>
+              <nav aria-label="Buying guide contents" className="mt-4 flex flex-col gap-3 text-[15px] font-semibold text-[#4f4e49]">{[['Top Picks', '#top-picks'], ['How We Chose', '#how-we-chose'], ['Full Reviews', '#full-reviews'], ['Buying Guide', '#buying-guide'], ['FAQs', '#faqs']].map(([label, href]) => <a key={href} href={href} className="hover:text-[#c65325]">{label}</a>)}</nav>
               <p className="mt-5 border-t border-[#e5e4df] pt-4 text-xs leading-5 text-[#77766f]">Product details and prices can change. Check the retailer listing before you buy.</p>
             </div>
           </aside>
