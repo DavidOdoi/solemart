@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import HeroSlider from '@/components/hero-slider'
+import { NeedsCarousel } from '@/components/needs-carousel'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { blogPosts } from '@/data/blog'
@@ -8,7 +9,7 @@ import { comparisons } from '@/data/comparisons'
 import { guides } from '@/data/guides'
 import { products } from '@/data/products'
 import { affiliateUrl } from '@/lib/content'
-import { CategoryCard, ComparisonCard, GuideCard, SectionHeading, TrustBar } from '@/components/affiliate-site'
+import { ComparisonCard, GuideCard, SectionHeading, TrustBar } from '@/components/affiliate-site'
 
 export default function SolemartHome() {
   return (
@@ -104,10 +105,7 @@ export default function SolemartHome() {
         </div>
       </section>
 
-      <section id="needs" className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-        <SectionHeading eyebrow="SHOP BY NEED" title="Start with your shoe need" href="/walking-shoes" linkLabel="View all categories" />
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">{categories.map((category) => <CategoryCard key={category.slug} category={category} />)}</div>
-      </section>
+      <NeedsCarousel categories={categories.map(({ title, slug, image, imageAlt }) => ({ title, slug, image, imageAlt }))} />
 
       <section id="guides" className="bg-[#efeee9]">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
