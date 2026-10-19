@@ -234,7 +234,7 @@ export function AffiliateDisclosure({ id = 'affiliate-disclosure' }: { id?: stri
     <section id={id} className="border-t border-[#e8e7e2] bg-[#f3f2ee]">
       <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-8 text-sm leading-6 text-[#5f5e57] sm:flex-row sm:items-center sm:justify-between lg:px-8">
         <p className="max-w-3xl"><strong className="text-[#161616]">Affiliate disclosure:</strong> As an Amazon Associate, SOLEMART may earn from qualifying purchases. Our recommendations are independently researched.</p>
-        <Link href="/#top" className="whitespace-nowrap font-bold text-[#161616]">Back to top Ã¢â€ â€˜</Link>
+        <Link href="/#top" className="whitespace-nowrap font-bold text-[#161616]">Back to top</Link>
       </div>
     </section>
   )
