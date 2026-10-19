@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import { useEffect, useId, useRef, useState } from 'react'
-import { brands } from '@/data/brands'
+import { brandGroups } from '@/data/brands'
 
 export function BrandsMenu({ mobile = false }: { mobile?: boolean }) {
   const [open, setOpen] = useState(false)
@@ -28,7 +28,7 @@ export function BrandsMenu({ mobile = false }: { mobile?: boolean }) {
   }
 
   return (
-    <div ref={root} className={mobile ? 'brands-menu brands-menu--mobile' : 'brands-menu relative'}
+    <div ref={root} className={mobile ? 'brands-menu brands-menu--mobile' : `brands-menu${open ? ' brands-menu--open' : ''}`}
       onPointerEnter={(event) => { if (!mobile && event.pointerType === 'mouse' && !open) { openedByHover.current = true; setOpen(true) } }}
       onPointerLeave={(event) => { if (!mobile && event.pointerType === 'mouse' && !root.current?.contains(document.activeElement)) setOpen(false) }}
       onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false) }}
@@ -49,12 +49,27 @@ export function BrandsMenu({ mobile = false }: { mobile?: boolean }) {
         Brands <ChevronDown aria-hidden="true" className={`size-3.5 transition-transform motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} />
       </button>
       <div id={panelId} hidden={!open} className="brands-menu__panel">
-        <div className="rounded-xl border border-[#e8e7e2] bg-white p-4 text-[#242424] shadow-xl sm:p-5">
-          <p className="mb-3 border-b border-[#e8e7e2] pb-3 text-xs font-bold uppercase tracking-[0.14em] text-[#68675f]">Explore popular shoe brands</p>
-          <ul className="brands-menu__list">
-            {brands.map((brand) => <li key={brand.slug}><Link href={`/brands/${brand.slug}`} onClick={closeAfterNavigation} className="block rounded-md px-2 py-2 text-sm font-semibold transition-colors hover:bg-[#f7f5f0] hover:text-[#c65325] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#c65325]">{brand.name}</Link></li>)}
-          </ul>
-          <Link href="/brands" onClick={closeAfterNavigation} className="mt-3 block border-t border-[#e8e7e2] pt-3 text-sm font-bold text-[#c65325] hover:underline">View all brands →</Link>
+        <div className="brands-menu__inner">
+          {brandGroups.map((group) => (
+            <section key={group.title} aria-label={group.title}>
+              <h2 className="brands-menu__heading">{group.title}</h2>
+              <ul className="brands-menu__list">
+                {group.brands.map((brand) => <li key={brand.slug}><Link href={`/brands/${brand.slug}`} onClick={closeAfterNavigation} className="brands-menu__link">{brand.name}</Link></li>)}
+              </ul>
+            </section>
+          ))}
+          <section aria-label="Discover">
+            <h2 className="brands-menu__heading">Discover</h2>
+            <ul className="brands-menu__list">
+              {[
+                { label: 'Explore All Brands', href: '/brands' },
+                { label: 'Running Shoes', href: '/running-shoes' },
+                { label: 'Walking Shoes', href: '/walking-shoes' },
+                { label: 'Everyday Sneakers', href: '/sneakers' },
+                { label: 'Shoe Buying Guides', href: '/#guides' },
+              ].map((item) => <li key={item.href}><Link href={item.href} onClick={closeAfterNavigation} className="brands-menu__link">{item.label}</Link></li>)}
+            </ul>
+          </section>
         </div>
       </div>
     </div>
