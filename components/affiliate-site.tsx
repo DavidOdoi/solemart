@@ -2,12 +2,10 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   ArrowRight,
-  BookOpen,
   Check,
   ChevronRight,
   Menu,
   Search,
-  ShieldCheck,
 } from 'lucide-react'
 import type { Category } from '@/data/categories'
 import type { Guide } from '@/data/guides'
@@ -18,6 +16,7 @@ import { guides } from '@/data/guides'
 import { affiliateUrl } from '@/lib/content'
 import { BrandsMenu } from '@/components/brands-menu'
 import { ReadingProgress } from '@/components/reading-progress'
+import { EditorialPromise } from '@/components/editorial-promise'
 
 export function SearchBar({ className = '' }: { className?: string }) {
   return (
@@ -215,18 +214,7 @@ export function ComparisonCard({ comparison, index }: { comparison: Comparison; 
 }
 
 export function TrustBar() {
-  const items = [
-    { icon: ShieldCheck, title: 'Independent recommendations', description: 'Research to inform your choice.' },
-    { icon: BookOpen, title: 'Helpful buying guides', description: 'Clear advice, less noise.' },
-    { icon: Check, title: 'Retailer price checks', description: 'Check current listing details.' },
-  ]
-  return (
-    <section aria-label="Our approach" className="border-y border-[#e8e7e2] bg-white">
-      <div className="mx-auto grid max-w-7xl gap-6 px-5 py-7 sm:grid-cols-3 lg:px-8">
-        {items.map(({ icon: Icon, title, description }) => <div key={title} className="flex items-center gap-3"><Icon aria-hidden="true" className="size-5 text-[#46705e]" /><div><p className="text-sm font-bold">{title}</p><p className="mt-0.5 text-sm text-[#5f5e57]">{description}</p></div></div>)}
-      </div>
-    </section>
-  )
+  return <EditorialPromise />
 }
 
 export function AffiliateDisclosure({ id = 'affiliate-disclosure' }: { id?: string }) {
