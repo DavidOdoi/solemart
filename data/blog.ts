@@ -5,6 +5,11 @@ export type BlogPost = {
   date: string
   excerpt: string
   paragraphs: string[]
+  publishedAt?: string
+  modifiedAt?: string
+  author?: string
+  contentHtml?: string
+  featuredImage?: { src: string; alt: string; width: number; height: number }
 }
 
 export const blogPosts: BlogPost[] = [

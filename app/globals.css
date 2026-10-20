@@ -335,6 +335,24 @@
   .brands-menu__link { transition: none; }
 }
 
+.wordpress-content > * + * { margin-top: 1.25rem; }
+.wordpress-content :is(h2, h3, h4, h5, h6) { margin-top: 2rem; color: #161616; font-weight: 700; line-height: 1.3; }
+.wordpress-content h2 { font-size: 1.75rem; }
+.wordpress-content h3 { font-size: 1.5rem; }
+.wordpress-content :is(h4, h5, h6) { font-size: 1.25rem; }
+.wordpress-content a { color: #a74520; text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
+.wordpress-content ul { list-style: disc; padding-left: 1.5rem; }
+.wordpress-content ol { list-style: decimal; padding-left: 1.5rem; }
+.wordpress-content li + li { margin-top: .5rem; }
+.wordpress-content blockquote { border-left: 3px solid #c65325; padding-left: 1.25rem; font-style: italic; }
+.wordpress-content img { max-width: 100%; height: auto; }
+.wordpress-content figure { max-width: 100%; }
+.wordpress-content figcaption { font-size: .875rem; color: #68675f; }
+.wordpress-content pre { max-width: 100%; overflow-x: auto; padding: 1rem; background: #f3f2ee; }
+.wordpress-content table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
+.wordpress-content :is(th, td) { border: 1px solid #d9d8d2; padding: .75rem; text-align: left; }
+.wordpress-content { overflow-wrap: anywhere; }
+
 .font-serif {
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 400;
