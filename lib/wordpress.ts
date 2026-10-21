@@ -206,3 +206,30 @@ export const getWordPressPosts = cache(async (after?: string): Promise<{
     endCursor: typeof connection.pageInfo.endCursor === 'string' ? connection.pageInfo.endCursor : null,
   }
 })
+
+/** Buying guides are separate from ordinary posts and never inherit sample picks. */
+export const getWordPressBuyingGuide = cache(async (slug: string): Promise<BlogPost | null> => {
+  if (!process.env.WORDPRESS_GRAPHQL_URL || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
+  const query = `
+    query PublishedBuyingGuide($slug: ID!) {
+      buyingGuide(id: $slug, idType: SLUG) {
+        title slug status content excerpt dateGmt modifiedGmt
+        featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+      }
+    }
+  `
+  const data = await queryWordPress<{ buyingGuide?: Omit<WordPressPost, 'author'> | null }>(
+    query, { slug }, ['wordpress:buying-guides', `wordpress:buying-guide:${slug}`],
+  )
+  if (!Object.hasOwn(data, 'buyingGuide')) throw new Error('WordPress could not return the requested buying guide.')
+  const guide = data.buyingGuide
+  if (!guide || guide.status !== 'publish') return null
+  if (guide.slug !== slug || !plainText(guide.title)) throw new Error('WordPress returned an incomplete buying guide.')
+  return {
+    ...postPreview({ ...guide, author: null }),
+    category: 'BUYING GUIDE',
+    modifiedAt: utcDate(guide.modifiedGmt),
+    paragraphs: [],
+    contentHtml: articleHtml(guide.content || ''),
+  }
+})

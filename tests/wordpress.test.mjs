@@ -174,3 +174,36 @@ test('archive failures and malformed pagination do not become an empty list', as
   respond({ data: { posts: { nodes: [post()], pageInfo: { hasNextPage: true, endCursor: null } } } })
   await assert.rejects(getWordPressPosts(), /pagination/)
 })
+
+test('fetches published buying guides separately and sanitizes their body', async () => {
+  const { getWordPressBuyingGuide } = await import('../lib/wordpress.ts')
+  globalThis.fetch = async (_url, options) => {
+    const payload = JSON.parse(options.body)
+    assert.match(payload.query, /buyingGuide\(id: \$slug, idType: SLUG\)/)
+    assert.doesNotMatch(payload.query, /author\s*\{/)
+    assert.deepEqual(payload.variables, { slug: 'shoe-fit' })
+    assert.ok(options.next.tags.includes('wordpress:buying-guide:shoe-fit'))
+    return Response.json({ data: { buyingGuide: post({ content: '<p>Real guide</p><script>bad()</script>' }) } })
+  }
+  const result = await getWordPressBuyingGuide('shoe-fit')
+  assert.equal(result.category, 'BUYING GUIDE')
+  assert.equal(result.contentHtml, '<p>Real guide</p>')
+  assert.equal(result.publishedAt, '2026-10-20T12:00:00.000Z')
+  assert.equal(result.author, undefined)
+})
+
+test('buying guides distinguish missing/private content from API failures', async () => {
+  const { getWordPressBuyingGuide } = await import('../lib/wordpress.ts')
+  for (const value of [null, post({ status: 'draft' }), post({ status: 'private' })]) {
+    respond({ data: { buyingGuide: value } })
+    assert.equal(await getWordPressBuyingGuide('shoe-fit'), null)
+  }
+  respond({ data: {} })
+  await assert.rejects(getWordPressBuyingGuide('shoe-fit'), /could not return/)
+  respond({ data: { buyingGuide: post({ slug: 'wrong-guide' }) } })
+  await assert.rejects(getWordPressBuyingGuide('shoe-fit'), /incomplete/)
+  respond({ errors: [{ message: 'Schema unavailable' }] })
+  await assert.rejects(getWordPressBuyingGuide('shoe-fit'), /could not return/)
+  globalThis.fetch = async () => new Response('Unavailable', { status: 503 })
+  await assert.rejects(getWordPressBuyingGuide('shoe-fit'), /temporarily unavailable/)
+})
