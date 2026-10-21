@@ -1,0 +1,7 @@
+#solemart-guide-editor .solemart-field { margin: 18px 0; }
+#solemart-guide-editor label { display: block; font-weight: 600; margin-bottom: 6px; }
+#solemart-guide-editor input, #solemart-guide-editor textarea { width: 100%; max-width: 900px; display: block; margin-bottom: 6px; }
+#solemart-guide-editor legend { font-size: 15px; font-weight: 600; }
+#solemart-guide-editor fieldset { border: 1px solid #c3c4c7; padding: 16px; }
+#solemart-guide-editor .solemart-row { margin: 16px 0; background: #fafafa; }
+#solemart-guide-editor .button + .button { margin-left: 8px; }

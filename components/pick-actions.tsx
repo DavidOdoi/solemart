@@ -5,7 +5,7 @@ import { Bookmark, Link2 } from 'lucide-react'
 
 const storageKey = 'solemart:saved-picks'
 
-export function PickActions({ slug }: { slug: string }) {
+export function PickActions({ slug, href }: { slug: string; href?: string }) {
   const [saved, setSaved] = useState(false)
   const [copied, setCopied] = useState(false)
 
@@ -31,7 +31,7 @@ export function PickActions({ slug }: { slug: string }) {
 
   async function copyLink() {
     try {
-      await navigator.clipboard.writeText(`${window.location.origin}/reviews/${slug}`)
+      await navigator.clipboard.writeText(new URL(href || `/reviews/${slug}`, window.location.href).href)
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1800)
     } catch {

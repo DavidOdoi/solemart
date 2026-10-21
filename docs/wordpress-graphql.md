@@ -1,6 +1,6 @@
 # WordPress blog integration
 
-Published **ordinary WordPress posts** supply the Shoe Advice listing at `/blog` and individual pages at `/blog/[slug]` using WPGraphQL. The frontend design is preserved. Published buying guides also supply `/best-shoes/[slug]`; see [buying-guide setup and migration limits](wordpress-buying-guides.md). Reviews, comparisons, homepage lists, and search still use local data; custom fields and publishing webhooks are later integration steps.
+Published **ordinary WordPress posts** supply the Shoe Advice listing at `/blog` and individual pages at `/blog/[slug]` using WPGraphQL. The frontend design is preserved. Published buying guides also fill the original Next.js template at `/best-shoes/[slug]` using the companion field editor; see [buying-guide setup and migration limits](wordpress-buying-guides.md). Reviews, comparisons, homepage lists, and search still use local data; custom fields and publishing webhooks are later integration steps.
 
 ## Configuration
 

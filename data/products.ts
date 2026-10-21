@@ -1,4 +1,7 @@
 export type Product = {
+  cmsManaged?: boolean
+  reviewUrl?: string
+  avoidIf?: string
   id?: string
   badge?: string
   seoTitle?: string

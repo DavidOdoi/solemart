@@ -120,6 +120,8 @@ function featuredImage(image: NonNullable<WordPressPost['featuredImage']>['node'
   }
 }
 
+class MissingGuideFieldsError extends Error {}
+
 async function queryWordPress<T>(query: string, variables: Record<string, string | null>, tags: string[]): Promise<T> {
   const endpoint = process.env.WORDPRESS_GRAPHQL_URL
 
@@ -143,7 +145,10 @@ async function queryWordPress<T>(query: string, variables: Record<string, string
     throw new Error('WordPress articles are temporarily unavailable.', { cause: error })
   }
 
-  const result = await response.json() as { data?: T; errors?: unknown[] }
+  const result = await response.json() as { data?: T; errors?: { message?: string }[] }
+  if (result.errors?.length && result.errors.every(error => error.message?.includes('Cannot query field \"solemartGuideData\"'))) {
+    throw new MissingGuideFieldsError('Install SOLEMART Guide Fields in WordPress.')
+  }
   if (result.errors?.length || !result.data) {
     throw new Error('WordPress could not return the requested article.')
   }
@@ -231,5 +236,25 @@ export const getWordPressBuyingGuide = cache(async (slug: string): Promise<BlogP
     modifiedAt: utcDate(guide.modifiedGmt),
     paragraphs: [],
     contentHtml: articleHtml(guide.content || ''),
+  }
+})
+
+/** An absent companion plugin must not break the original template. Other failures remain errors. */
+export const getWordPressGuideFields = cache(async (slug: string): Promise<unknown> => {
+  if (!process.env.WORDPRESS_GRAPHQL_URL || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
+  try {
+    const data = await queryWordPress<{ buyingGuide?: { solemartGuideData?: string | null } | null }>(`
+      query BuyingGuideTemplateFields($slug: ID!) {
+        buyingGuide(id: $slug, idType: SLUG) { solemartGuideData }
+      }
+    `, { slug }, ['wordpress:buying-guides', `wordpress:buying-guide:${slug}`])
+    if (!Object.hasOwn(data, 'buyingGuide')) throw new Error('WordPress returned incomplete template fields.')
+    if (data.buyingGuide && !Object.hasOwn(data.buyingGuide, 'solemartGuideData')) throw new Error('WordPress returned incomplete template fields.')
+    const raw = data.buyingGuide?.solemartGuideData
+    if (raw == null) return null
+    return JSON.parse(raw)
+  } catch (error) {
+    if (error instanceof MissingGuideFieldsError) return null
+    throw error
   }
 })

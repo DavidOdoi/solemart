@@ -1,4 +1,7 @@
 export type Guide = {
+  cmsManaged?: boolean
+  contentHtml?: string
+  publishedAt?: string
   title: string
   slug: string
   seoTitle?: string

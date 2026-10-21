@@ -207,3 +207,23 @@ test('buying guides distinguish missing/private content from API failures', asyn
   globalThis.fetch = async () => new Response('Unavailable', { status: 503 })
   await assert.rejects(getWordPressBuyingGuide('shoe-fit'), /temporarily unavailable/)
 })
+
+test('loads structured guide fields and tolerates only a genuinely absent companion field', async () => {
+  const { getWordPressGuideFields } = await import('../lib/wordpress.ts')
+  const fields = { intro: 'CMS introduction', products: [{ name: 'CMS shoe' }] }
+  globalThis.fetch = async (_url, options) => {
+    assert.match(JSON.parse(options.body).query, /solemartGuideData/)
+    return Response.json({data:{buyingGuide:{solemartGuideData:JSON.stringify(fields)}}})
+  }
+  assert.deepEqual(await getWordPressGuideFields('real-guide'),fields)
+  respond({errors:[{message:'Cannot query field "solemartGuideData" on type "BuyingGuide".'}]})
+  assert.equal(await getWordPressGuideFields('real-guide'),null)
+  respond({data:{buyingGuide:{solemartGuideData:null}}})
+  assert.equal(await getWordPressGuideFields('real-guide'),null)
+  respond({errors:[{message:'Database unavailable'}]})
+  await assert.rejects(getWordPressGuideFields('real-guide'),/could not return/)
+  respond({data:{buyingGuide:{solemartGuideData:'invalid JSON'}}})
+  await assert.rejects(getWordPressGuideFields('real-guide'),SyntaxError)
+  respond({data:{buyingGuide:{}}})
+  await assert.rejects(getWordPressGuideFields('real-guide'),/incomplete/)
+})

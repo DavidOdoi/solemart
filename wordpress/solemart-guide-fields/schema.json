@@ -1,0 +1,163 @@
+{
+  "category": {
+    "label": "Guide label (e.g. Walking Guide)",
+    "type": "text"
+  },
+  "intro": {
+    "label": "Introduction",
+    "type": "textarea"
+  },
+  "author": {
+    "label": "Author / editorial team",
+    "type": "text"
+  },
+  "reviewedBy": {
+    "label": "Reviewed by",
+    "type": "text"
+  },
+  "disclosure": {
+    "label": "Affiliate disclosure",
+    "type": "textarea"
+  },
+  "quickAnswerTitle": {
+    "label": "Quick Answer heading",
+    "type": "text"
+  },
+  "quickAnswerBody": {
+    "label": "Quick Answer",
+    "type": "textarea"
+  },
+  "howWeChose": {
+    "label": "How we chose \u2014 one point per line",
+    "type": "textarea"
+  },
+  "advice": {
+    "label": "Buying advice \u2014 one point per line",
+    "type": "textarea"
+  },
+  "whoItsFor": {
+    "label": "Who this guide is for \u2014 one point per line",
+    "type": "textarea"
+  },
+  "mistakesToAvoid": {
+    "label": "Mistakes to avoid \u2014 one point per line",
+    "type": "textarea"
+  },
+  "finalVerdict": {
+    "label": "Final verdict",
+    "type": "textarea"
+  },
+  "seoTitle": {
+    "label": "SEO title (optional)",
+    "type": "text"
+  },
+  "metaDescription": {
+    "label": "Meta description (optional)",
+    "type": "textarea"
+  },
+  "products": {
+    "label": "Top Picks \u2014 displayed in this order (up to four)",
+    "type": "repeat",
+    "fields": {
+      "name": {
+        "label": "Shoe name",
+        "type": "text"
+      },
+      "badge": {
+        "label": "Award label (e.g. Best Overall)",
+        "type": "text"
+      },
+      "image": {
+        "label": "Shoe image",
+        "type": "image"
+      },
+      "imageAlt": {
+        "label": "Image description",
+        "type": "text"
+      },
+      "affiliateUrl": {
+        "label": "Affiliate / retailer link",
+        "type": "url"
+      },
+      "reviewUrl": {
+        "label": "Optional published full-review URL",
+        "type": "url"
+      },
+      "shortReason": {
+        "label": "Short verdict",
+        "type": "textarea"
+      },
+      "bestFor": {
+        "label": "Best for",
+        "type": "textarea"
+      },
+      "avoidIf": {
+        "label": "Avoid if",
+        "type": "textarea"
+      },
+      "description": {
+        "label": "Description",
+        "type": "textarea"
+      },
+      "pros": {
+        "label": "Pros \u2014 one per line",
+        "type": "textarea"
+      },
+      "cons": {
+        "label": "Cons \u2014 one per line",
+        "type": "textarea"
+      },
+      "specs": {
+        "label": "Specifications \u2014 one per line: Label | Value",
+        "type": "textarea"
+      },
+      "review": {
+        "label": "Full review \u2014 separate paragraphs with a blank line",
+        "type": "textarea"
+      },
+      "cushioning": {
+        "label": "Comparison: cushioning",
+        "type": "text"
+      },
+      "widthOptions": {
+        "label": "Comparison: width options",
+        "type": "text"
+      },
+      "mainStrength": {
+        "label": "Comparison: main strength",
+        "type": "text"
+      }
+    },
+    "max": 4
+  },
+  "buyingGuideSections": {
+    "label": "Buying advice sections",
+    "type": "repeat",
+    "max": 30,
+    "fields": {
+      "heading": {
+        "label": "Heading",
+        "type": "text"
+      },
+      "paragraphs": {
+        "label": "Text \u2014 separate paragraphs with a blank line",
+        "type": "textarea"
+      }
+    }
+  },
+  "faqs": {
+    "label": "Frequently asked questions",
+    "type": "repeat",
+    "max": 30,
+    "fields": {
+      "question": {
+        "label": "Question",
+        "type": "text"
+      },
+      "answer": {
+        "label": "Answer",
+        "type": "textarea"
+      }
+    }
+  }
+}
