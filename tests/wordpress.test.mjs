@@ -1,6 +1,6 @@
 import { test, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { getWordPressPost } from '../lib/wordpress.ts'
+import { getWordPressPost, getWordPressPosts } from '../lib/wordpress.ts'
 
 const originalFetch = globalThis.fetch
 const originalEndpoint = process.env.WORDPRESS_GRAPHQL_URL
@@ -111,4 +111,66 @@ test('rejects invalid configuration and invalid slugs', async () => {
   assert.equal(await getWordPressPost('bad/slug'), null)
   process.env.WORDPRESS_GRAPHQL_URL = 'file:///etc/passwd'
   await assert.rejects(getWordPressPost('shoe-fit'), /temporarily unavailable/)
+})
+
+test('lists published summaries newest-first with a bounded cursor query', async () => {
+  globalThis.fetch = async (url, options) => {
+    const body = JSON.parse(options.body)
+    assert.deepEqual(body.variables, { after: null })
+    assert.match(body.query, /posts\(first: 12, after: \$after/)
+    assert.match(body.query, /status: PUBLISH/)
+    assert.match(body.query, /field: DATE, order: DESC/)
+    assert.doesNotMatch(body.query, /\bcontent\b/)
+    assert.equal(options.next.revalidate, 60)
+    assert.ok(options.next.tags.includes('wordpress:archive'))
+    return Response.json({ data: { posts: {
+      nodes: [post(), null, post({ status: 'draft' }), post({ status: 'private' }), post({ title: 'Older article', slug: 'older-article' })],
+      pageInfo: { hasNextPage: true, endCursor: 'YXJyYXljb25uZWN0aW9uOjEy' },
+    } } })
+  }
+  const result = await getWordPressPosts()
+  assert.deepEqual(result.posts.map((item) => item.title), ['Shoes & Fit', 'Older article'])
+  assert.equal(result.posts[0].excerpt, 'A & B')
+  assert.equal(result.posts[0].publishedAt, '2026-10-20T12:00:00.000Z')
+  assert.equal(result.posts[0].contentHtml, undefined)
+  assert.equal(result.hasNextPage, true)
+})
+
+test('passes the older-page cursor as a variable and handles the final page', async () => {
+  const cursor = 'YXJyYXljb25uZWN0aW9uOjEy'
+  globalThis.fetch = async (url, options) => {
+    assert.equal(JSON.parse(options.body).variables.after, cursor)
+    return Response.json({ data: { posts: { nodes: [post()], pageInfo: { hasNextPage: false, endCursor: null } } } })
+  }
+  const result = await getWordPressPosts(cursor)
+  assert.equal(result.posts.length, 1)
+  assert.equal(result.hasNextPage, false)
+})
+
+test('distinguishes a genuinely empty archive from unconfigured development', async () => {
+  respond({ data: { posts: { nodes: [], pageInfo: { hasNextPage: false, endCursor: null } } } })
+  assert.deepEqual(await getWordPressPosts(), { posts: [], hasNextPage: false, endCursor: null })
+  delete process.env.WORDPRESS_GRAPHQL_URL
+  globalThis.fetch = async () => { assert.fail('Must not fetch without configuration') }
+  assert.equal(await getWordPressPosts(), null)
+})
+
+test('rejects malformed cursors before making an upstream request', async () => {
+  globalThis.fetch = async () => { assert.fail('Invalid cursors must not fetch') }
+  for (const cursor of ['', 'bad cursor', 'a'.repeat(513), ['cursor', 'another']]) {
+    await assert.rejects(getWordPressPosts(cursor), RangeError)
+  }
+})
+
+test('archive failures and malformed pagination do not become an empty list', async () => {
+  globalThis.fetch = async () => new Response('Unavailable', { status: 503 })
+  await assert.rejects(getWordPressPosts(), /temporarily unavailable/)
+  respond({ errors: [{ message: 'Unavailable' }], data: { posts: null } })
+  await assert.rejects(getWordPressPosts(), /could not return/)
+  for (const value of [{ data: {} }, { data: { posts: { nodes: [] } } }, { data: { posts: { nodes: 'invalid', pageInfo: { hasNextPage: false } } } }]) {
+    respond(value)
+    await assert.rejects(getWordPressPosts(), /article listing/)
+  }
+  respond({ data: { posts: { nodes: [post()], pageInfo: { hasNextPage: true, endCursor: null } } } })
+  await assert.rejects(getWordPressPosts(), /pagination/)
 })

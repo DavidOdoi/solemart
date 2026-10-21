@@ -9,12 +9,12 @@ export const revalidate = 60
 export const dynamicParams = true
 
 async function getPost(slug: string) {
-  // Keep existing demo articles intact during the incremental CMS migration.
-  return getBlogPost(slug) ?? await getWordPressPost(slug)
+  // A migrated WordPress article must match the content shown in the listing.
+  return await getWordPressPost(slug) ?? getBlogPost(slug)
 }
 
 export function generateStaticParams() {
-  return blogPosts.map(({ slug }) => ({ slug }))
+  return process.env.WORDPRESS_GRAPHQL_URL ? [] : blogPosts.map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
