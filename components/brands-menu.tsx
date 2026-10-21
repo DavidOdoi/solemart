@@ -40,7 +40,7 @@ export function BrandsMenu({ mobile = false }: { mobile?: boolean }) {
         }
       }}>
       <button ref={trigger} type="button" aria-expanded={open} aria-controls={panelId}
-        className={`${mobile ? 'text-sm font-semibold text-[#4f4e49]' : 'category-nav-link text-sm font-bold text-[#242424]'} inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap hover:text-[#e86d35]`}
+        className={`${mobile ? 'text-base font-semibold text-[#4f4e49]' : 'category-nav-link text-base font-bold text-[#242424] xl:text-lg'} inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap hover:text-[#e86d35]`}
         onClick={(event) => {
           if (event.detail > 0 && openedByHover.current) setOpen(true)
           else setOpen((value) => !value)

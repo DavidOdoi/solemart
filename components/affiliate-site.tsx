@@ -63,8 +63,8 @@ export function SiteHeader() {
               <Menu aria-hidden="true" className="size-5" />
             </summary>
             <nav aria-label="Main navigation" className="absolute left-0 top-12 z-50 flex max-h-[calc(100dvh-100px)] w-64 flex-col gap-4 overflow-y-auto rounded-xl border border-[#e8e7e2] bg-white p-5 shadow-xl">
-              {navItems.map((item) => item.label === 'Brands' ? <BrandsMenu key={item.href} mobile /> : <Link key={item.href} href={item.href} className="text-sm font-semibold text-[#4f4e49] hover:text-[#e86d35]">{item.label}</Link>)}
-              <Link href="/blog" className="text-sm font-semibold text-[#4f4e49] hover:text-[#e86d35]">Shoe Advice</Link>
+              {navItems.map((item) => item.label === 'Brands' ? <BrandsMenu key={item.href} mobile /> : <Link key={item.href} href={item.href} className="text-base font-semibold text-[#4f4e49] hover:text-[#e86d35]">{item.label}</Link>)}
+              <Link href="/blog" className="text-base font-semibold text-[#4f4e49] hover:text-[#e86d35]">Shoe Advice</Link>
             </nav>
           </details>
           <Link href="/" className="shrink-0 text-[20px] font-black tracking-[0.2em] sm:text-2xl">
@@ -76,9 +76,9 @@ export function SiteHeader() {
             Find your fit <ArrowRight aria-hidden="true" className="ml-2 size-3.5" />
           </Link>
         </div>
-        <nav aria-label="Shop shoe categories" className="mx-auto hidden max-w-[1380px] items-center gap-8 px-10 pb-3 lg:flex">
-          {navItems.map((item) => item.label === 'Brands' ? <BrandsMenu key={item.href} /> : <Link key={item.href} href={item.href} className={`category-nav-link whitespace-nowrap text-sm font-bold ${item.label === 'Deals' ? 'text-[#d94331]' : 'text-[#242424]'}`}>{item.label}</Link>)}
-          <Link href="/blog" className="category-nav-link whitespace-nowrap text-sm font-bold text-[#242424]">Shoe Advice</Link>
+        <nav aria-label="Shop shoe categories" className="mx-auto hidden max-w-[1380px] items-center gap-6 px-10 pb-3 lg:flex xl:gap-8">
+          {navItems.map((item) => item.label === 'Brands' ? <BrandsMenu key={item.href} /> : <Link key={item.href} href={item.href} className={`category-nav-link whitespace-nowrap text-base font-bold xl:text-lg ${item.label === 'Deals' ? 'text-[#d94331]' : 'text-[#242424]'}`}>{item.label}</Link>)}
+          <Link href="/blog" className="category-nav-link whitespace-nowrap text-base font-bold xl:text-lg text-[#242424]">Shoe Advice</Link>
         </nav>
         <div className="px-4 pb-3 sm:px-6 md:hidden">
           <SearchBar />
