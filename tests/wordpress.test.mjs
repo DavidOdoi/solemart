@@ -263,3 +263,11 @@ test('unavailable or invalid author details never block the article or invent a 
   assert.equal(await getWordPressAuthorProfile(7),undefined)
   assert.equal(await getWordPressAuthorProfile(-1),undefined)
 })
+
+test('sanitized headings preserve WordPress anchors without admitting unsafe attributes', async () => {
+  respond({data:{post:post({content:'<h2 id="fit" onclick="bad()">Fit</h2><h3 id="width" style="position:fixed">Width</h3>'})}})
+  const result=await getWordPressPost('shoe-fit')
+  assert.match(result.contentHtml,/<h2 id="fit">Fit<\/h2>/)
+  assert.match(result.contentHtml,/<h3 id="width">Width<\/h3>/)
+  assert.doesNotMatch(result.contentHtml,/onclick|style=/)
+})

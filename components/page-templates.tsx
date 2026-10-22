@@ -12,7 +12,8 @@ import { guides as allGuides } from '@/data/guides'
 import { products as allProducts } from '@/data/products'
 import { affiliateUrl } from '@/lib/content'
 import { ArticleAuthor } from '@/components/article-author'
-import { getReadingMinutes } from '@/lib/article-details'
+import { ArticleContents } from '@/components/article-contents'
+import { getArticleContents, getReadingMinutes } from '@/lib/article-details'
 import { ReviewGuideTemplate, SpecsTable } from '@/components/review-guide-template'
 
 const pageClass = 'mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8'
@@ -100,6 +101,7 @@ export function ComparisonPage({ comparison }: { comparison: Comparison }) {
 export function BlogPostPage({ post }: { post: BlogPost }) {
   const publishedAt = post.publishedAt || (post.date ? new Date(post.date).toISOString() : undefined)
   const url = `https://thesolemart.com/blog/${encodeURIComponent(post.slug)}`
+  const contents = getArticleContents(post.contentHtml || '')
   const readingMinutes = getReadingMinutes(post.contentHtml ?? [post.excerpt, ...post.paragraphs].join(' '))
   const schema = {
     '@context': 'https://schema.org',
@@ -135,8 +137,9 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
                 className="object-cover object-center"
               />
             </div>}
+            <ArticleContents headings={contents.headings} />
             {post.contentHtml !== undefined
-              ? <div className="wordpress-content text-base leading-8 text-[#4f4e49] sm:text-lg" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+              ? <div className="wordpress-content text-base leading-8 text-[#4f4e49] sm:text-lg [&_h2]:scroll-mt-48 [&_h3]:scroll-mt-48" dangerouslySetInnerHTML={{ __html: contents.html }} />
               : <div className="space-y-5 text-base leading-8 text-[#4f4e49]">{post.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>}
             <Link href="/blog" className="mt-10 inline-flex items-center gap-2 font-semibold hover:text-[#e86d35]">More shoe advice <ArrowRight aria-hidden="true" className="size-4" /></Link>
           </div>

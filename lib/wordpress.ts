@@ -79,6 +79,8 @@ function articleHtml(content: string) {
     allowedTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'strong', 'b', 'em', 'i', 's', 'del', 'u', 'blockquote', 'pre', 'code', 'br', 'hr', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'figure', 'figcaption', 'img', 'sup', 'sub', 'dl', 'dt', 'dd', 'span', 'div'],
     allowedAttributes: {
       a: ['href', 'title', 'target', 'rel'],
+      h2: ['id'],
+      h3: ['id'],
       img: ['src', 'alt', 'width', 'height', 'loading', 'decoding'],
       th: ['scope', 'colspan', 'rowspan'],
       td: ['colspan', 'rowspan'],
