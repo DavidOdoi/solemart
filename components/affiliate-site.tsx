@@ -228,12 +228,13 @@ export function AffiliateDisclosure({ id = 'affiliate-disclosure' }: { id?: stri
   )
 }
 
-export function Breadcrumbs({ items }: { items: { label: string; href?: string }[] }) {
+export function Breadcrumbs({ items, variant = 'default' }: { items: { label: string; href?: string }[]; variant?: 'default' | 'editorial' }) {
+  const editorial = variant === 'editorial'
   return (
-    <nav aria-label="Breadcrumb" className="mb-8 text-sm text-[#68675f]">
+    <nav aria-label="Breadcrumb" className={editorial ? 'mx-auto mb-6 max-w-6xl text-base leading-7 text-[#161616] sm:text-lg' : 'mb-8 text-sm text-[#68675f]'}>
       <ol className="flex flex-wrap items-center gap-2">
-        <li><Link href="/" className="hover:text-[#e86d35]">Home</Link></li>
-        {items.map((item, index) => <li key={`${item.label}-${index}`} className="flex items-center gap-2"><span aria-hidden="true">/</span>{item.href && index < items.length - 1 ? <Link href={item.href} className="hover:text-[#e86d35]">{item.label}</Link> : <span aria-current="page" className="text-[#161616]">{item.label}</span>}</li>)}
+        <li><Link href="/" className="hover:text-[#e86d35]">{editorial ? 'SOLEMART' : 'Home'}</Link></li>
+        {items.map((item, index) => <li key={`${item.label}-${index}`} className="flex min-w-0 items-center gap-2">{editorial ? <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-[#242424]" /> : <span aria-hidden="true">/</span>}{item.href && index < items.length - 1 ? <Link href={item.href} className="hover:text-[#e86d35]">{item.label}</Link> : <span aria-current="page" className="break-words text-[#161616] [overflow-wrap:anywhere]">{item.label}</span>}</li>)}
       </ol>
     </nav>
   )

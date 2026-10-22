@@ -114,11 +114,10 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
   }
   return (
     <main id="top" className={pageClass}>
-      <Breadcrumbs items={[{ label: 'Shoe Advice', href: '/blog' }, { label: post.title }]} />
+      <Breadcrumbs variant="editorial" items={[{ label: 'Blog', href: '/blog' }, { label: post.title }]} />
       <article className="mx-auto max-w-6xl">
         <header>
-          <p className="text-xs font-bold tracking-[0.18em] text-[#e86d35]">{post.category}</p>
-          <h1 className="mt-4 font-serif text-4xl tracking-tight sm:text-6xl">{post.title}</h1>
+          <h1 className="font-serif text-4xl tracking-tight sm:text-6xl">{post.title}</h1>
           <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border border-[#e9e3d9] bg-[#f6f2eb] px-5 py-4 text-base leading-7 text-[#4f4e49]">
             {post.author && <span>Author: <a href="#about-author" rel="author" className="font-semibold text-[#161616] underline decoration-[#aaa292] underline-offset-4 hover:text-[#c65325]">{post.author}</a></span>}
             <span className="inline-flex items-center gap-2" title="Estimated reading time"><Clock3 aria-hidden="true" className="size-4" />{readingMinutes} min read</span>
