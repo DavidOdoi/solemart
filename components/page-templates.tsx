@@ -125,10 +125,15 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
             {post.modifiedAt && post.modifiedAt !== publishedAt && <span>Updated <time dateTime={post.modifiedAt}>{new Date(post.modifiedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time></span>}
           </div>
           {post.excerpt && post.contentHtml === undefined && <p className="mt-5 text-lg leading-8 text-[#68675f]">{post.excerpt}</p>}
-          {post.featuredImage && <Image src={post.featuredImage.src} alt={post.featuredImage.alt} width={post.featuredImage.width} height={post.featuredImage.height} priority sizes="(max-width: 768px) 100vw, 768px" className="mt-8 h-auto w-full rounded-xl" />}
         </header>
         <div className={`mt-10 grid items-start gap-10 ${post.author ? 'lg:grid-cols-[minmax(0,1fr)_280px] xl:gap-16' : 'max-w-3xl'}`}>
           <div className="min-w-0">
+            {post.featuredImage && <Image
+              src={post.featuredImage.src} alt={post.featuredImage.alt}
+              width={post.featuredImage.width} height={post.featuredImage.height} priority
+              sizes={post.author ? '(max-width: 1023px) calc(100vw - 40px), (max-width: 1279px) calc(100vw - 384px), 808px' : '(max-width: 807px) calc(100vw - 40px), 768px'}
+              className="mb-8 block h-auto max-h-80 w-auto max-w-full rounded-xl object-contain sm:max-h-[420px]"
+            />}
             {post.contentHtml !== undefined
               ? <div className="wordpress-content text-base leading-8 text-[#4f4e49] sm:text-lg" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
               : <div className="space-y-5 text-base leading-8 text-[#4f4e49]">{post.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>}
