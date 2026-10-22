@@ -128,12 +128,13 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
         </header>
         <div className={`mt-10 grid items-start gap-10 ${post.author ? 'lg:grid-cols-[minmax(0,1fr)_280px] xl:gap-16' : 'max-w-3xl'}`}>
           <div className="min-w-0">
-            {post.featuredImage && <Image
-              src={post.featuredImage.src} alt={post.featuredImage.alt}
-              width={post.featuredImage.width} height={post.featuredImage.height} priority
-              sizes={post.author ? '(max-width: 1023px) calc(100vw - 40px), (max-width: 1279px) calc(100vw - 384px), 808px' : '(max-width: 807px) calc(100vw - 40px), 768px'}
-              className="mb-8 block h-auto max-h-80 w-auto max-w-full rounded-xl object-contain sm:max-h-[420px]"
-            />}
+            {post.featuredImage && <div className="relative mb-8 aspect-video w-full max-w-[800px] overflow-hidden rounded-xl bg-[#f3f2ee]">
+              <Image
+                src={post.featuredImage.src} alt={post.featuredImage.alt} fill priority
+                sizes={post.author ? '(max-width: 1023px) min(800px, calc(100vw - 40px)), (max-width: 1279px) calc(100vw - 384px), 800px' : '(max-width: 807px) calc(100vw - 40px), 768px'}
+                className="object-cover object-center"
+              />
+            </div>}
             {post.contentHtml !== undefined
               ? <div className="wordpress-content text-base leading-8 text-[#4f4e49] sm:text-lg" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
               : <div className="space-y-5 text-base leading-8 text-[#4f4e49]">{post.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>}
