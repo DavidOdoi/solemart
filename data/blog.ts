@@ -8,6 +8,7 @@ export type BlogPost = {
   publishedAt?: string
   modifiedAt?: string
   author?: string
+  authorProfile?: { bio?: string; avatarUrl?: string }
   contentHtml?: string
   featuredImage?: { src: string; alt: string; width: number; height: number }
 }

@@ -13,7 +13,7 @@ type WordPressPost = {
   excerpt: string | null
   dateGmt: string | null
   modifiedGmt: string | null
-  author: { node: { name: string | null } | null } | null
+  author: { node: { name: string | null; databaseId?: number | null } | null } | null
   featuredImage: { node: {
     sourceUrl: string | null
     altText: string | null
@@ -31,7 +31,7 @@ const postQuery = `
       excerpt
       dateGmt
       modifiedGmt
-      author { node { name } }
+      author { node { name databaseId } }
       featuredImage {
         node { sourceUrl altText mediaDetails { width height } }
       }
@@ -180,6 +180,7 @@ export const getWordPressPost = cache(async (slug: string): Promise<BlogPost | n
 
   return {
     ...postPreview(post),
+    authorProfile: post.author?.node?.databaseId ? await getWordPressAuthorProfile(post.author.node.databaseId) : undefined,
     modifiedAt: utcDate(post.modifiedGmt),
     paragraphs: [],
     contentHtml: articleHtml(post.content || ''),
@@ -257,4 +258,42 @@ export const getWordPressGuideFields = cache(async (slug: string): Promise<unkno
     if (error instanceof MissingGuideFieldsError) return null
     throw error
   }
+})
+
+function avatarUrl(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined
+  try {
+    const url = new URL(value)
+    const allowed = ['gravatar.com', 'secure.gravatar.com', 'www.gravatar.com'].includes(url.hostname)
+      || (url.hostname === 'cms.thesolemart.com' && url.pathname.startsWith('/wp-content/uploads/'))
+    return allowed && url.protocol === 'https:' && !url.username && !url.password ? url.href : undefined
+  } catch { return undefined }
+}
+
+/** Public core WordPress profiles only. Optional profile failures must not hide an article. */
+export const getWordPressAuthorProfile = cache(async (id: number): Promise<BlogPost['authorProfile'] | undefined> => {
+  if (!Number.isSafeInteger(id) || id < 1) return undefined
+  try {
+    const restBase = process.env.WORDPRESS_API_URL
+      || (process.env.WORDPRESS_GRAPHQL_URL ? new URL('/wp-json/wp/v2/', process.env.WORDPRESS_GRAPHQL_URL).href : '')
+    const base = new URL(restBase.endsWith('/') ? restBase : `${restBase}/`)
+    if (!['https:', 'http:'].includes(base.protocol) || base.username || base.password) return undefined
+    const url = new URL(`users/${id}`, base)
+    url.searchParams.set('context', 'view')
+    url.searchParams.set('_fields', 'id,description,avatar_urls')
+    const response = await fetch(url, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(3000),
+      cache: 'force-cache',
+      next: { revalidate: 60, tags: ['wordpress:authors', `wordpress:author:${id}`] },
+    })
+    if (!response.ok) return undefined
+    const profile = await response.json() as { id?: number; description?: unknown; avatar_urls?: Record<string, unknown> }
+    if (profile.id !== id) return undefined
+    const bio = typeof profile.description === 'string'
+      ? decodeHTML(sanitizeHtml(profile.description, { allowedTags: [], allowedAttributes: {} })).trim().slice(0, 2500)
+      : undefined
+    const avatar = avatarUrl(profile.avatar_urls?.['96'] ?? profile.avatar_urls?.['48'])
+    return bio || avatar ? { bio: bio || undefined, avatarUrl: avatar } : undefined
+  } catch { return undefined }
 })

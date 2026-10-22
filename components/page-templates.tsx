@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Clock3 } from 'lucide-react'
 import type { BlogPost } from '@/data/blog'
 import type { Category } from '@/data/categories'
 import type { Comparison } from '@/data/comparisons'
@@ -11,6 +11,8 @@ import { comparisons as allComparisons } from '@/data/comparisons'
 import { guides as allGuides } from '@/data/guides'
 import { products as allProducts } from '@/data/products'
 import { affiliateUrl } from '@/lib/content'
+import { ArticleAuthor } from '@/components/article-author'
+import { getReadingMinutes } from '@/lib/article-details'
 import { ReviewGuideTemplate, SpecsTable } from '@/components/review-guide-template'
 
 const pageClass = 'mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8'
@@ -98,13 +100,14 @@ export function ComparisonPage({ comparison }: { comparison: Comparison }) {
 export function BlogPostPage({ post }: { post: BlogPost }) {
   const publishedAt = post.publishedAt || (post.date ? new Date(post.date).toISOString() : undefined)
   const url = `https://thesolemart.com/blog/${encodeURIComponent(post.slug)}`
+  const readingMinutes = getReadingMinutes(post.contentHtml ?? [post.excerpt, ...post.paragraphs].join(' '))
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
     datePublished: publishedAt,
     dateModified: post.modifiedAt,
-    author: post.author ? { '@type': 'Person', name: post.author } : undefined,
+    author: post.author ? { '@type': 'Person', '@id': `${url}#about-author`, name: post.author, url: `${url}#about-author`, description: post.authorProfile?.bio, image: post.authorProfile?.avatarUrl } : undefined,
     image: post.featuredImage?.src,
     mainEntityOfPage: url,
     publisher: { '@type': 'Organization', name: 'SOLEMART' },
@@ -112,22 +115,28 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
   return (
     <main id="top" className={pageClass}>
       <Breadcrumbs items={[{ label: 'Shoe Advice', href: '/blog' }, { label: post.title }]} />
-      <article className="mx-auto max-w-3xl">
+      <article className="mx-auto max-w-6xl">
         <header>
           <p className="text-xs font-bold tracking-[0.18em] text-[#e86d35]">{post.category}</p>
           <h1 className="mt-4 font-serif text-4xl tracking-tight sm:text-6xl">{post.title}</h1>
-          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#68675f]">
-            {post.author && <span>By {post.author}</span>}
-            {publishedAt && <time dateTime={publishedAt}>{post.date}</time>}
-            {post.modifiedAt && post.modifiedAt !== publishedAt && <time dateTime={post.modifiedAt}>Updated {new Date(post.modifiedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time>}
+          <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border border-[#e9e3d9] bg-[#f6f2eb] px-5 py-4 text-base leading-7 text-[#4f4e49]">
+            {post.author && <span>Author: <a href="#about-author" rel="author" className="font-semibold text-[#161616] underline decoration-[#aaa292] underline-offset-4 hover:text-[#c65325]">{post.author}</a></span>}
+            <span className="inline-flex items-center gap-2" title="Estimated reading time"><Clock3 aria-hidden="true" className="size-4" />{readingMinutes} min read</span>
+            {publishedAt && <span>Published <time dateTime={publishedAt}>{post.date}</time></span>}
+            {post.modifiedAt && post.modifiedAt !== publishedAt && <span>Updated <time dateTime={post.modifiedAt}>{new Date(post.modifiedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</time></span>}
           </div>
           {post.excerpt && post.contentHtml === undefined && <p className="mt-5 text-lg leading-8 text-[#68675f]">{post.excerpt}</p>}
           {post.featuredImage && <Image src={post.featuredImage.src} alt={post.featuredImage.alt} width={post.featuredImage.width} height={post.featuredImage.height} priority sizes="(max-width: 768px) 100vw, 768px" className="mt-8 h-auto w-full rounded-xl" />}
         </header>
-        {post.contentHtml !== undefined
-          ? <div className="wordpress-content mt-10 text-base leading-8 text-[#4f4e49] sm:text-lg" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
-          : <div className="mt-10 space-y-5 text-base leading-8 text-[#4f4e49]">{post.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>}
-        <Link href="/blog" className="mt-10 inline-flex items-center gap-2 font-semibold hover:text-[#e86d35]">More shoe advice <ArrowRight aria-hidden="true" className="size-4" /></Link>
+        <div className={`mt-10 grid items-start gap-10 ${post.author ? 'lg:grid-cols-[minmax(0,1fr)_280px] xl:gap-16' : 'max-w-3xl'}`}>
+          <div className="min-w-0">
+            {post.contentHtml !== undefined
+              ? <div className="wordpress-content text-base leading-8 text-[#4f4e49] sm:text-lg" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+              : <div className="space-y-5 text-base leading-8 text-[#4f4e49]">{post.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>}
+            <Link href="/blog" className="mt-10 inline-flex items-center gap-2 font-semibold hover:text-[#e86d35]">More shoe advice <ArrowRight aria-hidden="true" className="size-4" /></Link>
+          </div>
+          <ArticleAuthor post={post} url={url} />
+        </div>
       </article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
     </main>

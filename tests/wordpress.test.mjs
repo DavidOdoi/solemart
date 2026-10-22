@@ -227,3 +227,39 @@ test('loads structured guide fields and tolerates only a genuinely absent compan
   respond({data:{buyingGuide:{}}})
   await assert.rejects(getWordPressGuideFields('real-guide'),/incomplete/)
 })
+
+test('public author profiles use native REST, sanitized bios and validated avatars', async () => {
+  const { getWordPressAuthorProfile } = await import('../lib/wordpress.ts')
+  const previousApi = process.env.WORDPRESS_API_URL
+  delete process.env.WORDPRESS_API_URL
+  try {
+    globalThis.fetch = async (url,options) => {
+      assert.equal(url.origin,'https://cms.thesolemart.com')
+      assert.equal(url.pathname,'/wp-json/wp/v2/users/7')
+      assert.equal(url.searchParams.get('context'),'view')
+      assert.equal(url.searchParams.get('_fields'),'id,description,avatar_urls')
+      assert.equal(options.next.revalidate,60)
+      assert.equal(options.headers.Authorization,undefined)
+      return Response.json({id:7,description:'<p>Actual editor &amp; writer.</p><script>bad()</script>',avatar_urls:{96:'https://secure.gravatar.com/avatar/example?s=96'}})
+    }
+    const profile = await getWordPressAuthorProfile(7)
+    assert.equal(profile.bio,'Actual editor & writer.')
+    assert.match(profile.avatarUrl,/secure.gravatar.com/)
+  } finally {
+    if(previousApi===undefined)delete process.env.WORDPRESS_API_URL
+    else process.env.WORDPRESS_API_URL=previousApi
+  }
+})
+
+test('unavailable or invalid author details never block the article or invent a bio', async () => {
+  const { getWordPressAuthorProfile } = await import('../lib/wordpress.ts')
+  globalThis.fetch = async () => new Response('Forbidden',{status:403})
+  assert.equal(await getWordPressAuthorProfile(7),undefined)
+  globalThis.fetch = async () => {throw new DOMException('Timeout','TimeoutError')}
+  assert.equal(await getWordPressAuthorProfile(7),undefined)
+  respond({id:8,description:'Wrong person'})
+  assert.equal(await getWordPressAuthorProfile(7),undefined)
+  respond({id:7,description:'',avatar_urls:{96:'https://untrusted.test/avatar.jpg'}})
+  assert.equal(await getWordPressAuthorProfile(7),undefined)
+  assert.equal(await getWordPressAuthorProfile(-1),undefined)
+})
