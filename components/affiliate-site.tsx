@@ -16,6 +16,7 @@ import { guides } from '@/data/guides'
 import { affiliateUrl } from '@/lib/content'
 import { BrandsMenu } from '@/components/brands-menu'
 import { ReadingProgress } from '@/components/reading-progress'
+import { BrandLogo } from '@/components/brand-logo'
 import { EditorialPromise } from '@/components/editorial-promise'
 
 export function SearchBar({ className = '' }: { className?: string }) {
@@ -67,8 +68,8 @@ export function SiteHeader() {
               <Link href="/blog" className="text-base font-semibold text-[#4f4e49] hover:text-[#e86d35]">Shoe Advice</Link>
             </nav>
           </details>
-          <Link href="/" className="shrink-0 text-[20px] font-black tracking-[0.2em] sm:text-2xl">
-            SOLEMART<span className="text-[#e86d35]">.</span>
+          <Link href="/" aria-label="SOLEMART home" className="shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e86d35]">
+            <BrandLogo priority className="w-[190px] sm:w-[240px] xl:w-[280px]" />
           </Link>
           <SearchBar className="ml-auto hidden w-full max-w-[610px] md:flex" />
           <Link href="/contact" className="hidden shrink-0 text-sm font-semibold text-[#373630] transition hover:text-[#e86d35] sm:inline-flex">Help &amp; Support</Link>
@@ -94,7 +95,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8 lg:py-16">
         <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           <nav aria-label="About SOLEMART" className="flex flex-col items-start gap-3 text-base text-[#d1d1d1]">
-            <Link href="/" className="mb-1 text-xl font-black tracking-[0.22em]">SOLEMART<span className="text-[#e86d35]">.</span></Link>
+            <Link href="/" aria-label="SOLEMART home" className="mb-2 block w-[240px] max-w-full rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e86d35]"><BrandLogo inverted className="w-full" /></Link>
             <p className="mb-2 max-w-xs text-sm leading-6 text-[#d1d1d1]">Better shoes start with better research. Find a pair that fits your life and your budget.</p>
             <h2 className="mb-1 text-lg font-bold text-white">About SOLEMART</h2>
             <Link href="/about" className="hover:text-[#e86d35]">Who we are</Link>
