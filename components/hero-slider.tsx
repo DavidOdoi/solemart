@@ -1,101 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, ArrowRight, Pause, Play } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
-type VideoPlayer = {
-  mute: () => void
-  playVideo: () => void
-  pauseVideo: () => void
-  destroy: () => void
-}
-
-type YouTubeAPI = {
-  Player: new (element: HTMLElement, options: {
-    videoId: string
-    host: string
-    playerVars: Record<string, string | number>
-    events: {
-      onReady: (event: { target: VideoPlayer }) => void
-      onError: (event: { target: VideoPlayer }) => void
-    }
-  }) => VideoPlayer
-}
-
-let youtubeReady: Promise<YouTubeAPI> | undefined
-
-function loadYouTube() {
-  if (!youtubeReady) {
-    youtubeReady = new Promise<YouTubeAPI>((resolve, reject) => {
-      const apiWindow = window as typeof window & { YT?: YouTubeAPI; onYouTubeIframeAPIReady?: () => void }
-      if (apiWindow.YT?.Player) return resolve(apiWindow.YT)
-      const previousReady = apiWindow.onYouTubeIframeAPIReady
-      apiWindow.onYouTubeIframeAPIReady = () => {
-        previousReady?.()
-        if (apiWindow.YT) resolve(apiWindow.YT)
-      }
-      const script = document.createElement('script')
-      script.src = 'https://www.youtube.com/iframe_api'
-      script.onerror = () => reject(new Error('Video highlights unavailable'))
-      document.head.appendChild(script)
-    })
-  }
-  return youtubeReady
-}
-
-function MutedVideo({ id, playing }: { id: string; playing: boolean }) {
-  const container = useRef<HTMLDivElement>(null)
-  const player = useRef<VideoPlayer | null>(null)
-  const shouldPlay = useRef(playing)
-  shouldPlay.current = playing
-
-  useEffect(() => {
-    let disposed = false
-    let instance: VideoPlayer | undefined
-    loadYouTube().then((api) => {
-      if (disposed || !container.current) return
-      const host = document.createElement('div')
-      container.current.appendChild(host)
-      instance = new api.Player(host, {
-        host: 'https://www.youtube-nocookie.com',
-        videoId: id,
-        playerVars: { autoplay: 0, mute: 1, controls: 0, disablekb: 1, playsinline: 1, loop: 1, playlist: id, rel: 0, origin: window.location.origin },
-        events: {
-          onReady: ({ target }) => {
-            if (disposed) return
-            player.current = target
-            target.mute()
-            if (shouldPlay.current) target.playVideo()
-            const iframe = container.current?.querySelector('iframe')
-            iframe?.setAttribute('tabindex', '-1')
-            iframe?.setAttribute('title', 'Muted shoe video highlight')
-          },
-          onError: () => {
-            player.current = null
-            instance?.destroy()
-            instance = undefined
-            container.current?.replaceChildren()
-          },
-        },
-      })
-    }).catch(() => { /* Keep the slide's poster visible when embeds are unavailable. */ })
-    return () => {
-      disposed = true
-      player.current = null
-      instance?.destroy()
-      container.current?.replaceChildren()
-    }
-  }, [id])
-
-  useEffect(() => {
-    player.current?.mute()
-    if (playing) player.current?.playVideo()
-    else player.current?.pauseVideo()
-  }, [playing])
-
-  return <div ref={container} aria-hidden="true" className="hero-slider__video" />
-}
+const MutedVideo = lazy(() => import('@/components/muted-video'))
 
 const slides = [
   { label: 'The Shoe Edit', title: 'Find Your Next', accent: 'Favourite.', description: 'Good shoes make a difference. Find your fit with independent reviews, practical guides, and picks worth a closer look.', image: 'photo-1542291026-7eec264c27ff', cta: 'Find your shoes', href: '/#needs', video: undefined },
@@ -109,13 +19,18 @@ export default function HeroSlider() {
   const [hovered, setHovered] = useState(false)
   const [focused, setFocused] = useState(false)
   const [visible, setVisible] = useState(true)
+  const [inView, setInView] = useState(true)
+  const [posterReady, setPosterReady] = useState(false)
+  const [visitedSlides, setVisitedSlides] = useState([0])
+  const hero = useRef<HTMLDivElement>(null)
   const touchStart = useRef<number | null>(null)
-  const videoPlaying = !paused && visible
+  const videoPlaying = !paused && visible && inView && posterReady
   const playing = videoPlaying && !hovered && !focused
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => setPaused(preference.matches)
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+    const update = () => setPaused(preference.matches || Boolean(connection?.saveData))
     const visibility = () => setVisible(!document.hidden)
     update()
     visibility()
@@ -128,18 +43,30 @@ export default function HeroSlider() {
   }, [])
 
   useEffect(() => {
+    if (!hero.current || typeof IntersectionObserver === 'undefined') return
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting && entry.intersectionRatio >= 0.15), { threshold: [0, 0.15] })
+    observer.observe(hero.current)
+    return () => observer.disconnect()
+  }, [])
+
+  const selectSlide = useCallback((index: number) => {
+    setActive(index)
+    setVisitedSlides(indices => indices.includes(index) ? indices : [...indices, index])
+  }, [])
+
+  useEffect(() => {
     if (!playing) return
-    const timer = window.setTimeout(() => setActive((index) => (index + 1) % slides.length), 12000)
+    const timer = window.setTimeout(() => selectSlide((active + 1) % slides.length), 12000)
     return () => window.clearTimeout(timer)
-  }, [active, playing])
+  }, [active, playing, selectSlide])
 
   function move(direction: number) {
-    setActive((index) => (index + direction + slides.length) % slides.length)
+    selectSlide((active + direction + slides.length) % slides.length)
   }
 
   return (
     <section className="px-3 pt-3 sm:px-5" aria-label="Shoe highlights" aria-roledescription="carousel">
-      <div className="home-hero hero-slider relative overflow-hidden rounded-[1.75rem] bg-[#080808] text-white"
+      <div ref={hero} className="home-hero hero-slider relative overflow-hidden rounded-[1.75rem] bg-[#080808] text-white"
         onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
         onFocusCapture={() => setFocused(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}
         onKeyDown={(event) => { if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); move(event.key === 'ArrowLeft' ? -1 : 1) } }}
@@ -148,8 +75,15 @@ export default function HeroSlider() {
         <div className="hero-slider__track" style={{ transform: `translateX(-${active * 100}%)` }}>
           {slides.map((slide, index) => (
             <div key={slide.label} className="hero-slider__slide" role="group" aria-roledescription="slide" aria-label={`${index + 1} of ${slides.length}: ${slide.label}`} aria-hidden={index !== active} inert={index !== active}>
-              <div className="hero-slider__poster" style={{ backgroundImage: `url(https://images.unsplash.com/${slide.image}?w=2200&q=90)` }} />
-              {slide.video && index === active && <MutedVideo id={slide.video} playing={videoPlaying} />}
+              {visitedSlides.includes(index) && <Image
+                src={`https://images.unsplash.com/${slide.image}?auto=format&fit=crop&w=1920&q=80`}
+                alt="" aria-hidden="true" fill sizes="100vw" className="hero-slider__poster"
+                loading={index === 0 || index === active ? 'eager' : 'lazy'}
+                fetchPriority={index === 0 ? 'high' : 'auto'}
+                onLoad={index === 0 ? () => setPosterReady(true) : undefined}
+                onError={index === 0 ? () => setPosterReady(true) : undefined}
+              />}
+              {slide.video && index === active && <Suspense fallback={null}><MutedVideo id={slide.video} playing={videoPlaying} /></Suspense>}
               <div className="hero-slider__shade" aria-hidden="true" />
               <div className="hero-slider__copy relative z-10 mx-auto flex w-full max-w-[1380px] flex-col items-start justify-center px-6 pb-32 pt-14 sm:px-10 lg:px-16">
                 <p className="rounded-full border border-white/25 bg-black/20 px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] backdrop-blur-sm sm:text-xs">{slide.label} / Made For Your Next Move</p>
@@ -165,7 +99,7 @@ export default function HeroSlider() {
         </div>
         <div className="absolute inset-x-0 bottom-6 z-20 flex items-center justify-between gap-4 px-6 sm:bottom-8 sm:px-10 lg:px-16">
           <div className="flex items-center gap-2" aria-label="Choose a highlight">
-            {slides.map((slide, index) => <button key={slide.label} type="button" className="hero-slider__dot" aria-label={`Show highlight ${index + 1}: ${slide.label}`} aria-current={index === active ? 'true' : undefined} onClick={() => setActive(index)}><span /></button>)}
+            {slides.map((slide, index) => <button key={slide.label} type="button" className="hero-slider__dot" aria-label={`Show highlight ${index + 1}: ${slide.label}`} aria-current={index === active ? 'true' : undefined} onClick={() => selectSlide(index)}><span /></button>)}
             <span className="ml-2 text-xs font-semibold tabular-nums text-white/75" aria-hidden="true">0{active + 1} / 0{slides.length}</span>
           </div>
           <div className="flex gap-2 sm:gap-3">

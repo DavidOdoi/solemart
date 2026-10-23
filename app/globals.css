@@ -722,8 +722,8 @@
 }
 
 .hero-slider__poster {
-  background-size: cover;
-  background-position: 68% 54%;
+  object-fit: cover;
+  object-position: 68% 54%;
 }
 
 .hero-slider__video {
