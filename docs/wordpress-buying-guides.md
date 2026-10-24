@@ -1,5 +1,11 @@
 # WordPress content → existing Next.js buying-guide template
 
+**Legacy integration:** this document describes the custom SOLEMART Guide Fields
+plugin currently read by Next.js. For the replacement using maintained ACF
+plugins and reusable Shoe records, follow [ACF setup](wordpress-acf-setup.md).
+Keep this implementation and its saved data during migration; do not install the
+legacy plugin as a new requirement for the ACF setup.
+
 ## What this implements
 
 WordPress stores and edits content; `ReviewGuideTemplate` in Next.js retains the original design, including Quick Answer, Top Picks ribbon and cards, comparison table, full reviews, buying advice, contents navigation, FAQs and verdict. The previous simplified CMS article component has been removed. CMS fields populate `Guide` and `Product` view models instead of replacing the frontend with WordPress layout HTML.

@@ -1,0 +1,1408 @@
+[
+  {
+    "key": "group_solemart_buying_guide_acf",
+    "title": "SOLEMART Buying Guide — ACF",
+    "fields": [
+      {
+        "key": "field_solemart_guide_overview_tab",
+        "label": "Overview",
+        "name": "overview_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "overviewTab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_guide_intro",
+        "label": "Introduction",
+        "name": "intro",
+        "type": "textarea",
+        "instructions": "The introduction below the page title. Use plain text.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "intro",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_category",
+        "label": "Guide label",
+        "name": "category",
+        "type": "text",
+        "instructions": "For example: WALKING GUIDE. This is a display label, not a WordPress category.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "category",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_author",
+        "label": "Optional byline name",
+        "name": "author",
+        "type": "text",
+        "instructions": "Use a real author or organization. Leave blank to use the native WordPress author once the ACF adapter is connected.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "author",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_reviewed_by",
+        "label": "Reviewed by",
+        "name": "reviewed_by",
+        "type": "text",
+        "instructions": "Optional. Name only someone who actually reviewed this article.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "reviewedBy",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_disclosure",
+        "label": "Affiliate disclosure",
+        "name": "disclosure",
+        "type": "textarea",
+        "instructions": "Enter your applicable disclosure. Do not claim Amazon Associates membership before acceptance.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "disclosure",
+        "graphql_non_null": 0,
+        "default_value": "SOLEMART may earn a commission from qualifying purchases through links on this page.",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_quick_answer_title",
+        "label": "Quick-answer heading",
+        "name": "quick_answer_title",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "quickAnswerTitle",
+        "graphql_non_null": 0,
+        "default_value": "Quick Answer",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_quick_answer_body",
+        "label": "Quick answer",
+        "name": "quick_answer_body",
+        "type": "textarea",
+        "instructions": "A concise answer to the article's main buying question.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "quickAnswerBody",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_1_tab",
+        "label": "Pick 1",
+        "name": "pick_1_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "pick1Tab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_guide_pick_1_shoe",
+        "label": "Select shoe",
+        "name": "pick_1_shoe",
+        "type": "post_object",
+        "instructions": "Select a published Shoe record. Leave this slot empty if it is not needed.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick1Shoe",
+        "graphql_non_null": 0,
+        "post_type": [
+          "shoe"
+        ],
+        "post_status": [
+          "publish"
+        ],
+        "taxonomy": [],
+        "allow_null": 1,
+        "multiple": 0,
+        "return_format": "id",
+        "ui": 1,
+        "graphql_connection_type": "one_to_one"
+      },
+      {
+        "key": "field_solemart_guide_pick_1_award",
+        "label": "Award badge",
+        "name": "pick_1_award",
+        "type": "text",
+        "instructions": "For example: Best for wide feet. Make claims supported by your research.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick1Award",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_1_reason",
+        "label": "Short recommendation reason",
+        "name": "pick_1_reason",
+        "type": "textarea",
+        "instructions": "Why this shoe belongs in this particular guide.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick1Reason",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_1_best_for",
+        "label": "Best for",
+        "name": "pick_1_best_for",
+        "type": "text",
+        "instructions": "Who this recommendation suits in the context of this guide.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick1BestFor",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_1_avoid_if",
+        "label": "Avoid if",
+        "name": "pick_1_avoid_if",
+        "type": "text",
+        "instructions": "Who should consider a different option.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick1AvoidIf",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_1_commentary",
+        "label": "Guide-specific commentary",
+        "name": "pick_1_commentary",
+        "type": "textarea",
+        "instructions": "Optional detailed discussion for this guide. Separate paragraphs with a blank line. When blank, the frontend adapter can use the Shoe's general commentary.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick1Commentary",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_2_tab",
+        "label": "Pick 2",
+        "name": "pick_2_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "pick2Tab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_guide_pick_2_shoe",
+        "label": "Select shoe",
+        "name": "pick_2_shoe",
+        "type": "post_object",
+        "instructions": "Select a published Shoe record. Leave this slot empty if it is not needed.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick2Shoe",
+        "graphql_non_null": 0,
+        "post_type": [
+          "shoe"
+        ],
+        "post_status": [
+          "publish"
+        ],
+        "taxonomy": [],
+        "allow_null": 1,
+        "multiple": 0,
+        "return_format": "id",
+        "ui": 1,
+        "graphql_connection_type": "one_to_one"
+      },
+      {
+        "key": "field_solemart_guide_pick_2_award",
+        "label": "Award badge",
+        "name": "pick_2_award",
+        "type": "text",
+        "instructions": "For example: Best for wide feet. Make claims supported by your research.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick2Award",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_2_reason",
+        "label": "Short recommendation reason",
+        "name": "pick_2_reason",
+        "type": "textarea",
+        "instructions": "Why this shoe belongs in this particular guide.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick2Reason",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_2_best_for",
+        "label": "Best for",
+        "name": "pick_2_best_for",
+        "type": "text",
+        "instructions": "Who this recommendation suits in the context of this guide.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick2BestFor",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_2_avoid_if",
+        "label": "Avoid if",
+        "name": "pick_2_avoid_if",
+        "type": "text",
+        "instructions": "Who should consider a different option.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick2AvoidIf",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_2_commentary",
+        "label": "Guide-specific commentary",
+        "name": "pick_2_commentary",
+        "type": "textarea",
+        "instructions": "Optional detailed discussion for this guide. Separate paragraphs with a blank line. When blank, the frontend adapter can use the Shoe's general commentary.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick2Commentary",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_3_tab",
+        "label": "Pick 3",
+        "name": "pick_3_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "pick3Tab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_guide_pick_3_shoe",
+        "label": "Select shoe",
+        "name": "pick_3_shoe",
+        "type": "post_object",
+        "instructions": "Select a published Shoe record. Leave this slot empty if it is not needed.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick3Shoe",
+        "graphql_non_null": 0,
+        "post_type": [
+          "shoe"
+        ],
+        "post_status": [
+          "publish"
+        ],
+        "taxonomy": [],
+        "allow_null": 1,
+        "multiple": 0,
+        "return_format": "id",
+        "ui": 1,
+        "graphql_connection_type": "one_to_one"
+      },
+      {
+        "key": "field_solemart_guide_pick_3_award",
+        "label": "Award badge",
+        "name": "pick_3_award",
+        "type": "text",
+        "instructions": "For example: Best for wide feet. Make claims supported by your research.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick3Award",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_3_reason",
+        "label": "Short recommendation reason",
+        "name": "pick_3_reason",
+        "type": "textarea",
+        "instructions": "Why this shoe belongs in this particular guide.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick3Reason",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_3_best_for",
+        "label": "Best for",
+        "name": "pick_3_best_for",
+        "type": "text",
+        "instructions": "Who this recommendation suits in the context of this guide.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick3BestFor",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_3_avoid_if",
+        "label": "Avoid if",
+        "name": "pick_3_avoid_if",
+        "type": "text",
+        "instructions": "Who should consider a different option.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick3AvoidIf",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_3_commentary",
+        "label": "Guide-specific commentary",
+        "name": "pick_3_commentary",
+        "type": "textarea",
+        "instructions": "Optional detailed discussion for this guide. Separate paragraphs with a blank line. When blank, the frontend adapter can use the Shoe's general commentary.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick3Commentary",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_4_tab",
+        "label": "Pick 4",
+        "name": "pick_4_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "pick4Tab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_guide_pick_4_shoe",
+        "label": "Select shoe",
+        "name": "pick_4_shoe",
+        "type": "post_object",
+        "instructions": "Select a published Shoe record. Leave this slot empty if it is not needed.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick4Shoe",
+        "graphql_non_null": 0,
+        "post_type": [
+          "shoe"
+        ],
+        "post_status": [
+          "publish"
+        ],
+        "taxonomy": [],
+        "allow_null": 1,
+        "multiple": 0,
+        "return_format": "id",
+        "ui": 1,
+        "graphql_connection_type": "one_to_one"
+      },
+      {
+        "key": "field_solemart_guide_pick_4_award",
+        "label": "Award badge",
+        "name": "pick_4_award",
+        "type": "text",
+        "instructions": "For example: Best for wide feet. Make claims supported by your research.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick4Award",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_4_reason",
+        "label": "Short recommendation reason",
+        "name": "pick_4_reason",
+        "type": "textarea",
+        "instructions": "Why this shoe belongs in this particular guide.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick4Reason",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_4_best_for",
+        "label": "Best for",
+        "name": "pick_4_best_for",
+        "type": "text",
+        "instructions": "Who this recommendation suits in the context of this guide.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick4BestFor",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_4_avoid_if",
+        "label": "Avoid if",
+        "name": "pick_4_avoid_if",
+        "type": "text",
+        "instructions": "Who should consider a different option.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick4AvoidIf",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_pick_4_commentary",
+        "label": "Guide-specific commentary",
+        "name": "pick_4_commentary",
+        "type": "textarea",
+        "instructions": "Optional detailed discussion for this guide. Separate paragraphs with a blank line. When blank, the frontend adapter can use the Shoe's general commentary.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pick4Commentary",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_advice_tab",
+        "label": "Advice and verdict",
+        "name": "advice_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "adviceTab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_guide_how_we_chose",
+        "label": "How we chose",
+        "name": "how_we_chose",
+        "type": "textarea",
+        "instructions": "Describe your actual selection method. One point per line. Distinguish desk research from hands-on testing.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "howWeChose",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_advice",
+        "label": "Buying-advice checklist",
+        "name": "advice",
+        "type": "textarea",
+        "instructions": "One useful buying consideration per line. Put longer formatted sections in the main Gutenberg editor.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "advice",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_who_its_for",
+        "label": "Who this guide is for",
+        "name": "who_its_for",
+        "type": "textarea",
+        "instructions": "One audience or use case per line.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "whoItsFor",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_mistakes_to_avoid",
+        "label": "Mistakes to avoid",
+        "name": "mistakes_to_avoid",
+        "type": "textarea",
+        "instructions": "One practical mistake per line.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "mistakesToAvoid",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_final_verdict",
+        "label": "Final verdict",
+        "name": "final_verdict",
+        "type": "textarea",
+        "instructions": "Your concluding recommendation. Use plain text.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "finalVerdict",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_faqs_tab",
+        "label": "FAQs",
+        "name": "faqs_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "faqsTab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_guide_faq_1_question",
+        "label": "FAQ 1: question",
+        "name": "faq_1_question",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "faq1Question",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_faq_1_answer",
+        "label": "FAQ 1: answer",
+        "name": "faq_1_answer",
+        "type": "textarea",
+        "instructions": "Optional. Leave both question and answer empty to omit this FAQ.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "faq1Answer",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_faq_2_question",
+        "label": "FAQ 2: question",
+        "name": "faq_2_question",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "faq2Question",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_faq_2_answer",
+        "label": "FAQ 2: answer",
+        "name": "faq_2_answer",
+        "type": "textarea",
+        "instructions": "Optional. Leave both question and answer empty to omit this FAQ.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "faq2Answer",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_faq_3_question",
+        "label": "FAQ 3: question",
+        "name": "faq_3_question",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "faq3Question",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_faq_3_answer",
+        "label": "FAQ 3: answer",
+        "name": "faq_3_answer",
+        "type": "textarea",
+        "instructions": "Optional. Leave both question and answer empty to omit this FAQ.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "faq3Answer",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_faq_4_question",
+        "label": "FAQ 4: question",
+        "name": "faq_4_question",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "faq4Question",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_faq_4_answer",
+        "label": "FAQ 4: answer",
+        "name": "faq_4_answer",
+        "type": "textarea",
+        "instructions": "Optional. Leave both question and answer empty to omit this FAQ.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "faq4Answer",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_guide_seo_tab",
+        "label": "Search description",
+        "name": "seo_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "seoTab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_guide_seo_title",
+        "label": "SEO title",
+        "name": "seo_title",
+        "type": "text",
+        "instructions": "Optional. The native article title is the fallback. Next.js generates the public page metadata.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "seoTitle",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_guide_meta_description",
+        "label": "Meta description",
+        "name": "meta_description",
+        "type": "textarea",
+        "instructions": "Optional concise search description. The native excerpt is the fallback.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "metaDescription",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 3,
+        "new_lines": ""
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "buying_guides"
+        }
+      ]
+    ],
+    "menu_order": 10,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [],
+    "active": true,
+    "description": "Content for the existing SOLEMART Next.js template. No layout changes or executable WordPress code.",
+    "show_in_rest": 0,
+    "show_in_graphql": 1,
+    "graphql_field_name": "SolemartBuyingGuideFields",
+    "map_graphql_types_from_location_rules": 1,
+    "graphql_types": [
+      "BuyingGuide"
+    ]
+  },
+  {
+    "key": "group_solemart_shoe_acf",
+    "title": "SOLEMART Shoe — ACF",
+    "fields": [
+      {
+        "key": "field_solemart_shoe_details_tab",
+        "label": "Shoe details",
+        "name": "details_tab",
+        "type": "tab",
+        "instructions": "",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 0,
+        "graphql_field_name": "detailsTab",
+        "graphql_non_null": 0,
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_solemart_shoe_brand",
+        "label": "Brand",
+        "name": "brand",
+        "type": "text",
+        "instructions": "The actual product brand.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "brand",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_description",
+        "label": "General description",
+        "name": "description",
+        "type": "textarea",
+        "instructions": "Reusable description of this specific shoe model. Use the native WordPress title as its product name and the Featured image panel for its image.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "description",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_shoe_affiliate_url",
+        "label": "Affiliate / retailer URL",
+        "name": "affiliate_url",
+        "type": "url",
+        "instructions": "The actual destination URL. Leave blank if unavailable; never enter a placeholder.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "affiliateUrl",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_review_url",
+        "label": "Full-review URL",
+        "name": "review_url",
+        "type": "url",
+        "instructions": "Optional published Next.js review URL. Leave blank if a separate review does not exist.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "reviewUrl",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_pros",
+        "label": "General pros",
+        "name": "pros",
+        "type": "textarea",
+        "instructions": "One supported strength per line.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "pros",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_shoe_cons",
+        "label": "General cons",
+        "name": "cons",
+        "type": "textarea",
+        "instructions": "One supported limitation per line.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "cons",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_shoe_specs",
+        "label": "Specifications",
+        "name": "specs",
+        "type": "textarea",
+        "instructions": "One specification per line, formatted as Label | Value. For example: Weight | 280 g. Include size/source context where needed.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "specs",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      },
+      {
+        "key": "field_solemart_shoe_cushioning",
+        "label": "Cushioning",
+        "name": "cushioning",
+        "type": "text",
+        "instructions": "A factual comparison-table description.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "cushioning",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_width_options",
+        "label": "Width options",
+        "name": "width_options",
+        "type": "text",
+        "instructions": "Available widths verified against the current product information.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "widthOptions",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_main_strength",
+        "label": "Main strength",
+        "name": "main_strength",
+        "type": "text",
+        "instructions": "The short comparison-table summary.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "mainStrength",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_commentary",
+        "label": "General shoe commentary",
+        "name": "commentary",
+        "type": "textarea",
+        "instructions": "Optional reusable discussion. Separate paragraphs with a blank line. Guide-specific commentary takes precedence.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "commentary",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": "",
+        "rows": 4,
+        "new_lines": ""
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "post_type",
+          "operator": "==",
+          "value": "shoe"
+        }
+      ]
+    ],
+    "menu_order": 10,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [],
+    "active": true,
+    "description": "Content for the existing SOLEMART Next.js template. No layout changes or executable WordPress code.",
+    "show_in_rest": 0,
+    "show_in_graphql": 1,
+    "graphql_field_name": "SolemartShoeFields",
+    "map_graphql_types_from_location_rules": 1,
+    "graphql_types": [
+      "Shoe"
+    ]
+  }
+]

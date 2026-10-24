@@ -1,5 +1,10 @@
 # WordPress blog integration
 
+The next buying-guide configuration step uses ACF and WPGraphQL for ACF; see
+[ACF setup](wordpress-acf-setup.md). The existing GraphQL connection remains in
+use. The companion-plugin instructions below describe the legacy guide adapter
+until that replacement is verified.
+
 Published **ordinary WordPress posts** supply the Shoe Advice listing at `/blog` and individual pages at `/blog/[slug]` using WPGraphQL. The frontend design is preserved. Published buying guides also fill the original Next.js template at `/best-shoes/[slug]` using the companion field editor; see [buying-guide setup and migration limits](wordpress-buying-guides.md). Reviews, comparisons, homepage lists, and search still use local data; custom fields and publishing webhooks are later integration steps.
 
 ## Configuration
