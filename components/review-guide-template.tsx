@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { ArrowDown, ArrowRight, Check, X } from 'lucide-react'
 import type { Guide } from '@/data/guides'
 import type { Product } from '@/data/products'
@@ -11,8 +12,8 @@ function reviewHref(product: Product) {
   return product.cmsManaged ? product.reviewUrl || `#review-${product.slug}` : `/reviews/${product.slug}`
 }
 
-function priceButtonLabel(product: Product) {
-  if (!product.cmsManaged || /https:\/\/(?:[^/]+\.)?(?:amazon\.com|amzn\.to)(?:\/|$)/i.test(product.affiliateUrl || '')) return 'Check Price on Amazon'
+function priceButtonLabel(product: Product, preview = false) {
+  if (preview || !product.cmsManaged || /https:\/\/(?:[^/]+\.)?(?:amazon\.com|amzn\.to)(?:\/|$)/i.test(product.affiliateUrl || '')) return 'Check Price on Amazon'
   return 'Check latest price'
 }
 
@@ -21,8 +22,14 @@ function jsonLd(value: object) {
   return { __html: JSON.stringify(value).replace(/</g, '\\u003c') }
 }
 
-function TopPickCard({ product, index }: { product: Product; index: number }) {
+function RetailerAction({ href, preview, className, children }: { href?: string; preview: boolean; className: string; children: ReactNode }) {
+  if (preview) return <button type="button" disabled aria-describedby="template-preview-note" title="Retailer buttons are disabled in this design preview" className={className}>{children}</button>
+  return href ? <a href={href} target="_blank" rel="sponsored nofollow noopener noreferrer" className={className}>{children}</a> : null
+}
+
+function TopPickCard({ product, index, preview }: { product: Product; index: number; preview: boolean }) {
   const href = product.cmsManaged ? product.affiliateUrl : product.affiliateUrl || affiliateUrl
+  const showPrice = preview || Boolean(href)
   return (
     <article className="relative grid gap-5 border-b border-[#e7e5de] p-5 last:border-b-0 sm:p-7 md:grid-cols-2 md:items-center md:gap-8 md:p-8">
       {product.image && <Link href={reviewHref(product)} className="group relative block overflow-hidden rounded-xl bg-[#f3f2ee]">
@@ -36,9 +43,9 @@ function TopPickCard({ product, index }: { product: Product; index: number }) {
         <h3 className="mt-4 text-2xl font-bold leading-tight text-[#c65325] sm:text-3xl"><Link href={reviewHref(product)} className="hover:underline hover:underline-offset-4">{product.name}</Link></h3>
         <p className="mt-3 text-base leading-7 text-[#68675f]">{product.shortReason || product.bestFor}</p>
         <div className="mt-6 max-w-[360px]">
-          {href && <p className="text-sm font-semibold">{product.priceLabel || 'Check latest price'}</p>}
-          {href && <a href={href} target="_blank" rel="sponsored nofollow noopener noreferrer" className="mt-3 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#161616] px-4 py-3 text-center text-base font-bold text-white transition hover:bg-[#e86d35]">{priceButtonLabel(product)} <ArrowRight aria-hidden="true" className="size-5 shrink-0" /></a>}
-          {href && <p className="mt-2 text-sm text-[#77766f]">Price may vary by size and color.</p>}
+          {showPrice && <p className="text-sm font-semibold">{product.priceLabel || 'Check latest price'}</p>}
+          {showPrice && <RetailerAction href={href} preview={preview} className="mt-3 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#161616] px-4 py-3 text-center text-base font-bold text-white transition hover:bg-[#e86d35]">{priceButtonLabel(product, preview)} <ArrowRight aria-hidden="true" className="size-5 shrink-0" /></RetailerAction>}
+          {showPrice && <p className="mt-2 text-sm text-[#77766f]">Price may vary by size and color.</p>}
           <Link href={reviewHref(product)} className="mt-5 inline-block text-base font-bold underline decoration-[#c9c7bf] underline-offset-4 hover:text-[#c65325]">Read full review</Link>
         </div>
       </div>
@@ -63,15 +70,16 @@ export function SpecsTable({ specs }: { specs: Product['specs'] }) {
   )
 }
 
-function FullReviewCard({ product, index }: { product: Product; index: number }) {
+function FullReviewCard({ product, index, preview }: { product: Product; index: number; preview: boolean }) {
   const href = product.cmsManaged ? product.affiliateUrl : product.affiliateUrl || affiliateUrl
+  const showPrice = preview || Boolean(href)
   return (
     <article id={`review-${product.slug}`} className="scroll-mt-36 rounded-2xl border border-[#e5e4df] bg-white p-5 sm:p-7">
       <div className="grid gap-6 lg:grid-cols-[minmax(250px,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
         <div>
           {product.image && <div className="overflow-hidden rounded-xl bg-[#f3f2ee]"><Image src={product.image} alt={product.imageAlt} width={900} height={900} sizes="(max-width: 1024px) 90vw, 35vw" className="aspect-[4/3] w-full object-cover mix-blend-multiply" /></div>}
-          {href && <a href={href} target="_blank" rel="sponsored nofollow noopener noreferrer" className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#161616] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#e86d35]">{priceButtonLabel(product)} <ArrowRight aria-hidden="true" className="size-4" /></a>}
-          {href && <p className="mt-2 text-center text-xs text-[#77766f]">Price may vary by size and color.</p>}
+          {showPrice && <RetailerAction href={href} preview={preview} className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#161616] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#e86d35]">{priceButtonLabel(product, preview)} <ArrowRight aria-hidden="true" className="size-4" /></RetailerAction>}
+          {showPrice && <p className="mt-2 text-center text-xs text-[#77766f]">Price may vary by size and color.</p>}
         </div>
         <div>
           <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#c65325]">#{index + 1} · {product.badge || `Pick ${index + 1}`} · {product.bestFor}</span>
@@ -107,7 +115,7 @@ function StickyReviewNav({ items }: { items: string[][] }) {
   </nav>
 }
 
-export function ReviewGuideTemplate({ guide, products }: { guide: Guide; products: Product[] }) {
+export function ReviewGuideTemplate({ guide, products, preview = false }: { guide: Guide; products: Product[]; preview?: boolean }) {
   const picks = products.slice(0, 4)
   const show = {
     picks: !guide.cmsManaged || picks.length > 0,
@@ -154,7 +162,7 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
         {show.picks && <section id="top-picks" aria-labelledby="top-picks-heading" className="relative mx-auto mt-14 max-w-5xl scroll-mt-36 overflow-visible rounded-sm border-[3px] border-[#e86d35] bg-white pt-4 shadow-sm">
           <span aria-hidden="true" className="top-picks-ribbon absolute -top-[19px] left-5 z-10">TOP PICKS</span>
           <div className="border-b border-[#e7e5de] px-5 pb-5 pt-4 sm:px-7"><p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">THE SHORTLIST</p><h2 id="top-picks-heading" className="mt-1 font-sans text-3xl font-black tracking-tight sm:text-4xl">Our Top Picks</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-[#68675f]">A quick comparison to help you choose where to start. Confirm fit, current model details, and availability before buying.</p></div>
-          {picks.length ? picks.map((product, index) => <TopPickCard key={product.slug} product={product} index={index} />) : <p className="p-6 text-sm text-[#68675f]">Recommendations are being updated. Check back soon.</p>}
+          {picks.length ? picks.map((product, index) => <TopPickCard key={product.slug} product={product} index={index} preview={preview} />) : <p className="p-6 text-sm text-[#68675f]">Recommendations are being updated. Check back soon.</p>}
         </section>}
 
         {picks.length > 0 && <section aria-labelledby="comparison-heading" className="mx-auto mt-8 max-w-5xl">
@@ -165,7 +173,7 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
               <thead className="bg-[#f3f2ee]"><tr>{['Pick', 'Best For', 'Cushioning', 'Width Options', 'Main Strength', 'Check Price'].map((heading) => <th key={heading} scope="col" className="p-3 font-bold">{heading}</th>)}</tr></thead>
               <tbody className="divide-y divide-[#e5e4df]">{picks.map((pick) => {
                 const comparison = guide.topPicks?.find(({ productSlug }) => productSlug === pick.slug)
-                return <tr key={pick.slug}><th scope="row" className="break-words p-3 font-bold"><Link href={reviewHref(pick)} className="underline decoration-[#c9c7bf] underline-offset-2 hover:text-[#c65325]">{pick.name}</Link></th><td className="break-words p-3 text-[#68675f]">{pick.bestFor}</td><td className="break-words p-3 text-[#68675f]">{comparison?.cushioning || 'Check product specifications'}</td><td className="break-words p-3 text-[#68675f]">{comparison?.widthOptions || 'Check available sizing'}</td><td className="break-words p-3 text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</td><td className="p-3">{(!pick.cmsManaged || pick.affiliateUrl) && <a href={pick.affiliateUrl || affiliateUrl} target="_blank" rel="sponsored nofollow noopener noreferrer" className="font-bold text-[#c65325] underline underline-offset-2">See Latest Price</a>}</td></tr>
+                return <tr key={pick.slug}><th scope="row" className="break-words p-3 font-bold"><Link href={reviewHref(pick)} className="underline decoration-[#c9c7bf] underline-offset-2 hover:text-[#c65325]">{pick.name}</Link></th><td className="break-words p-3 text-[#68675f]">{pick.bestFor}</td><td className="break-words p-3 text-[#68675f]">{comparison?.cushioning || 'Check product specifications'}</td><td className="break-words p-3 text-[#68675f]">{comparison?.widthOptions || 'Check available sizing'}</td><td className="break-words p-3 text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</td><td className="p-3">{(preview || !pick.cmsManaged || pick.affiliateUrl) && <RetailerAction href={pick.cmsManaged ? pick.affiliateUrl : pick.affiliateUrl || affiliateUrl} preview={preview} className="font-bold text-[#c65325] underline underline-offset-2">See Latest Price</RetailerAction>}</td></tr>
               })}</tbody>
             </table>
           </div>
@@ -174,7 +182,7 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
             return <article key={pick.slug} className="rounded-xl border border-[#e5e4df] bg-white p-4">
             <h3 className="font-bold"><Link href={reviewHref(pick)} className="hover:text-[#c65325]">{pick.name}</Link></h3>
             <dl className="mt-3 grid grid-cols-[minmax(6.5rem,0.8fr)_minmax(0,1.2fr)] gap-x-3 gap-y-2 text-[15px]"><dt className="font-semibold">Best for</dt><dd className="break-words text-[#68675f]">{pick.bestFor}</dd><dt className="font-semibold">Cushioning</dt><dd className="break-words text-[#68675f]">{comparison?.cushioning || 'Check product specifications'}</dd><dt className="font-semibold">Width options</dt><dd className="break-words text-[#68675f]">{comparison?.widthOptions || 'Check available sizing'}</dd><dt className="font-semibold">Main strength</dt><dd className="break-words text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</dd></dl>
-            {(!pick.cmsManaged || pick.affiliateUrl) && <a href={pick.affiliateUrl || affiliateUrl} target="_blank" rel="sponsored nofollow noopener noreferrer" className="mt-3 inline-block text-sm font-bold text-[#c65325] underline underline-offset-2">See Latest Price</a>}
+            {(preview || !pick.cmsManaged || pick.affiliateUrl) && <RetailerAction href={pick.cmsManaged ? pick.affiliateUrl : pick.affiliateUrl || affiliateUrl} preview={preview} className="mt-3 inline-block text-sm font-bold text-[#c65325] underline underline-offset-2">See Latest Price</RetailerAction>}
           </article>})}</div>
         </section>}
 
@@ -189,7 +197,7 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
 
             {picks.length > 0 && <section id="full-reviews" className="scroll-mt-36">
               <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">THE DETAILS</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">Full Reviews</h2>
-              <div className="mt-6 space-y-5">{picks.map((product, index) => <FullReviewCard key={product.slug} product={product} index={index} />)}</div>
+              <div className="mt-6 space-y-5">{picks.map((product, index) => <FullReviewCard key={product.slug} product={product} index={index} preview={preview} />)}</div>
             </section>}
 
             {show.buying && <section id="buying-guide" className="scroll-mt-36">
@@ -227,9 +235,11 @@ export function ReviewGuideTemplate({ guide, products }: { guide: Guide; product
           </aside>}
         </div>
       </article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(articleSchema)} />
-      {guide.faqs.length > 0 && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(faqSchema)} />}
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(breadcrumbSchema)} />
+      {!preview && <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(articleSchema)} />
+        {guide.faqs.length > 0 && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(faqSchema)} />}
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(breadcrumbSchema)} />
+      </>}
     </main>
   )
 }
