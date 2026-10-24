@@ -2,13 +2,21 @@
 
 ## Current stage
 
-This is the field-configuration stage of the migration. The downloadable JSON
-creates two ACF field groups; it contains no executable plugin code and does not
-register post types, change existing content, or switch the Next.js adapter.
+The downloadable JSON creates two ACF field groups; it contains no executable
+plugin code and does not register post types or change existing content.
 
-The existing blog connection continues to use WPGraphQL. Buying guides still
-read the legacy SOLEMART fields until the ACF adapter is implemented and tested.
-Importing these groups alone does **not** make their values appear on the site.
+The Next.js buying-guide route now supports these ACF groups. ACF, WPGraphQL and
+the separate **WPGraphQL for ACF** bridge must all be active. Importing groups
+without that bridge leaves them unavailable through GraphQL. The existing blog
+connection continues to use WPGraphQL.
+
+Guides with substantive ACF content use the ACF adapter. If only the default
+heading/disclosure is present, existing legacy fields are retained when available.
+Guides with neither source can render their native title and sanitized Gutenberg
+body. Missing optional schema fields are recognized whether WordPress returns
+HTTP 200 or HTTP 400; real HTTP, resolver and malformed-schema failures remain
+errors. A missing or unpublished guide returns 404 in configured production,
+including slugs that also exist in local sample data.
 
 The target remains WordPress + ACF + WPGraphQL for ACF → server-side Next.js
 adapter → the existing `ReviewGuideTemplate`, with roughly 60-second revalidation.
@@ -111,7 +119,7 @@ it during migration. These fields use separate metadata and do not overwrite
   guide-specific commentary overrides the reusable Shoe commentary.
 - Picks 2–4 are optional. The recommendation order is the numbered slot order.
 - Fill actual methodology, advice, verdict and any applicable FAQs. The four FAQ
-  pairs are optional; blank pairs should be omitted by the future adapter.
+  pairs are optional; incomplete and blank pairs are omitted by the adapter.
 - SEO title and meta description are optional overrides. Next.js continues to
   own canonical URLs, social metadata, breadcrumbs and structured data.
 - Use genuine author/reviewer information and a disclosure appropriate to your
@@ -168,35 +176,57 @@ The development environment cannot currently reach the live CMS due to its
 network proxy. Import syntax/source checks are not a substitute for a successful
 ACF import and anonymous query on the actual WordPress installation.
 
-## Next.js connection and verification still to do
+## Next.js connection
 
-After verifying the actual schema and response:
+- `lib/wordpress.ts` fetches the guide's native content, ACF text fields and four
+  single-Shoe references in one public query. Each distinct selected Shoe is then
+  fetched concurrently through its global node ID with a separate 60-second
+  cache. A native author lookup is optional when the ACF byline is empty. No
+  administrator credentials are used.
+- `lib/guide-fields.ts` maps these responses into the existing `Guide` and
+  `Product` models. Only published Shoe nodes contribute products. Duplicate
+  selections are omitted, slot order is retained, and guide-specific commentary
+  takes precedence over reusable commentary. Native title and image alt text
+  are decoded; URLs use the existing HTTPS/image-host allowlists.
+- `app/best-shoes/[slug]/page.tsx` shares the complete server lookup between page
+  rendering and metadata, then renders the original `ReviewGuideTemplate`.
+  Missing CMS guides never substitute local samples when WordPress is configured.
+- Existing template affiliate buttons retain `sponsored nofollow noopener
+  noreferrer`. Amazon/amzn.to links and explicitly sponsored links in sanitized
+  Gutenberg HTML also receive `sponsored nofollow`.
 
-1. Add an ACF query and server adapter alongside `getWordPressGuideFields` in
-   `lib/wordpress.ts`; keep the existing blog connection.
-2. Map native post data and ACF fields into the existing `Guide` and `Product`
-   models in `lib/guide-fields.ts` or a dedicated ACF mapper. Native WordPress
-   author supplies the default byline. Only published Shoe nodes may contribute
-   products; do not fetch using WordPress administrator credentials.
-3. For each of four numbered slots, combine the reusable Shoe values with that
-   guide's badge, reason, Best for, Avoid if and commentary. A Shoe update then
-   affects all guides referencing it after cache expiry and revalidation.
-4. Use the same trusted-URL validation and HTML sanitization. Keep affiliate
-   anchors marked `sponsored nofollow noopener noreferrer` in Next.js.
-5. Switch the buying-guide route after testing fields, missing/private content,
-   metadata, images, mobile layout, production build and revalidation. Remove
-   production sample fallbacks and example affiliate destinations as a separate
-   verified launch step; the existing setup files do not do this automatically.
-6. Integrate guide lists/search and sitemap with the CMS before claiming that
-   newly published guides are discoverable throughout the site.
-7. Deactivate the legacy custom fields plugin only after migrating its values
-   and confirming the new guide works. Keep WPGraphQL and CPT UI active for this
-   architecture. Retain old metadata and a database backup for rollback.
+Set `WORDPRESS_GUIDE_FIELDS_SOURCE=legacy` in the deployment environment and
+redeploy to use the old adapter during rollback. Unset it for normal ACF-first
+operation. The old plugin, adapter and `_solemart_guide_fields` data are retained.
+Starting to fill a guide's actual ACF content opts that guide into the new source;
+copy its legacy values before switching. Never delete old metadata prematurely.
 
-Rollback during this configuration stage is simply to leave the existing
-frontend adapter in use; it has not changed. Once switching the adapter, retain
-an explicit source switch or revertible deployment until the migration is
-verified. Do not delete old metadata, post types or plugin files prematurely.
+## Remaining live verification and launch work
+
+1. Activate WPGraphQL for ACF and verify the query above anonymously. The user
+   confirmed the bridge was not installed when the field was first unavailable.
+2. Check the actual published guide, pictures, recommendation slots and links.
+   Change a guide field and a reused Shoe, then verify updates after the cache
+   becomes eligible for revalidation. A first request may still serve stale HTML
+   while regeneration runs; this is not an instant publishing webhook.
+3. Integrate guide lists/search and sitemap with the CMS before claiming that new
+   guides are discoverable throughout the site. These still use local records.
+   Other legacy review/comparison routes also retain sample data and require a
+   separate launch cleanup; this adapter does not migrate every content type.
+4. Deactivate the legacy custom fields plugin only after migrating its values
+   and verifying the new flow. Keep WPGraphQL and CPT UI active.
+
+Automated adapter/mapping tests and production-browser fixture checks cover this
+connection locally. The cloud cannot access the live CMS, so these do not replace
+WordPress editor/public-API and deployment checks.
+
+Local verification passed 38 automated tests, production compilation/type checks,
+and browser checks at 390px, 768px and 1440px. Checks covered the unchanged template,
+metadata/schema, sanitized body, product images, affiliate attributes, FAQ behavior,
+JavaScript-disabled rendering, legacy/default-field migration, actual 404/500
+responses and the existing blog. A running production fixture test observed a
+guide-field edit and shared Shoe edit in two guides after 66 seconds, without a
+rebuild. Fixture images and responses do not establish live CMS connectivity.
 
 ## Exact imported fields
 

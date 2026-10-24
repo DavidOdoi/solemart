@@ -49,7 +49,7 @@ export function mapGuideFields(post: BlogPost, input: unknown): { guide: Guide; 
       metaDescription: text(fields.metaDescription) || post.excerpt,
       category: text(fields.category) || 'BUYING GUIDE', excerpt: post.excerpt,
       image: post.featuredImage?.src || '', imageAlt: post.featuredImage?.alt || '',
-      intro: text(fields.intro), author: text(fields.author), reviewedBy: text(fields.reviewedBy),
+      intro: text(fields.intro), author: text(fields.author) || post.author || '', reviewedBy: text(fields.reviewedBy),
       updatedAt: post.modifiedAt, disclosure: text(fields.disclosure) || 'SOLEMART may earn a commission from qualifying purchases through links on this page.',
       quickAnswerTitle: text(fields.quickAnswerTitle) || 'Quick Answer', quickAnswerBody: text(fields.quickAnswerBody),
       advice: lines(fields.advice), howWeChose: lines(fields.howWeChose),
@@ -61,4 +61,55 @@ export function mapGuideFields(post: BlogPost, input: unknown): { guide: Guide; 
       faqs: rows(fields.faqs).map(row => ({ question: text(row.question), answer: text(row.answer) })).filter(row => row.question && row.answer),
     },
   }
+}
+
+/** Defaults alone must not replace an unmigrated guide's legacy recommendations. */
+export function hasAcfGuideContent(input: unknown): boolean {
+  const fields = record(input)
+  if (['intro', 'quickAnswerBody', 'howWeChose', 'advice', 'whoItsFor', 'mistakesToAvoid', 'finalVerdict'].some(key => text(fields[key]))) return true
+  return [1, 2, 3, 4].some(index => text(record(record(fields[`pick${index}Shoe`]).node).id)
+    || text(fields[`faq${index}Question`]) || text(fields[`faq${index}Answer`]))
+}
+
+/** Combine four guide-specific slots with published, reusable Shoe records. */
+export function mapAcfGuideFields(post: BlogPost, input: unknown, shoeInput: unknown[]): { guide: Guide; products: Product[] } {
+  if (input !== null && input !== undefined && (typeof input !== 'object' || Array.isArray(input))) throw new Error('Invalid ACF buying-guide fields.')
+  const fields = record(input)
+  const shoes = new Map(shoeInput.map(value => {
+    const shoe = record(value)
+    return [text(shoe.id), shoe] as const
+  }))
+  const selected: Record<string, unknown>[] = []
+  const products: Record<string, unknown>[] = []
+  const seen = new Set<string>()
+  for (const index of [1, 2, 3, 4]) {
+    const reference = record(record(fields[`pick${index}Shoe`]).node)
+    const id = text(reference.id)
+    const shoe = shoes.get(id)
+    if (reference.__typename !== 'Shoe' || !shoe || shoe.status !== 'publish' || !text(shoe.title) || !text(shoe.slug) || seen.has(id)) continue
+    const values = record(shoe.solemartShoeFields)
+    const image = record(record(shoe.featuredImage).node)
+    seen.add(id)
+    selected.push(shoe)
+    products.push({
+      name: text(shoe.title), image: image.sourceUrl, imageAlt: image.altText,
+      affiliateUrl: values.affiliateUrl, reviewUrl: values.reviewUrl,
+      description: values.description, pros: values.pros, cons: values.cons, specs: values.specs,
+      cushioning: values.cushioning, widthOptions: values.widthOptions, mainStrength: values.mainStrength,
+      badge: fields[`pick${index}Award`], shortReason: fields[`pick${index}Reason`],
+      bestFor: fields[`pick${index}BestFor`], avoidIf: fields[`pick${index}AvoidIf`],
+      review: text(fields[`pick${index}Commentary`]) || text(values.commentary),
+    })
+  }
+  const result = mapGuideFields(post, {
+    ...fields, products,
+    faqs: [1, 2, 3, 4].map(index => ({ question: fields[`faq${index}Question`], answer: fields[`faq${index}Answer`] })),
+  })
+  result.products.forEach((product, index) => {
+    product.id = text(selected[index].id)
+    product.slug = text(selected[index].slug)
+    if (result.guide.topPicks?.[index]) result.guide.topPicks[index].productSlug = product.slug
+  })
+  result.guide.productSlugs = result.products.map(product => product.slug)
+  return result
 }

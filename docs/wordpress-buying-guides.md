@@ -1,7 +1,7 @@
 # WordPress content → existing Next.js buying-guide template
 
 **Legacy integration:** this document describes the custom SOLEMART Guide Fields
-plugin currently read by Next.js. For the replacement using maintained ACF
+plugin retained as a Next.js migration fallback. For the replacement using maintained ACF
 plugins and reusable Shoe records, follow [ACF setup](wordpress-acf-setup.md).
 Keep this implementation and its saved data during migration; do not install the
 legacy plugin as a new requirement for the ACF setup.

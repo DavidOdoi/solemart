@@ -91,12 +91,17 @@ function articleHtml(content: string) {
     allowProtocolRelative: false,
     transformTags: {
       h1: 'h2',
-      a: (tagName, attributes) => ({
-        tagName,
-        attribs: attributes.target === '_blank'
-          ? { ...attributes, rel: `${attributes.rel || ''} noopener noreferrer`.trim() }
-          : attributes,
-      }),
+      a: (tagName, attributes) => {
+        const rel = new Set((attributes.rel || '').split(/\s+/).filter(Boolean))
+        let retailer = false
+        try {
+          const url = new URL(attributes.href)
+          retailer = ['amazon.com', 'amzn.to'].some(host => url.hostname === host || url.hostname.endsWith(`.${host}`))
+        } catch { /* Relative source links are permitted by the sanitizer. */ }
+        if (retailer || rel.has('sponsored')) { rel.add('sponsored'); rel.add('nofollow') }
+        if (attributes.target === '_blank') { rel.add('noopener'); rel.add('noreferrer') }
+        return { tagName, attribs: rel.size ? { ...attributes, rel: [...rel].join(' ') } : attributes }
+      },
       img: (tagName, attributes) => ({ tagName, attribs: { ...attributes, loading: 'lazy', decoding: 'async' } }),
     },
   })
@@ -122,7 +127,13 @@ function featuredImage(image: NonNullable<WordPressPost['featuredImage']>['node'
   }
 }
 
-class MissingGuideFieldsError extends Error {}
+class MissingGuideFieldsError extends Error {
+  readonly field: 'solemartGuideData' | 'solemartBuyingGuideFields'
+  constructor(field: 'solemartGuideData' | 'solemartBuyingGuideFields') {
+    super(`WordPress does not expose ${field}.`)
+    this.field = field
+  }
+}
 
 async function queryWordPress<T>(query: string, variables: Record<string, string | null>, tags: string[]): Promise<T> {
   const endpoint = process.env.WORDPRESS_GRAPHQL_URL
@@ -141,19 +152,26 @@ async function queryWordPress<T>(query: string, variables: Record<string, string
       cache: 'force-cache',
       next: { revalidate: 60, tags },
     })
-    if (!response.ok) throw new Error(`WordPress returned HTTP ${response.status}`)
+    // GraphQL validation failures can use HTTP 400. Read their JSON before
+    // deciding whether an optional migration field is genuinely absent.
+    if (!response.ok && response.status !== 400) throw new Error(`WordPress returned HTTP ${response.status}`)
   } catch (error) {
     // Infrastructure failures must not be mistaken for a missing article.
     throw new Error('WordPress articles are temporarily unavailable.', { cause: error })
   }
 
   const result = await response.json() as { data?: T; errors?: { message?: string }[] }
-  if (result.errors?.length && result.errors.every(error => error.message?.includes('Cannot query field \"solemartGuideData\"'))) {
-    throw new MissingGuideFieldsError('Install SOLEMART Guide Fields in WordPress.')
+  for (const field of ['solemartGuideData', 'solemartBuyingGuideFields'] as const) {
+    if (result.errors?.length && result.errors.every(error => error.message?.startsWith(`Cannot query field "${field}" on type "BuyingGuide".`))) {
+      throw new MissingGuideFieldsError(field)
+    }
   }
   if (result.errors?.length || !result.data) {
-    throw new Error('WordPress could not return the requested article.')
+    throw new Error('WordPress could not return the requested article.', {
+      cause: new Error(result.errors?.map(error => error.message || 'Unknown GraphQL error').join('; ') || 'Missing GraphQL data'),
+    })
   }
+  if (!response.ok) throw new Error('WordPress articles are temporarily unavailable.', { cause: new Error(`WordPress returned HTTP ${response.status}`) })
   return result.data
 }
 
@@ -257,8 +275,119 @@ export const getWordPressGuideFields = cache(async (slug: string): Promise<unkno
     if (raw == null) return null
     return JSON.parse(raw)
   } catch (error) {
-    if (error instanceof MissingGuideFieldsError) return null
+    if (error instanceof MissingGuideFieldsError && error.field === 'solemartGuideData') return null
     throw error
+  }
+})
+
+const acfGuideQuery = `
+  query PublishedAcfBuyingGuide($slug: ID!) {
+    buyingGuide(id: $slug, idType: SLUG) {
+      id title slug status content excerpt dateGmt modifiedGmt
+      featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+      solemartBuyingGuideFields {
+        intro category author reviewedBy disclosure quickAnswerTitle quickAnswerBody
+        howWeChose advice whoItsFor mistakesToAvoid finalVerdict seoTitle metaDescription
+        ${[1, 2, 3, 4].map(index => `
+          pick${index}Shoe { node { __typename id } }
+          pick${index}Award pick${index}Reason pick${index}BestFor pick${index}AvoidIf pick${index}Commentary
+          faq${index}Question faq${index}Answer
+        `).join('\n')}
+      }
+    }
+  }
+`
+
+type AcfShoeReference = { node?: { __typename?: string; id?: string } | null } | null
+type AcfGuideFields = Record<string, unknown>
+export type WordPressAcfShoe = {
+  id: string
+  title: string
+  slug: string
+  status: string
+  featuredImage?: WordPressPost['featuredImage']
+  solemartShoeFields?: Record<string, unknown> | null
+}
+
+/** A shared Shoe response is cached independently of guides that reference it. */
+const getWordPressAcfShoe = cache(async (id: string): Promise<WordPressAcfShoe | null> => {
+  const data = await queryWordPress<{ node?: WordPressAcfShoe | null }>(`
+    query PublishedAcfShoe($id: ID!) {
+      node(id: $id) {
+        ... on Shoe {
+          id title slug status
+          featuredImage { node { sourceUrl altText mediaDetails { width height } } }
+          solemartShoeFields {
+            brand description affiliateUrl reviewUrl pros cons specs
+            cushioning widthOptions mainStrength commentary
+          }
+        }
+      }
+    }
+  `, { id }, ['wordpress:shoes', `wordpress:shoe:${id}`])
+  if (!Object.hasOwn(data, 'node')) throw new Error('WordPress returned an incomplete Shoe response.')
+  const shoe = data.node
+  if (!shoe || shoe.status !== 'publish') return null
+  if (shoe.id !== id || !shoe.slug || !plainText(shoe.title)) throw new Error('WordPress returned an incomplete Shoe.')
+  return {
+    ...shoe, title: plainText(shoe.title),
+    featuredImage: shoe.featuredImage?.node ? {
+      node: { ...shoe.featuredImage.node, altText: plainText(shoe.featuredImage.node.altText) },
+    } : null,
+  }
+})
+
+/** A missing optional native author must not make a published guide unavailable. */
+const getWordPressGuideAuthor = cache(async (id: string): Promise<string | undefined> => {
+  try {
+    const data = await queryWordPress<{ node?: { author?: WordPressPost['author'] } | null }>(`
+      query BuyingGuideAuthor($id: ID!) {
+        node(id: $id) { ... on NodeWithAuthor { author { node { name } } } }
+      }
+    `, { id }, ['wordpress:authors'])
+    return plainText(data.node?.author?.node?.name) || undefined
+  } catch { return undefined }
+})
+
+/** undefined means the ACF schema is absent; null means no published guide. */
+export const getWordPressAcfBuyingGuide = cache(async (slug: string): Promise<{
+  post: BlogPost
+  fields: AcfGuideFields
+  shoes: WordPressAcfShoe[]
+} | null | undefined> => {
+  if (!process.env.WORDPRESS_GRAPHQL_URL || process.env.WORDPRESS_GUIDE_FIELDS_SOURCE === 'legacy') return undefined
+  if (!/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
+  let data: { buyingGuide?: (Omit<WordPressPost, 'author'> & { id: string; solemartBuyingGuideFields?: AcfGuideFields | null }) | null }
+  try {
+    data = await queryWordPress(acfGuideQuery, { slug }, ['wordpress:buying-guides', `wordpress:buying-guide:${slug}`])
+  } catch (error) {
+    if (error instanceof MissingGuideFieldsError && error.field === 'solemartBuyingGuideFields') return undefined
+    throw error
+  }
+  if (!Object.hasOwn(data, 'buyingGuide')) throw new Error('WordPress could not return the requested buying guide.')
+  const guide = data.buyingGuide
+  if (!guide || guide.status !== 'publish') return null
+  if (guide.slug !== slug || !plainText(guide.title)) throw new Error('WordPress returned an incomplete buying guide.')
+  if (!Object.hasOwn(guide, 'solemartBuyingGuideFields')) throw new Error('WordPress returned incomplete ACF guide fields.')
+  const fields = guide.solemartBuyingGuideFields ?? {}
+  if (typeof fields !== 'object' || Array.isArray(fields)) throw new Error('WordPress returned invalid ACF guide fields.')
+  const ids = [...new Set([1, 2, 3, 4].flatMap(index => {
+    const reference = fields[`pick${index}Shoe`] as AcfShoeReference
+    const node = reference?.node
+    return node?.__typename === 'Shoe' && typeof node.id === 'string' && node.id.length > 0 && node.id.length <= 200 ? [node.id] : []
+  }))]
+  const [shoes, author] = await Promise.all([
+    Promise.all(ids.map(getWordPressAcfShoe)),
+    !plainText(typeof fields.author === 'string' ? fields.author : '') && guide.id ? getWordPressGuideAuthor(guide.id) : undefined,
+  ])
+  return {
+    post: {
+      ...postPreview({ ...guide, author: author ? { node: { name: author } } : null }),
+      category: 'BUYING GUIDE', modifiedAt: utcDate(guide.modifiedGmt),
+      paragraphs: [], contentHtml: articleHtml(guide.content || ''),
+    },
+    fields,
+    shoes: shoes.filter((shoe): shoe is WordPressAcfShoe => shoe !== null),
   }
 })
 

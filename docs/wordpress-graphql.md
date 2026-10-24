@@ -1,11 +1,12 @@
 # WordPress blog integration
 
-The next buying-guide configuration step uses ACF and WPGraphQL for ACF; see
+Buying-guide configuration uses ACF and WPGraphQL for ACF; see
 [ACF setup](wordpress-acf-setup.md). The existing GraphQL connection remains in
 use. The companion-plugin instructions below describe the legacy guide adapter
-until that replacement is verified.
+retained during migration. The buying-guide route prefers populated ACF fields
+and handles absent legacy fields on both HTTP 200 and HTTP 400.
 
-Published **ordinary WordPress posts** supply the Shoe Advice listing at `/blog` and individual pages at `/blog/[slug]` using WPGraphQL. The frontend design is preserved. Published buying guides also fill the original Next.js template at `/best-shoes/[slug]` using the companion field editor; see [buying-guide setup and migration limits](wordpress-buying-guides.md). Reviews, comparisons, homepage lists, and search still use local data; custom fields and publishing webhooks are later integration steps.
+Published **ordinary WordPress posts** supply the Shoe Advice listing at `/blog` and individual pages at `/blog/[slug]` using WPGraphQL. The frontend design is preserved. Published buying guides fill the original Next.js template at `/best-shoes/[slug]` using ACF and reusable Shoes, with the companion field editor retained as a migration fallback; see [ACF setup and remaining launch work](wordpress-acf-setup.md). Reviews, comparisons, homepage lists, and search still use local data; publishing webhooks remain a later integration step.
 
 ## Configuration
 
@@ -59,4 +60,4 @@ Pushing to `main` triggers deployment if the existing Vercel Git integration is 
 
 If deployment cannot load a post, inspect Vercel server logs for HTTP/GraphQL errors, verify the variable is set for the deployment's environment, and confirm the post is published and publicly queryable. Do not expose credentials in logs or source code. InMotion security rules must allow legitimate WPGraphQL POST requests from Vercel.
 
-Next stages: agree on custom post types and fields; migrate guide/review/product templates and listing/search queries; add authenticated on-demand revalidation; then complete sitewide sitemap, canonical, taxonomy, and CMS-indexing configuration.
+Next stages: verify the live ACF guide connection; migrate listing/search queries and remaining review/comparison templates; complete sitemap, taxonomy and CMS-indexing configuration. Authenticated on-demand revalidation can follow the initial time-based publishing flow.

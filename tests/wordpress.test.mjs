@@ -54,7 +54,7 @@ test('sanitizes scripts, attributes, unsafe URLs, forms and extra H1s', async ()
   const result = await getWordPressPost('shoe-fit')
   assert.doesNotMatch(result.contentHtml, /<script|<style|<h1|onclick|onerror|javascript:|<form|<input|<iframe/)
   assert.match(result.contentHtml, /<p>Safe<\/p>/)
-  assert.match(result.contentHtml, /sponsored noopener noreferrer/)
+  assert.match(result.contentHtml, /sponsored nofollow noopener noreferrer/)
   assert.match(result.contentHtml, /loading="lazy"/)
 })
 
