@@ -1,0 +1,23 @@
+// Add as a PHP snippet in the maintained Code Snippets plugin (admin scope).
+// This is editor configuration, not a custom WordPress plugin or API resolver.
+add_action('acf/input/admin_footer', function () {
+    echo <<<'HTML'
+<script>
+if (window.acf) {
+    acf.addFilter('wysiwyg_tinymce_settings', function (settings, id) {
+        var editor = document.getElementById(id);
+        var field = editor && editor.closest('.acf-field');
+        var key = field && field.getAttribute('data-key');
+        if (!key || key.indexOf('field_solemart_') !== 0) return settings;
+        settings.toolbar1 = 'formatselect,bold,italic,bullist,numlist,link';
+        settings.toolbar2 = '';
+        settings.toolbar3 = '';
+        settings.toolbar4 = '';
+        settings.block_formats = 'Paragraph=p';
+        settings.menubar = false;
+        return settings;
+    });
+}
+</script>
+HTML;
+});

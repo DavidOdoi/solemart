@@ -7,6 +7,8 @@ import type { Product } from '@/data/products'
 import { Breadcrumbs } from '@/components/affiliate-site'
 import { affiliateUrl } from '@/lib/content'
 import { PickActions } from '@/components/pick-actions'
+import { EditorialRichText } from '@/components/editorial-rich-text'
+import { editorialPlainText } from '@/lib/cms-rich-text'
 
 function reviewHref(product: Product) {
   return product.cmsManaged ? product.reviewUrl || `#review-${product.slug}` : `/reviews/${product.slug}`
@@ -84,7 +86,7 @@ function FullReviewCard({ product, index, preview }: { product: Product; index: 
         <div>
           <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#c65325]">#{index + 1} · {product.badge || `Pick ${index + 1}`} · {product.bestFor}</span>
           <h3 className="mt-2 font-serif text-2xl leading-tight sm:text-3xl">{product.name}</h3>
-          <div className="mt-4 space-y-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{product.review.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+          <EditorialRichText value={product.reviewHtml || product.review.join('\n\n')} className="mt-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />
           {!product.cmsManaged && <p className="mt-3 text-xs leading-5 text-[#77766f]">Sample editorial profile. Confirm current model details, fit, and availability with the retailer.</p>}
           {product.avoidIf && <p className="mt-4 text-base leading-7 text-[#4f4e49]"><strong>Avoid if:</strong> {product.avoidIf}</p>}
         </div>
@@ -133,7 +135,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
     ...(show.buying ? [['Buying Guide', '#buying-guide']] : []),
     ...(show.faqs ? [['FAQs', '#faqs']] : []),
   ]
-  const faqSchema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: guide.faqs.map(({ question, answer }) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answer } })) }
+  const faqSchema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: guide.faqs.map(({ question, answer, answerHtml }) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answerHtml ? editorialPlainText(answerHtml) : answer } })) }
   const articleSchema = { '@context': 'https://schema.org', '@type': 'Article', headline: guide.title, description: guide.metaDescription || guide.excerpt, datePublished: guide.publishedAt, dateModified: guide.updatedAt, mainEntityOfPage: `https://thesolemart.com/best-shoes/${encodeURIComponent(guide.slug)}`, author: guide.author || !guide.cmsManaged ? { '@type': 'Organization', name: guide.author || 'SOLEMART Editorial Team' } : undefined, publisher: { '@type': 'Organization', name: 'SOLEMART' }, mainEntity: picks.map((product) => ({ '@type': 'Product', name: product.name, image: product.image, description: product.shortReason || product.description })) }
   const breadcrumbSchema = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thesolemart.com/' }, { '@type': 'ListItem', position: 2, name: 'Buying Guides', item: 'https://thesolemart.com/#guides' }, { '@type': 'ListItem', position: 3, name: guide.title }] }
   return (
@@ -143,7 +145,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
         <header className="mx-auto max-w-4xl">
           <p className="text-xs font-bold tracking-[0.18em] text-[#c65325]">{guide.category}</p>
           <h1 className="mt-3 max-w-5xl font-sans text-4xl font-black leading-[1.04] tracking-[-0.04em] sm:text-6xl lg:text-7xl">{guide.title}</h1>
-          <p className="mt-5 max-w-4xl text-xl font-bold leading-snug text-[#24231f] sm:text-2xl">{guide.intro}</p>
+          <EditorialRichText value={guide.introHtml || guide.intro} className="mt-5 max-w-4xl text-xl font-bold leading-snug text-[#24231f] sm:text-2xl" />
           <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#68675f]">
             {(guide.author || !guide.cmsManaged) && <span>By <strong className="text-[#161616]">{guide.author || 'SOLEMART Editorial Team'}</strong></span>}
             {guide.reviewedBy && <span>Reviewed by <strong className="text-[#161616]">{guide.reviewedBy}</strong></span>}
@@ -203,7 +205,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
             {show.buying && <section id="buying-guide" className="scroll-mt-36">
               <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">BUYING GUIDE</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">What to Look For Before Buying</h2>
               {guide.contentHtml && <div className="wordpress-content mt-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" dangerouslySetInnerHTML={{ __html: guide.contentHtml }} />}
-              {guide.buyingGuideSections?.length ? <div className="mt-5 space-y-6">{guide.buyingGuideSections.map((section) => <section key={section.heading}><h3 className="text-lg font-bold">{section.heading}</h3><div className="mt-2 space-y-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>)}</div> : <ul className="mt-5 list-disc space-y-3 pl-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{guide.advice.map((tip) => <li key={tip}>{tip}</li>)}</ul>}
+              {guide.buyingGuideSections?.length ? <div className="mt-5 space-y-6">{guide.buyingGuideSections.map((section) => <section key={section.heading}><h3 className="text-lg font-bold">{section.heading}</h3><div className="mt-2 space-y-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>)}</div> : <EditorialRichText value={guide.adviceHtml || guide.advice.join('\n')} plainFormat="list" className="mt-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />}
             </section>}
 
             {show.who && <section aria-labelledby="who-heading">
@@ -218,11 +220,11 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
 
             {show.faqs && <section id="faqs" className="scroll-mt-36">
               <h2 className="font-sans text-4xl font-black leading-tight tracking-tight sm:text-5xl">{guide.title} FAQs</h2>
-              <div className="mt-4 border-t border-[#d9d8d2]">{guide.faqs.map(({ question, answer }) => <details key={question} className="group border-b border-[#d9d8d2] py-4 sm:py-5"><summary className="flex cursor-pointer list-none items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e86d35] [&::-webkit-details-marker]:hidden"><span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#898880] text-[#161616]"><ArrowDown aria-hidden="true" className="size-5 transition-transform duration-200 group-open:rotate-180" /></span><span className="text-base font-black leading-snug sm:text-lg">{question}</span></summary><p className="ml-14 mt-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{answer}</p></details>)}</div>
+              <div className="mt-4 border-t border-[#d9d8d2]">{guide.faqs.map(({ question, answer, answerHtml }) => <details key={question} className="group border-b border-[#d9d8d2] py-4 sm:py-5"><summary className="flex cursor-pointer list-none items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e86d35] [&::-webkit-details-marker]:hidden"><span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#898880] text-[#161616]"><ArrowDown aria-hidden="true" className="size-5 transition-transform duration-200 group-open:rotate-180" /></span><span className="text-base font-black leading-snug sm:text-lg">{question}</span></summary><EditorialRichText value={answerHtml || answer} className="ml-14 mt-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" /></details>)}</div>
             </section>}
 
             {show.verdict && <section aria-labelledby="verdict-heading" className="rounded-2xl bg-[#f3f2ee] p-6 sm:p-8">
-              <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">OUR TAKE</p><h2 id="verdict-heading" className="mt-2 font-sans text-3xl font-black tracking-tight">Final Verdict</h2><p className="mt-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{guide.finalVerdict || guide.quickAnswerBody}</p>
+              <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">OUR TAKE</p><h2 id="verdict-heading" className="mt-2 font-sans text-3xl font-black tracking-tight">Final Verdict</h2><EditorialRichText value={guide.finalVerdictHtml || guide.finalVerdict || guide.quickAnswerBody} className="mt-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />
             </section>}
           </div>
 

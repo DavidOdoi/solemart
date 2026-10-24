@@ -11,9 +11,11 @@ export type Guide = {
   image: string
   imageAlt: string
   intro: string
+  introHtml?: string
   quickAnswerBody: string
   quickAnswerTitle: string
   advice: string[]
+  adviceHtml?: string
   productSlugs: string[]
   topPicks?: {
     productSlug: string
@@ -22,7 +24,7 @@ export type Guide = {
     mainStrength: string
   }[]
   relatedGuideSlugs: string[]
-  faqs: { question: string; answer: string }[]
+  faqs: { question: string; answer: string; answerHtml?: string }[]
   author?: string
   reviewedBy?: string
   updatedAt?: string
@@ -31,6 +33,7 @@ export type Guide = {
   whoItsFor?: string[]
   mistakesToAvoid?: string[]
   finalVerdict?: string
+  finalVerdictHtml?: string
   buyingGuideSections?: { heading: string; paragraphs: string[] }[]
 }
 

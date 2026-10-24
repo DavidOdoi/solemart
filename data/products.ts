@@ -20,6 +20,7 @@ export type Product = {
   cons: string[]
   specs: { label: string; value: string }[]
   review: string[]
+  reviewHtml?: string
   shortReason?: string
   priceLabel?: string
   affiliateUrl?: string

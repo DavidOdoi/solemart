@@ -26,8 +26,8 @@
         "key": "field_solemart_guide_intro",
         "label": "Introduction",
         "name": "intro",
-        "type": "textarea",
-        "instructions": "The introduction below the page title. Use plain text.",
+        "type": "wysiwyg",
+        "instructions": "Introduction below the page title. Use paragraphs, bold, italic, lists and editorial links. Retailer/affiliate URLs belong in the separate Shoe URL field.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -39,9 +39,10 @@
         "graphql_field_name": "intro",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_category",
@@ -291,8 +292,8 @@
         "key": "field_solemart_guide_pick_1_commentary",
         "label": "Guide-specific commentary",
         "name": "pick_1_commentary",
-        "type": "textarea",
-        "instructions": "Optional detailed discussion for this guide. Separate paragraphs with a blank line. When blank, the frontend adapter can use the Shoe's general commentary.",
+        "type": "wysiwyg",
+        "instructions": "Optional formatted commentary for this guide. Leave empty to use the Shoe’s Product Full Review. Add editorial links here and keep retailer/affiliate URLs in their separate URL field.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -304,9 +305,10 @@
         "graphql_field_name": "pick1Commentary",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_pick_2_tab",
@@ -438,8 +440,8 @@
         "key": "field_solemart_guide_pick_2_commentary",
         "label": "Guide-specific commentary",
         "name": "pick_2_commentary",
-        "type": "textarea",
-        "instructions": "Optional detailed discussion for this guide. Separate paragraphs with a blank line. When blank, the frontend adapter can use the Shoe's general commentary.",
+        "type": "wysiwyg",
+        "instructions": "Optional formatted commentary for this guide. Leave empty to use the Shoe’s Product Full Review. Add editorial links here and keep retailer/affiliate URLs in their separate URL field.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -451,9 +453,10 @@
         "graphql_field_name": "pick2Commentary",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_pick_3_tab",
@@ -585,8 +588,8 @@
         "key": "field_solemart_guide_pick_3_commentary",
         "label": "Guide-specific commentary",
         "name": "pick_3_commentary",
-        "type": "textarea",
-        "instructions": "Optional detailed discussion for this guide. Separate paragraphs with a blank line. When blank, the frontend adapter can use the Shoe's general commentary.",
+        "type": "wysiwyg",
+        "instructions": "Optional formatted commentary for this guide. Leave empty to use the Shoe’s Product Full Review. Add editorial links here and keep retailer/affiliate URLs in their separate URL field.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -598,9 +601,10 @@
         "graphql_field_name": "pick3Commentary",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_pick_4_tab",
@@ -732,8 +736,8 @@
         "key": "field_solemart_guide_pick_4_commentary",
         "label": "Guide-specific commentary",
         "name": "pick_4_commentary",
-        "type": "textarea",
-        "instructions": "Optional detailed discussion for this guide. Separate paragraphs with a blank line. When blank, the frontend adapter can use the Shoe's general commentary.",
+        "type": "wysiwyg",
+        "instructions": "Optional formatted commentary for this guide. Leave empty to use the Shoe’s Product Full Review. Add editorial links here and keep retailer/affiliate URLs in their separate URL field.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -745,9 +749,10 @@
         "graphql_field_name": "pick4Commentary",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_advice_tab",
@@ -791,10 +796,10 @@
       },
       {
         "key": "field_solemart_guide_advice",
-        "label": "Buying-advice checklist",
+        "label": "Buying Advice Text",
         "name": "advice",
-        "type": "textarea",
-        "instructions": "One useful buying consideration per line. Put longer formatted sections in the main Gutenberg editor.",
+        "type": "wysiwyg",
+        "instructions": "Formatted buying advice. Internal links can use frontend paths such as /blog/your-article. Use lists for checklist items. Put retailer/affiliate URLs in the separate Shoe URL field.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -806,9 +811,10 @@
         "graphql_field_name": "advice",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_who_its_for",
@@ -856,8 +862,8 @@
         "key": "field_solemart_guide_final_verdict",
         "label": "Final verdict",
         "name": "final_verdict",
-        "type": "textarea",
-        "instructions": "Your concluding recommendation. Use plain text.",
+        "type": "wysiwyg",
+        "instructions": "Your concluding recommendation, including relevant editorial links. Retailer/affiliate URLs stay in the separate Shoe URL field.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -869,9 +875,10 @@
         "graphql_field_name": "finalVerdict",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_faqs_tab",
@@ -915,8 +922,8 @@
         "key": "field_solemart_guide_faq_1_answer",
         "label": "FAQ 1: answer",
         "name": "faq_1_answer",
-        "type": "textarea",
-        "instructions": "Optional. Leave both question and answer empty to omit this FAQ.",
+        "type": "wysiwyg",
+        "instructions": "Optional formatted FAQ answer with editorial links. Leave both question and answer empty to omit this FAQ.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -928,9 +935,10 @@
         "graphql_field_name": "faq1Answer",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_faq_2_question",
@@ -955,8 +963,8 @@
         "key": "field_solemart_guide_faq_2_answer",
         "label": "FAQ 2: answer",
         "name": "faq_2_answer",
-        "type": "textarea",
-        "instructions": "Optional. Leave both question and answer empty to omit this FAQ.",
+        "type": "wysiwyg",
+        "instructions": "Optional formatted FAQ answer with editorial links. Leave both question and answer empty to omit this FAQ.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -968,9 +976,10 @@
         "graphql_field_name": "faq2Answer",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_faq_3_question",
@@ -995,8 +1004,8 @@
         "key": "field_solemart_guide_faq_3_answer",
         "label": "FAQ 3: answer",
         "name": "faq_3_answer",
-        "type": "textarea",
-        "instructions": "Optional. Leave both question and answer empty to omit this FAQ.",
+        "type": "wysiwyg",
+        "instructions": "Optional formatted FAQ answer with editorial links. Leave both question and answer empty to omit this FAQ.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -1008,9 +1017,10 @@
         "graphql_field_name": "faq3Answer",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_faq_4_question",
@@ -1035,8 +1045,8 @@
         "key": "field_solemart_guide_faq_4_answer",
         "label": "FAQ 4: answer",
         "name": "faq_4_answer",
-        "type": "textarea",
-        "instructions": "Optional. Leave both question and answer empty to omit this FAQ.",
+        "type": "wysiwyg",
+        "instructions": "Optional formatted FAQ answer with editorial links. Leave both question and answer empty to omit this FAQ.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -1048,9 +1058,10 @@
         "graphql_field_name": "faq4Answer",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       },
       {
         "key": "field_solemart_guide_seo_tab",
@@ -1129,7 +1140,7 @@
     "hide_on_screen": [],
     "active": true,
     "description": "Content for the existing SOLEMART Next.js template. No layout changes or executable WordPress code.",
-    "show_in_rest": 0,
+    "show_in_rest": 1,
     "show_in_graphql": 1,
     "graphql_field_name": "SolemartBuyingGuideFields",
     "map_graphql_types_from_location_rules": 1,
@@ -1360,10 +1371,10 @@
       },
       {
         "key": "field_solemart_shoe_commentary",
-        "label": "General shoe commentary",
+        "label": "Product Full Review",
         "name": "commentary",
-        "type": "textarea",
-        "instructions": "Optional reusable discussion. Separate paragraphs with a blank line. Guide-specific commentary takes precedence.",
+        "type": "wysiwyg",
+        "instructions": "Reusable product full review. Use paragraphs, lists and editorial links. Guide-specific commentary takes precedence; retailer/affiliate URLs stay in their separate URL field.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -1375,9 +1386,10 @@
         "graphql_field_name": "commentary",
         "graphql_non_null": 0,
         "default_value": "",
-        "placeholder": "",
-        "rows": 4,
-        "new_lines": ""
+        "tabs": "visual",
+        "toolbar": "basic",
+        "media_upload": 0,
+        "delay": 0
       }
     ],
     "location": [
@@ -1397,7 +1409,7 @@
     "hide_on_screen": [],
     "active": true,
     "description": "Content for the existing SOLEMART Next.js template. No layout changes or executable WordPress code.",
-    "show_in_rest": 0,
+    "show_in_rest": 1,
     "show_in_graphql": 1,
     "graphql_field_name": "SolemartShoeFields",
     "map_graphql_types_from_location_rules": 1,

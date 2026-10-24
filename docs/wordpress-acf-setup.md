@@ -29,8 +29,8 @@ publishing webhook in this setup.
 - Keep WPGraphQL and CPT UI active. Keep any existing SOLEMART Guide Fields plugin
   and its saved metadata until migration is verified.
 - Activate **Advanced Custom Fields (ACF)** and **WPGraphQL for ACF**. ACF Free is
-  sufficient; this configuration uses text, textarea, URL, Post Object and Tab
-  fields. There are no Pro repeater, flexible-content, or clone fields.
+  sufficient; this configuration uses text, textarea, WYSIWYG, URL, Post Object
+  and Tab fields. There are no Pro repeater, flexible-content, or clone fields.
 - Do not create a second Buying Guides post type in ACF. CPT UI continues to own
   the existing post type, whose slug must remain `buying_guides`.
 
@@ -74,7 +74,10 @@ You should see these two active groups under **ACF → Field Groups**:
 - **SOLEMART Buying Guide — ACF**, location: Post Type equals Buying Guides.
 - **SOLEMART Shoe — ACF**, location: Post Type equals Shoe.
 
-The import sets GraphQL visibility and stable field names. Check the GraphQL
+The import sets GraphQL visibility, native ACF REST visibility and stable field names.
+Introduction, Buying Advice Text, Product Full Review/commentary, Final Verdict
+and FAQ answers use WYSIWYG editors; see [rich-text setup](wordpress-rich-text.md)
+for the optional exact minimal toolbar and link behavior. Check the GraphQL
 settings if the group is missing from the API:
 
 | Group | GraphQL Type Name | GraphQL location | Query field |
@@ -99,7 +102,7 @@ Open **Shoes → Add New**:
   `Label | Value` for specifications, one specification per line.
 - Enter a real retailer/affiliate URL or leave it blank. Leave Full-review URL
   blank unless that separate public review exists.
-- Separate commentary paragraphs with a blank line. Publish the Shoe.
+- Use the Product Full Review editor for formatted commentary and links. Publish the Shoe.
 
 ## 5. Fill one Buying Guide
 
@@ -243,7 +246,7 @@ Automated adapter/mapping tests and production-browser fixture checks cover this
 connection locally. The cloud cannot access the live CMS, so these do not replace
 WordPress editor/public-API and deployment checks.
 
-Local verification passed 41 automated tests, production compilation/type checks,
+Local verification passed 53 automated tests, production compilation/type checks,
 and browser checks at 390px, 768px and 1440px. Checks covered the unchanged template,
 metadata/schema, sanitized body, product images, affiliate attributes, FAQ behavior,
 JavaScript-disabled rendering, legacy/default-field migration, actual 404/500
@@ -263,7 +266,7 @@ GraphQL name in the JSON. Tabs only organize the editor and are excluded below.
 
 | ACF name | Field type | GraphQL field |
 | --- | --- | --- |
-| `intro` | textarea | `intro` |
+| `intro` | wysiwyg | `intro` |
 | `category` | text | `category` |
 | `author` | text | `author` |
 | `reviewed_by` | text | `reviewedBy` |
@@ -275,38 +278,38 @@ GraphQL name in the JSON. Tabs only organize the editor and are excluded below.
 | `pick_1_reason` | textarea | `pick1Reason` |
 | `pick_1_best_for` | text | `pick1BestFor` |
 | `pick_1_avoid_if` | text | `pick1AvoidIf` |
-| `pick_1_commentary` | textarea | `pick1Commentary` |
+| `pick_1_commentary` | wysiwyg | `pick1Commentary` |
 | `pick_2_shoe` | post_object | `pick2Shoe` |
 | `pick_2_award` | text | `pick2Award` |
 | `pick_2_reason` | textarea | `pick2Reason` |
 | `pick_2_best_for` | text | `pick2BestFor` |
 | `pick_2_avoid_if` | text | `pick2AvoidIf` |
-| `pick_2_commentary` | textarea | `pick2Commentary` |
+| `pick_2_commentary` | wysiwyg | `pick2Commentary` |
 | `pick_3_shoe` | post_object | `pick3Shoe` |
 | `pick_3_award` | text | `pick3Award` |
 | `pick_3_reason` | textarea | `pick3Reason` |
 | `pick_3_best_for` | text | `pick3BestFor` |
 | `pick_3_avoid_if` | text | `pick3AvoidIf` |
-| `pick_3_commentary` | textarea | `pick3Commentary` |
+| `pick_3_commentary` | wysiwyg | `pick3Commentary` |
 | `pick_4_shoe` | post_object | `pick4Shoe` |
 | `pick_4_award` | text | `pick4Award` |
 | `pick_4_reason` | textarea | `pick4Reason` |
 | `pick_4_best_for` | text | `pick4BestFor` |
 | `pick_4_avoid_if` | text | `pick4AvoidIf` |
-| `pick_4_commentary` | textarea | `pick4Commentary` |
+| `pick_4_commentary` | wysiwyg | `pick4Commentary` |
 | `how_we_chose` | textarea | `howWeChose` |
-| `advice` | textarea | `advice` |
+| `advice` | wysiwyg | `advice` |
 | `who_its_for` | textarea | `whoItsFor` |
 | `mistakes_to_avoid` | textarea | `mistakesToAvoid` |
-| `final_verdict` | textarea | `finalVerdict` |
+| `final_verdict` | wysiwyg | `finalVerdict` |
 | `faq_1_question` | text | `faq1Question` |
-| `faq_1_answer` | textarea | `faq1Answer` |
+| `faq_1_answer` | wysiwyg | `faq1Answer` |
 | `faq_2_question` | text | `faq2Question` |
-| `faq_2_answer` | textarea | `faq2Answer` |
+| `faq_2_answer` | wysiwyg | `faq2Answer` |
 | `faq_3_question` | text | `faq3Question` |
-| `faq_3_answer` | textarea | `faq3Answer` |
+| `faq_3_answer` | wysiwyg | `faq3Answer` |
 | `faq_4_question` | text | `faq4Question` |
-| `faq_4_answer` | textarea | `faq4Answer` |
+| `faq_4_answer` | wysiwyg | `faq4Answer` |
 | `seo_title` | text | `seoTitle` |
 | `meta_description` | textarea | `metaDescription` |
 
@@ -324,4 +327,4 @@ GraphQL name in the JSON. Tabs only organize the editor and are excluded below.
 | `cushioning` | text | `cushioning` |
 | `width_options` | text | `widthOptions` |
 | `main_strength` | text | `mainStrength` |
-| `commentary` | textarea | `commentary` |
+| `commentary` | wysiwyg | `commentary` |

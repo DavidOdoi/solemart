@@ -4,6 +4,7 @@ import { cache } from 'react'
 import { decodeHTML } from 'entities'
 import sanitizeHtml from 'sanitize-html'
 import type { BlogPost } from '@/data/blog'
+import { sanitizeCmsArticleHtml as articleHtml } from './cms-rich-text.ts'
 
 type WordPressPost = {
   title: string | null
@@ -76,39 +77,6 @@ function utcDate(value: string | null) {
   if (!value) return undefined
   const date = new Date(value.endsWith('Z') ? value : `${value}Z`)
   return Number.isNaN(date.getTime()) ? undefined : date.toISOString()
-}
-
-function articleHtml(content: string) {
-  return sanitizeHtml(content, {
-    allowedTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'a', 'strong', 'b', 'em', 'i', 's', 'del', 'u', 'blockquote', 'pre', 'code', 'br', 'hr', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'figure', 'figcaption', 'img', 'sup', 'sub', 'dl', 'dt', 'dd', 'span', 'div'],
-    allowedAttributes: {
-      a: ['href', 'title', 'target', 'rel'],
-      h2: ['id'],
-      h3: ['id'],
-      img: ['src', 'alt', 'width', 'height', 'loading', 'decoding'],
-      th: ['scope', 'colspan', 'rowspan'],
-      td: ['colspan', 'rowspan'],
-      ol: ['start', 'reversed'],
-    },
-    allowedSchemes: ['https', 'http', 'mailto'],
-    allowedSchemesByTag: { img: ['https', 'http'] },
-    allowProtocolRelative: false,
-    transformTags: {
-      h1: 'h2',
-      a: (tagName, attributes) => {
-        const rel = new Set((attributes.rel || '').split(/\s+/).filter(Boolean))
-        let retailer = false
-        try {
-          const url = new URL(attributes.href)
-          retailer = ['amazon.com', 'amzn.to'].some(host => url.hostname === host || url.hostname.endsWith(`.${host}`))
-        } catch { /* Relative source links are permitted by the sanitizer. */ }
-        if (retailer || rel.has('sponsored')) { rel.add('sponsored'); rel.add('nofollow') }
-        if (attributes.target === '_blank') { rel.add('noopener'); rel.add('noreferrer') }
-        return { tagName, attribs: rel.size ? { ...attributes, rel: [...rel].join(' ') } : attributes }
-      },
-      img: (tagName, attributes) => ({ tagName, attribs: { ...attributes, loading: 'lazy', decoding: 'async' } }),
-    },
-  })
 }
 
 function featuredImage(image: NonNullable<WordPressPost['featuredImage']>['node']): BlogPost['featuredImage'] {
@@ -405,11 +373,11 @@ export const getWordPressAcfBuyingGuide = cache(async (slug: string): Promise<{
     post: {
       ...postPreview({
         ...guide,
-        excerpt: plainText(guide.excerpt) || plainText(typeof fields.intro === 'string' ? fields.intro : '') || guideBodySummary(guide.content),
+        excerpt: plainText(guide.excerpt) || guideBodySummary(typeof fields.intro === 'string' ? fields.intro : '') || guideBodySummary(guide.content),
         author: author ? { node: { name: author } } : null,
       }),
       category: 'BUYING GUIDE', modifiedAt: utcDate(guide.modifiedGmt),
-      paragraphs: [], contentHtml: articleHtml(guide.content || ''),
+      paragraphs: [], contentHtml: articleHtml(guide.content || '', shoes.flatMap(shoe => typeof shoe?.solemartShoeFields?.affiliateUrl === 'string' ? [shoe.solemartShoeFields.affiliateUrl] : [])),
     },
     fields,
     shoes: shoes.filter((shoe): shoe is WordPressAcfShoe => shoe !== null),
