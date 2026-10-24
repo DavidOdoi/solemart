@@ -1,6 +1,6 @@
 import { test, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { getWordPressAcfBuyingGuide, getWordPressGuideFields } from '../lib/wordpress.ts'
+import { getWordPressAcfBuyingGuide, getWordPressBuyingGuide, getWordPressGuideFields } from '../lib/wordpress.ts'
 import { hasAcfGuideContent, mapAcfGuideFields } from '../lib/guide-fields.ts'
 
 const originalFetch = globalThis.fetch
@@ -29,6 +29,53 @@ test('ACF defaults do not opt an unmigrated guide out of its legacy content',()=
 test('HTTP 400 for a missing optional legacy field does not make a published guide fail', async () => {
  globalThis.fetch = async () => Response.json({errors:[{message:'Cannot query field "solemartGuideData" on type "BuyingGuide".'}]},{status:400})
  assert.equal(await getWordPressGuideFields(post.slug),null)
+})
+
+test('a CPT without Excerpt support still returns the ACF guide on HTTP 200 and 400', async () => {
+ for (const status of [200,400]) {
+  const calls=[]
+  globalThis.fetch=async (_url,options)=>{
+   const payload=JSON.parse(options.body);calls.push(payload)
+   assert.equal(options.next.revalidate,60)
+   if (/\bexcerpt\b/.test(payload.query))return Response.json({errors:[{message:'Cannot query field "excerpt" on type "BuyingGuide".',locations:[{line:3,column:32}]}]},{status})
+   const {excerpt,...native}=post
+   return Response.json({data:{buyingGuide:{...native,solemartBuyingGuideFields:{intro:'The real guide introduction.',author:'David'}}}})
+  }
+  const result=await getWordPressAcfBuyingGuide(post.slug)
+  assert.equal(calls.length,2)
+  assert.deepEqual(calls[0].variables,calls[1].variables)
+  assert.match(calls[0].query,/\bexcerpt\b/);assert.doesNotMatch(calls[1].query,/\bexcerpt\b/)
+  assert.equal(result.post.title,post.title)
+  assert.equal(result.post.excerpt,'The real guide introduction.')
+  assert.equal(mapAcfGuideFields(result.post,result.fields,result.shoes).guide.metaDescription,'The real guide introduction.')
+ }
+})
+
+test('the legacy/native guide adapter also tolerates a missing Excerpt capability',async()=>{
+ let calls=0
+ globalThis.fetch=async(_url,options)=>{
+  calls++
+  const payload=JSON.parse(options.body)
+  if (/\bexcerpt\b/.test(payload.query))return Response.json({errors:[{message:'Cannot query field "excerpt" on type "BuyingGuide".'}]},{status:400})
+  const {excerpt,...native}=post
+  return Response.json({data:{buyingGuide:native}})
+ }
+ const result=await getWordPressBuyingGuide(post.slug)
+ assert.equal(calls,2);assert.equal(result.excerpt,'Fit guide Real article.')
+})
+
+test('excerpt retry preserves missing-ACF detection but never hides unrelated errors',async()=>{
+ let calls=0
+ globalThis.fetch=async(_url,options)=>{
+  calls++
+  const errors=[{message:'Cannot query field "solemartBuyingGuideFields" on type "BuyingGuide".'}]
+  if (/\bexcerpt\b/.test(JSON.parse(options.body).query))errors.push({message:'Cannot query field "excerpt" on type "BuyingGuide".'})
+  return Response.json({errors},{status:400})
+ }
+ assert.equal(await getWordPressAcfBuyingGuide(post.slug),undefined);assert.equal(calls,2)
+ calls=0
+ globalThis.fetch=async()=>{calls++;return Response.json({errors:[{message:'Cannot query field "excerpt" on type "BuyingGuide".'},{message:'Database unavailable'}]},{status:400})}
+ await assert.rejects(getWordPressAcfBuyingGuide(post.slug),/could not return/);assert.equal(calls,1)
 })
 
 test('absent ACF schema is distinguishable from a missing guide and other HTTP 400 errors', async () => {

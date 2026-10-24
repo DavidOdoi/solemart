@@ -68,6 +68,10 @@ function plainText(html: string | null | undefined) {
     .replace(/\s+/g, ' ').trim()
 }
 
+function guideBodySummary(html: string | null | undefined) {
+  return plainText((html || '').replace(/<\/(?:h[1-6]|p|li|div|blockquote|tr|figcaption)>|<br\s*\/?>/gi, '$& '))
+}
+
 function utcDate(value: string | null) {
   if (!value) return undefined
   const date = new Date(value.endsWith('Z') ? value : `${value}Z`)
@@ -135,6 +139,8 @@ class MissingGuideFieldsError extends Error {
   }
 }
 
+class MissingGuideExcerptError extends Error {}
+
 async function queryWordPress<T>(query: string, variables: Record<string, string | null>, tags: string[]): Promise<T> {
   const endpoint = process.env.WORDPRESS_GRAPHQL_URL
 
@@ -161,6 +167,11 @@ async function queryWordPress<T>(query: string, variables: Record<string, string
   }
 
   const result = await response.json() as { data?: T; errors?: { message?: string }[] }
+  const missingExcerpt = 'Cannot query field "excerpt" on type "BuyingGuide".'
+  if (result.errors?.some(error => error.message?.startsWith(missingExcerpt))
+    && result.errors.every(error => [missingExcerpt, 'Cannot query field "solemartGuideData" on type "BuyingGuide".', 'Cannot query field "solemartBuyingGuideFields" on type "BuyingGuide".'].some(prefix => error.message?.startsWith(prefix)))) {
+    throw new MissingGuideExcerptError('WordPress Buying Guides do not support excerpts.')
+  }
   for (const field of ['solemartGuideData', 'solemartBuyingGuideFields'] as const) {
     if (result.errors?.length && result.errors.every(error => error.message?.startsWith(`Cannot query field "${field}" on type "BuyingGuide".`))) {
       throw new MissingGuideFieldsError(field)
@@ -173,6 +184,16 @@ async function queryWordPress<T>(query: string, variables: Record<string, string
   }
   if (!response.ok) throw new Error('WordPress articles are temporarily unavailable.', { cause: new Error(`WordPress returned HTTP ${response.status}`) })
   return result.data
+}
+
+/** CPT UI can omit Excerpt support; retry once without that optional selection. */
+async function queryBuyingGuide<T>(query: string, variables: Record<string, string | null>, tags: string[]): Promise<T> {
+  try {
+    return await queryWordPress<T>(query, variables, tags)
+  } catch (error) {
+    if (!(error instanceof MissingGuideExcerptError) || !/\bexcerpt\b/.test(query)) throw error
+    return queryWordPress<T>(query.replace(/\bexcerpt\b/g, ''), variables, tags)
+  }
 }
 
 function postPreview(post: WordPressPreview): BlogPostPreview {
@@ -244,7 +265,7 @@ export const getWordPressBuyingGuide = cache(async (slug: string): Promise<BlogP
       }
     }
   `
-  const data = await queryWordPress<{ buyingGuide?: Omit<WordPressPost, 'author'> | null }>(
+  const data = await queryBuyingGuide<{ buyingGuide?: Omit<WordPressPost, 'author'> | null }>(
     query, { slug }, ['wordpress:buying-guides', `wordpress:buying-guide:${slug}`],
   )
   if (!Object.hasOwn(data, 'buyingGuide')) throw new Error('WordPress could not return the requested buying guide.')
@@ -252,7 +273,7 @@ export const getWordPressBuyingGuide = cache(async (slug: string): Promise<BlogP
   if (!guide || guide.status !== 'publish') return null
   if (guide.slug !== slug || !plainText(guide.title)) throw new Error('WordPress returned an incomplete buying guide.')
   return {
-    ...postPreview({ ...guide, author: null }),
+    ...postPreview({ ...guide, excerpt: plainText(guide.excerpt) || guideBodySummary(guide.content), author: null }),
     category: 'BUYING GUIDE',
     modifiedAt: utcDate(guide.modifiedGmt),
     paragraphs: [],
@@ -359,7 +380,7 @@ export const getWordPressAcfBuyingGuide = cache(async (slug: string): Promise<{
   if (!/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
   let data: { buyingGuide?: (Omit<WordPressPost, 'author'> & { id: string; solemartBuyingGuideFields?: AcfGuideFields | null }) | null }
   try {
-    data = await queryWordPress(acfGuideQuery, { slug }, ['wordpress:buying-guides', `wordpress:buying-guide:${slug}`])
+    data = await queryBuyingGuide(acfGuideQuery, { slug }, ['wordpress:buying-guides', `wordpress:buying-guide:${slug}`])
   } catch (error) {
     if (error instanceof MissingGuideFieldsError && error.field === 'solemartBuyingGuideFields') return undefined
     throw error
@@ -382,7 +403,11 @@ export const getWordPressAcfBuyingGuide = cache(async (slug: string): Promise<{
   ])
   return {
     post: {
-      ...postPreview({ ...guide, author: author ? { node: { name: author } } : null }),
+      ...postPreview({
+        ...guide,
+        excerpt: plainText(guide.excerpt) || plainText(typeof fields.intro === 'string' ? fields.intro : '') || guideBodySummary(guide.content),
+        author: author ? { node: { name: author } } : null,
+      }),
       category: 'BUYING GUIDE', modifiedAt: utcDate(guide.modifiedGmt),
       paragraphs: [], contentHtml: articleHtml(guide.content || ''),
     },

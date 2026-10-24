@@ -172,6 +172,28 @@ Also verify while logged out: paste this query into the public
 GraphiQL can expose drafts and private records that Next.js must not publish.
 A null selection usually means no Shoe was selected, saved or published.
 
+If WordPress reports `Cannot query field "excerpt" on type "BuyingGuide"`, open
+**CPT UI → Add/Edit Post Types → Buying Guides → Supports**, enable **Excerpt**,
+and save the post type. The adapter also handles this capability being absent:
+it retries the guide query once without `excerpt`, for both HTTP 200 and 400
+validation responses. Explicit ACF meta descriptions still take precedence;
+otherwise summaries use a native excerpt, the ACF introduction, or sanitized
+visible article text. Unrelated API errors are not suppressed by this retry.
+
+If `buyingGuide` is null, verify the actual public slug before changing code:
+
+```graphql
+query PublishedGuideSlugs {
+  buyingGuides(first: 20) { nodes { title slug status } }
+}
+```
+
+WordPress generates a slug from the full title unless the editor sets one. In
+the live setup, the user confirmed the published sandal guide had slug
+`best-wide-toe-box-sandals-for-2026-our-top-4-picks`, while the shorter
+`best-wide-toe-box-sandals` lookup returned null. Public frontend URLs must use
+the actual saved slug: `/best-shoes/{slug}`. The title and slug need not match.
+
 The development environment cannot currently reach the live CMS due to its
 network proxy. Import syntax/source checks are not a substitute for a successful
 ACF import and anonymous query on the actual WordPress installation.
@@ -203,8 +225,9 @@ copy its legacy values before switching. Never delete old metadata prematurely.
 
 ## Remaining live verification and launch work
 
-1. Activate WPGraphQL for ACF and verify the query above anonymously. The user
-   confirmed the bridge was not installed when the field was first unavailable.
+1. The user has confirmed WPGraphQL for ACF is now active. Public API checks
+   identified missing Excerpt support and the different saved guide slug, both
+   covered above. Verify the complete guide response using its actual slug.
 2. Check the actual published guide, pictures, recommendation slots and links.
    Change a guide field and a reused Shoe, then verify updates after the cache
    becomes eligible for revalidation. A first request may still serve stale HTML
@@ -220,13 +243,16 @@ Automated adapter/mapping tests and production-browser fixture checks cover this
 connection locally. The cloud cannot access the live CMS, so these do not replace
 WordPress editor/public-API and deployment checks.
 
-Local verification passed 38 automated tests, production compilation/type checks,
+Local verification passed 41 automated tests, production compilation/type checks,
 and browser checks at 390px, 768px and 1440px. Checks covered the unchanged template,
 metadata/schema, sanitized body, product images, affiliate attributes, FAQ behavior,
 JavaScript-disabled rendering, legacy/default-field migration, actual 404/500
 responses and the existing blog. A running production fixture test observed a
 guide-field edit and shared Shoe edit in two guides after 66 seconds, without a
 rebuild. Fixture images and responses do not establish live CMS connectivity.
+Additional production-browser checks reproduced missing Excerpt support for ACF,
+native/legacy and empty-field guides, including summary fallbacks, mobile layout,
+JavaScript-disabled content and real missing/private 404 responses.
 
 ## Exact imported fields
 
