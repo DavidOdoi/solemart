@@ -160,7 +160,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
 
         {show.picks && <section id="top-picks" aria-labelledby="top-picks-heading" className="relative mx-auto mt-14 max-w-5xl scroll-mt-36 overflow-visible rounded-sm border-[3px] border-[#e86d35] bg-white pt-4 shadow-sm">
           <span aria-hidden="true" className="top-picks-ribbon absolute -top-[19px] left-5 z-10">TOP PICKS</span>
-          <div className="border-b border-[#e7e5de] px-5 pb-5 pt-4 sm:px-7"><p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">THE SHORTLIST</p><h2 id="top-picks-heading" className="mt-1 font-sans text-3xl font-black tracking-tight sm:text-4xl">Our Top Picks</h2><p className="mt-3 max-w-2xl text-base font-medium leading-7 text-[#4f4e49] sm:text-lg">A quick comparison to help you choose where to start. Confirm fit, current model details, and availability before buying.</p></div>
+          <div className="border-b border-[#e7e5de] px-5 pb-5 pt-4 sm:px-7"><h2 id="top-picks-heading" className="font-sans text-3xl font-black tracking-tight sm:text-4xl">Our Top Picks</h2><p className="mt-3 max-w-2xl text-base font-medium leading-7 text-[#4f4e49] sm:text-lg">A quick comparison to help you choose where to start. Confirm fit, current model details, and availability before buying.</p></div>
           {picks.length ? picks.map((product, index) => <TopPickCard key={product.slug} product={product} index={index} preview={preview} />) : <p className="p-6 text-sm text-[#68675f]">Recommendations are being updated. Check back soon.</p>}
         </section>}
 
