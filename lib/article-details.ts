@@ -14,11 +14,11 @@ export function getReadingMinutes(html: string): number {
 export type ArticleHeading = { id: string; label: string; level: 2 | 3 }
 
 /** Adds anchors to the canonical H2/H3 markup produced by the article HTML sanitizer. */
-export function getArticleContents(sanitizedHtml: string): { html: string; headings: ArticleHeading[] } {
+export function getArticleContents(sanitizedHtml: string, reservedIds: string[] = []): { html: string; headings: ArticleHeading[] } {
   // Sanitized headings allow only an optional id; all other attributes have been removed.
   const pattern = /<(h[23])(?:\s+id="([^"]*)")?\s*>([\s\S]*?)<\/\1>/gi
   const validId = (value: string) => /^[A-Za-z][A-Za-z0-9_.:-]{0,120}$/.test(value)
-  const reserved = new Set(['top', 'about-author', 'about-author-heading', 'article-contents'])
+  const reserved = new Set(['top', 'about-author', 'about-author-heading', 'article-contents', ...reservedIds])
   const customIds = new Set([...sanitizedHtml.matchAll(pattern)].map(match => decodeHTML(match[2] || '')).filter(validId))
   const used = new Set(reserved)
   const headings: ArticleHeading[] = []

@@ -5,7 +5,7 @@ import sanitizeHtml from 'sanitize-html'
 
 const siteHosts = new Set(['thesolemart.com', 'www.thesolemart.com'])
 const fieldTags = ['p', 'br', 'strong', 'b', 'em', 'i', 'ul', 'ol', 'li', 'a']
-const articleTags = [...fieldTags, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'del', 'u', 'blockquote', 'pre', 'code', 'hr', 'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'figure', 'figcaption', 'img', 'sup', 'sub', 'dl', 'dt', 'dd', 'span', 'div']
+const articleTags = [...fieldTags, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'del', 'u', 'blockquote', 'pre', 'code', 'hr', 'table', 'caption', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'figure', 'figcaption', 'img', 'sup', 'sub', 'dl', 'dt', 'dd', 'span', 'div']
 
 function links(retailerUrls: string[]) {
   const retailers = new Set(['amazon.com', 'amzn.to'])

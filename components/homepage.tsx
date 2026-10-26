@@ -123,7 +123,7 @@ export default function SolemartHome() {
         }))}
       />
 
-      <section className="border-y border-[#e8e7e2] bg-white">
+      <section id="comparisons" className="border-y border-[#e8e7e2] bg-white">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
           <SectionHeading eyebrow="KNOW YOUR OPTIONS" title="Compare before you buy" href={`/comparisons/${comparisons[0].slug}`} linkLabel="View comparisons" />
           <div className="grid gap-4 md:grid-cols-2">{comparisons.map((comparison, index) => <ComparisonCard key={comparison.slug} comparison={comparison} index={index} />)}</div>
