@@ -87,7 +87,7 @@ function FullReviewCard({ product, preview }: { product: Product; preview: boole
           <h3 className="font-serif text-2xl leading-tight sm:text-3xl">{product.name}</h3>
           <EditorialRichText value={product.reviewHtml || product.review.join('\n\n')} className="mt-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />
           {!product.cmsManaged && <p className="mt-3 text-xs leading-5 text-[#77766f]">Sample editorial profile. Confirm current model details, fit, and availability with the retailer.</p>}
-          {product.avoidIf && <p className="mt-4 text-base leading-7 text-[#4f4e49]"><strong>Avoid if:</strong> {product.avoidIf}</p>}
+          {product.avoidIf && <p className="mt-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]"><strong>Avoid if:</strong> {product.avoidIf}</p>}
         </div>
       </div>
       <div className="mt-7 grid min-w-0 gap-6">
