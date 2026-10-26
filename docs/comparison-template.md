@@ -14,9 +14,10 @@ noindex/nofollow and omits article/product/FAQ schema for sample content.
 2. Direct answer followed by two choice cards and links to relevant buying guides.
 3. Side-by-side differences table, in its own keyboard-accessible scroll region.
 4. Situations that change the recommendation, trade-offs and a buying checklist.
-5. Natural-language FAQs, methodology and citations within the article body.
-6. Final decision and two editorial next steps; author details use the existing
-   author component and genuine profile data when supplied.
+5. FAQs in the same expandable component as buying guides, plus methodology and
+   citations within the article body.
+6. Final decision and two editorial next steps. The byline remains; the separate
+   author/profile/share card is omitted from comparisons.
 
 Use the established SOLEMART colors and 17 px mobile / 19 px desktop reading
 size. Optional featured images use the same 800 × 450 responsive frame as guides.
@@ -32,32 +33,28 @@ body**: definitions, the native Table block, use cases, trade-offs, checklist,
 FAQs and sources. The frontend generates contents links from H2/H3 headings.
 Editors do not need a separate custom field for each table row or FAQ.
 
-Only eight additional comparison fields are needed, of which the two guide
-links are optional. Proposed ACF names and their frontend mapping:
+The recommendation is now **native WordPress Posts plus one Gutenberg article**
+for this type of comparison, with shared Next.js article styling. A dedicated
+comparison ACF form is unnecessary. The earlier preview's eight fields remain
+internal design-fixture properties; do not create a mandatory eight-field form
+on their account. Quick answers, choice guidance, tables and verdicts can all
+be authored using normal blocks when connecting the publishing flow.
 
-| ACF name | Type | Frontend field |
-| --- | --- | --- |
-| `quick_answer` | WYSIWYG, Basic/minimal toolbar | `quickAnswer` |
-| `left_name` | Text | `leftName` |
-| `left_choose_if` | Textarea | `leftChooseIf` |
-| `left_guide_url` | Text, frontend relative path | `leftGuideUrl` |
-| `right_name` | Text | `rightName` |
-| `right_choose_if` | Textarea | `rightChooseIf` |
-| `right_guide_url` | Text, frontend relative path | `rightGuideUrl` |
-| `final_verdict` | WYSIWYG, Basic/minimal toolbar | `finalVerdict` |
+For the matching FAQ accordion, use an H2 named **Frequently asked questions**
+(or **FAQs**), then an H3 for each question and paragraphs/lists for its answer.
+The comparison renderer automatically uses the same `EditorialFaqList` component
+as the buying guide. It preserves the question anchors, answer formatting and
+surrounding sections. Incomplete FAQ sections remain normal article content
+rather than losing text. No custom FAQ fields or WordPress plugin are required.
 
-There are no repeaters, four recommendation slots, duplicate product records,
-custom WordPress plugins or publishing webhooks. Optional SEO overrides can be
-mapped separately; the native title and excerpt are suitable defaults. Rank Math
-settings do not automatically control Next.js metadata.
-
-`ComparisonTemplate` already accepts the native article view model plus these
-eight fields. The subsequent CMS task is to configure the agreed WordPress
-comparison location and map its published GraphQL response to this model,
-retaining server-side fetching, 60-second revalidation and real missing-page 404s.
-No ACF import, post type registration or API change is applied by this design
-commit. Do not treat the preview as the `/comparisons/sneakers-vs-walking-shoes`
-production article or add it to the sitemap.
+The existing Posts-to-`/blog/[slug]` publishing path already works. Applying this
+comparison presentation to native Posts at `/comparisons/[slug]` still requires
+a routing/data-adapter step, retaining server-side fetching, 60-second revalidation
+and real missing-page 404s. This design update does not apply a WordPress import,
+change post types or migrate URLs. Optional SEO overrides can be mapped separately;
+Rank Math settings do not automatically control Next.js metadata. Do not treat
+the preview as the `/comparisons/sneakers-vs-walking-shoes` production article or
+add it to the sitemap.
 
 ## Editorial and SEO requirements
 
@@ -96,7 +93,7 @@ Preview copy lives in `data/comparison-template-preview.ts`; change the shared
 `components/comparison-template.tsx` to refine the layout. Existing routes do
 not fall back to this preview's sample content.
 
-Validation: production build and TypeScript passed; all 58 automated tests passed.
+Validation: production build and TypeScript passed; all 61 automated tests passed.
 Browser checks at 360, 390, 768, 1024, 1440 and 1920 px verified readable table
 columns, keyboard scrolling, unique contents anchors, decision links, external
 link attributes, matching reading sizes, no page overflow and preview metadata.

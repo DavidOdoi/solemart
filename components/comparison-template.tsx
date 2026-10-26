@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { ArrowDown, ArrowRight, Check, Clock3 } from 'lucide-react'
 import type { ComparisonTemplateContent } from '@/data/comparison-template'
 import { Breadcrumbs } from '@/components/affiliate-site'
-import { ArticleAuthor } from '@/components/article-author'
 import { EditorialRichText } from '@/components/editorial-rich-text'
+import { EditorialFaqList } from '@/components/editorial-faq-list'
 import { getReadingMinutes } from '@/lib/article-details'
 import { comparisonArticle, comparisonGuideHref } from '@/lib/comparison-article'
 import { editorialPlainText } from '@/lib/cms-rich-text'
@@ -30,7 +30,7 @@ export function ComparisonTemplate({ content, preview = false }: { content: Comp
     '@context': 'https://schema.org', '@type': 'Article', headline: post.title,
     description: post.excerpt, mainEntityOfPage: url,
     datePublished: post.publishedAt, dateModified: post.modifiedAt,
-    author: post.author ? { '@type': 'Person', name: post.author, url: `${url}#about-author` } : undefined,
+    author: post.author ? { '@type': 'Person', name: post.author } : undefined,
     image: post.featuredImage?.src,
     publisher: { '@type': 'Organization', name: 'SOLEMART' },
     articleBody: editorialPlainText([fields.quickAnswer, post.contentHtml, fields.finalVerdict].join('\n')),
@@ -43,7 +43,7 @@ export function ComparisonTemplate({ content, preview = false }: { content: Comp
           <h1 className="font-sans text-4xl font-black leading-[1.06] tracking-[-0.04em] text-[#111] sm:text-6xl lg:text-7xl">{post.title}</h1>
           {post.excerpt && <p className={`mt-5 max-w-3xl ${bodyType}`}>{post.excerpt}</p>}
           <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm leading-6 text-[#68675f]">
-            {post.author && <span>By <a href="#about-author" rel="author" className="font-bold text-[#161616] underline decoration-[#c4bfb5] underline-offset-4">{post.author}</a></span>}
+            {post.author && <span>By <strong className="font-bold text-[#161616]">{post.author}</strong></span>}
             <span className="inline-flex items-center gap-2"><Clock3 aria-hidden="true" className="size-4" />{readingMinutes} min read</span>
             {post.publishedAt && <span>Published <time dateTime={post.publishedAt}>{dateLabel(post.publishedAt)}</time></span>}
             {post.modifiedAt && post.modifiedAt !== post.publishedAt && <span>Updated <time dateTime={post.modifiedAt}>{dateLabel(post.modifiedAt)}</time></span>}
@@ -75,13 +75,18 @@ export function ComparisonTemplate({ content, preview = false }: { content: Comp
               <summary className="cursor-pointer text-base font-bold">On this page</summary>
               <nav aria-label="Comparison contents" className="mt-4"><ul className="space-y-3">{contents.map(item => <li key={item.id}><a href={`#${item.id}`} className="text-base leading-6 underline decoration-[#c9c7bf] underline-offset-4 hover:text-[#a74520]">{item.label}</a></li>)}</ul></nav>
             </details>
-            {article.html && <div className={`wordpress-content comparison-article ${bodyType}`} dangerouslySetInnerHTML={{ __html: article.html }} />}
+            {article.parts.length > 0 && <div className="space-y-12">{article.parts.map((part, index) => part.kind === 'html'
+              ? <div key={index} className={`wordpress-content comparison-article ${bodyType}`} dangerouslySetInnerHTML={{ __html: part.html }} />
+              : <section key={part.heading.id} id={part.heading.id} className="scroll-mt-48" aria-label={part.heading.label}>
+                <h2 className="font-sans text-4xl font-black leading-tight tracking-tight sm:text-5xl">{part.heading.label}</h2>
+                {part.introductionHtml && <EditorialRichText value={part.introductionHtml} className={`mt-4 ${bodyType}`} />}
+                <EditorialFaqList faqs={part.faqs} />
+              </section>)}</div>}
             {fields.finalVerdict && <section id="comparison-verdict" aria-labelledby="comparison-verdict-heading" className="mt-10 scroll-mt-48 rounded-2xl border border-[#e4ddd0] bg-[#f3f2ee] p-5 sm:p-8">
               <h2 id="comparison-verdict-heading" className="font-sans text-3xl font-black tracking-tight sm:text-4xl">Which should you buy?</h2>
               <EditorialRichText value={fields.finalVerdict} className={`mt-4 ${bodyType}`} />
               {options.some(option => option.href) && <div className="mt-6 flex flex-wrap gap-3">{options.filter(option => option.href).map(option => <Link key={option.id} href={option.href!} className="inline-flex min-h-12 items-center gap-3 rounded-lg border border-[#161616] bg-white px-4 py-3 text-base font-bold text-[#161616] hover:bg-[#161616] hover:text-white">Explore {option.name.toLowerCase()} <ArrowRight aria-hidden="true" className="size-4" /></Link>)}</div>}
             </section>}
-            {post.author && <div className="mt-10 border-t border-[#e5e4df] pt-7"><ArticleAuthor post={post} url={url} /></div>}
           </div>
           <aside className="hidden lg:block">
             <div className="sticky top-40 rounded-xl border border-[#e5e4df] p-5">

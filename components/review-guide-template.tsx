@@ -1,13 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { ArrowDown, ArrowRight, Check, X } from 'lucide-react'
+import { ArrowRight, Check, X } from 'lucide-react'
 import type { Guide } from '@/data/guides'
 import type { Product } from '@/data/products'
 import { Breadcrumbs } from '@/components/affiliate-site'
 import { affiliateUrl } from '@/lib/content'
 import { PickActions } from '@/components/pick-actions'
 import { EditorialRichText } from '@/components/editorial-rich-text'
+import { EditorialFaqList } from '@/components/editorial-faq-list'
 import { editorialPlainText } from '@/lib/cms-rich-text'
 
 function reviewHref(product: Product) {
@@ -217,7 +218,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
 
             {show.faqs && <section id="faqs" className="scroll-mt-36">
               <h2 className="font-sans text-4xl font-black leading-tight tracking-tight sm:text-5xl">{guide.title} FAQs</h2>
-              <div className="mt-4 border-t border-[#d9d8d2]">{guide.faqs.map(({ question, answer, answerHtml }) => <details key={question} className="group border-b border-[#d9d8d2] py-4 sm:py-5"><summary className="flex cursor-pointer list-none items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#e86d35] [&::-webkit-details-marker]:hidden"><span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#898880] text-[#161616]"><ArrowDown aria-hidden="true" className="size-5 transition-transform duration-200 group-open:rotate-180" /></span><span className="text-base font-black leading-snug sm:text-lg">{question}</span></summary><EditorialRichText value={answerHtml || answer} className="ml-14 mt-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" /></details>)}</div>
+              <EditorialFaqList faqs={guide.faqs} />
             </section>}
 
             {show.verdict && <section aria-labelledby="verdict-heading" className="rounded-2xl bg-[#f3f2ee] p-6 sm:p-8">
