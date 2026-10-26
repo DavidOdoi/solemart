@@ -2,6 +2,7 @@ import 'server-only'
 
 import { decodeHTML } from 'entities'
 import sanitizeHtml from 'sanitize-html'
+import { normalizeRankMathFaq } from './rank-math-faq.ts'
 
 const siteHosts = new Set(['thesolemart.com', 'www.thesolemart.com'])
 const fieldTags = ['p', 'br', 'strong', 'b', 'em', 'i', 'ul', 'ol', 'li', 'a']
@@ -35,7 +36,7 @@ function links(retailerUrls: string[]) {
 }
 
 function clean(value: string, article: boolean, retailerUrls: string[]) {
-  return sanitizeHtml(value, {
+  return sanitizeHtml(article ? normalizeRankMathFaq(value) : value, {
     allowedTags: article ? articleTags : fieldTags,
     allowedAttributes: {
       a: ['href', 'title', 'target', 'rel'],

@@ -4,7 +4,7 @@ import { ArrowDown, ArrowRight, Check, Clock3 } from 'lucide-react'
 import type { ComparisonTemplateContent } from '@/data/comparison-template'
 import { Breadcrumbs } from '@/components/affiliate-site'
 import { EditorialRichText } from '@/components/editorial-rich-text'
-import { EditorialFaqList } from '@/components/editorial-faq-list'
+import { EditorialArticleBody } from '@/components/editorial-article-body'
 import { getReadingMinutes } from '@/lib/article-details'
 import { comparisonArticle, comparisonGuideHref } from '@/lib/comparison-article'
 import { editorialPlainText } from '@/lib/cms-rich-text'
@@ -75,13 +75,7 @@ export function ComparisonTemplate({ content, preview = false }: { content: Comp
               <summary className="cursor-pointer text-base font-bold">On this page</summary>
               <nav aria-label="Comparison contents" className="mt-4"><ul className="space-y-3">{contents.map(item => <li key={item.id}><a href={`#${item.id}`} className="text-base leading-6 underline decoration-[#c9c7bf] underline-offset-4 hover:text-[#a74520]">{item.label}</a></li>)}</ul></nav>
             </details>
-            {article.parts.length > 0 && <div className="space-y-12">{article.parts.map((part, index) => part.kind === 'html'
-              ? <div key={index} className={`wordpress-content comparison-article ${bodyType}`} dangerouslySetInnerHTML={{ __html: part.html }} />
-              : <section key={part.heading.id} id={part.heading.id} className="scroll-mt-48" aria-label={part.heading.label}>
-                <h2 className="font-sans text-4xl font-black leading-tight tracking-tight sm:text-5xl">{part.heading.label}</h2>
-                {part.introductionHtml && <EditorialRichText value={part.introductionHtml} className={`mt-4 ${bodyType}`} />}
-                <EditorialFaqList faqs={part.faqs} />
-              </section>)}</div>}
+            {article.parts.length > 0 && <EditorialArticleBody parts={article.parts} />}
             {fields.finalVerdict && <section id="comparison-verdict" aria-labelledby="comparison-verdict-heading" className="mt-10 scroll-mt-48 rounded-2xl border border-[#e4ddd0] bg-[#f3f2ee] p-5 sm:p-8">
               <h2 id="comparison-verdict-heading" className="font-sans text-3xl font-black tracking-tight sm:text-4xl">Which should you buy?</h2>
               <EditorialRichText value={fields.finalVerdict} className={`mt-4 ${bodyType}`} />

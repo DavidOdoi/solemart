@@ -1,6 +1,6 @@
 # Blog author details
 
-Every `/blog/[slug]` article now has an author byline (when supplied), estimated reading time and publication/update dates. The name links to an author card on the same article. On desktop the card sits beside the body; on small screens it follows the body. The card shows the real WordPress display name, optional biography/avatar, links to existing editorial policies and user-initiated share links. It does not create a separate author archive or invent contributor/reviewer claims.
+Every `/blog/[slug]` article has an author byline (when supplied), estimated reading time and publication/update dates. The separate author/profile/share card is **temporarily hidden at the owner's request**. The byline no longer links to a missing card, and the body uses a centered reading column instead of reserving sidebar space. Native WordPress profile data and the reusable `ArticleAuthor` component remain available for future use; no biography or avatar data is deleted.
 
 ## Edit the details in WordPress
 
@@ -20,7 +20,7 @@ No custom WordPress plugin or field is required. The optional `WORDPRESS_API_URL
 
 Only public profile fields are requested, without credentials. Blocked/private/missing profile endpoints or a timeout do not prevent the article loading: the native display name remains visible while unavailable biography/avatar data is omitted. Profile requests have a three-second timeout and 60-second caching; the article's own regeneration also affects when profile changes appear. Native avatar URLs are accepted only from configured CMS uploads and standard Gravatar hosts, over HTTPS without URL credentials. Avatars are served directly through an unoptimized image rather than adding arbitrary image-optimizer hosts.
 
-Reading time is an estimate at 220 words per minute, with a one-minute minimum, based on visible article text rather than author information or hidden scripts. It is calculated server-side. Article JSON-LD includes the same author name, optional bio/avatar and a URL pointing to the visible author card. Actual contributor/reviewer associations require content-model support and are intentionally not fabricated.
+Reading time is an estimate at 220 words per minute, with a one-minute minimum, based on visible article text rather than author information or hidden scripts. It is calculated server-side. Article JSON-LD includes the same author name; the removed card's fragment URL and bio/avatar are no longer emitted. Actual contributor/reviewer associations require content-model support and are intentionally not fabricated.
 
 This improves reader transparency. It is not a ranking guarantee or a substitute for accurate, original content, sources and demonstrable expertise.
 
