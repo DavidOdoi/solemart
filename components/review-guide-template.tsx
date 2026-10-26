@@ -39,7 +39,7 @@ function TopPickCard({ product, index, preview }: { product: Product; index: num
       </Link>}
       <div className="min-w-0">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2"><span className="inline-flex rounded-md bg-[#161616] px-2.5 py-1.5 text-xs font-black text-white">#{index + 1}</span><span className="inline-flex rounded-full bg-[#f3f2ee] px-3 py-1.5 text-xs font-bold text-[#4f4e49]">{product.badge || (index === 0 ? 'Top Pick' : 'Also Consider')}</span></div>
+          <div className="flex flex-wrap items-center gap-3"><span className="inline-flex min-h-12 min-w-14 shrink-0 items-center justify-center rounded-lg bg-[#161616] px-3 py-2 text-xl font-black leading-none text-white sm:text-2xl">#{index + 1}</span><span className="inline-flex min-h-11 items-center rounded-full bg-[#f3f2ee] px-4 py-2 text-base font-bold leading-snug text-[#24231f]">{product.badge || (index === 0 ? 'Top Pick' : 'Also Consider')}</span></div>
           <PickActions slug={product.slug} href={reviewHref(product)} />
         </div>
         <h3 className="mt-4 text-2xl font-bold leading-tight text-[#c65325] sm:text-3xl"><Link href={reviewHref(product)} className="hover:underline hover:underline-offset-4">{product.name}</Link></h3>
@@ -57,12 +57,12 @@ function TopPickCard({ product, index, preview }: { product: Product; index: num
 
 export function SpecsTable({ specs }: { specs: Product['specs'] }) {
   return (
-    <div className="rounded-xl border border-[#e5e4df]">
+    <div className="min-w-0 max-w-full overflow-hidden rounded-xl border border-[#e5e4df]">
       <dl className="divide-y divide-[#e5e4df] sm:hidden">
         {specs.map(({ label, value }) => <div key={label} className="grid grid-cols-[minmax(6rem,0.8fr)_minmax(0,1.2fr)] gap-3 px-4 py-3 text-sm"><dt className="font-bold text-[#4f4e49]">{label}</dt><dd className="break-words text-[#68675f]">{value}</dd></div>)}
       </dl>
-      <div className="hidden overflow-x-auto sm:block">
-      <table className="w-full min-w-[420px] table-fixed text-left text-sm">
+      <div role="region" aria-label="Scrollable shoe specifications" tabIndex={0} className="hidden overflow-x-auto pb-1 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#c65325] sm:block">
+      <table style={{ minWidth: Math.max(420, specs.length * 160) }} className="w-full table-fixed text-left text-sm">
         <caption className="sr-only">Key shoe specifications</caption>
         <thead className="bg-[#f8e9e0]"><tr>{specs.map(({ label }) => <th key={label} scope="col" className="border-r border-white px-4 py-3 font-bold last:border-r-0">{label}</th>)}</tr></thead>
         <tbody><tr>{specs.map(({ label, value }) => <td key={label} className="break-words border-r border-[#e5e4df] px-4 py-4 align-top font-semibold text-[#4f4e49] last:border-r-0">{value}</td>)}</tr></tbody>
@@ -91,8 +91,8 @@ function FullReviewCard({ product, index, preview }: { product: Product; index: 
           {product.avoidIf && <p className="mt-4 text-base leading-7 text-[#4f4e49]"><strong>Avoid if:</strong> {product.avoidIf}</p>}
         </div>
       </div>
-      <div className="mt-7 grid gap-6 lg:grid-cols-2">
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <div className="mt-7 grid min-w-0 gap-6 lg:grid-cols-2">
+        <div className="grid min-w-0 gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
           {(!product.cmsManaged || product.pros.length > 0) && <section aria-label={`${product.name} strengths`} className="rounded-xl border border-[#e5e4df] p-4">
             <h4 className="text-sm font-black uppercase tracking-[0.12em] text-[#46705e]">Pros</h4>
             <ul className="mt-3 space-y-2 text-sm leading-6 text-[#4f4e49]">{product.pros.map((pro) => <li key={pro} className="flex gap-2"><Check aria-hidden="true" className="mt-1 size-4 shrink-0 text-[#46705e]" />{pro}</li>)}</ul>
@@ -102,7 +102,7 @@ function FullReviewCard({ product, index, preview }: { product: Product; index: 
             <ul className="mt-3 space-y-2 text-sm leading-6 text-[#4f4e49]">{product.cons.map((con) => <li key={con} className="flex gap-2"><X aria-hidden="true" className="mt-1 size-4 shrink-0 text-[#8b6657]" />{con}</li>)}</ul>
           </section>}
         </div>
-        {(!product.cmsManaged || product.specs.length > 0) && <section aria-label={`${product.name} specifications`}>
+        {(!product.cmsManaged || product.specs.length > 0) && <section aria-label={`${product.name} specifications`} className="min-w-0">
           <h4 className="mb-3 text-sm font-bold">Key specs to check</h4>
           <SpecsTable specs={product.specs} />
         </section>}
@@ -140,11 +140,10 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
   const breadcrumbSchema = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thesolemart.com/' }, { '@type': 'ListItem', position: 2, name: 'Buying Guides', item: 'https://thesolemart.com/#guides' }, { '@type': 'ListItem', position: 3, name: guide.title }] }
   return (
     <main id="top" className={shell}>
-      <Breadcrumbs items={[{ label: 'Buying Guides', href: '/#guides' }, { label: guide.title }]} />
+      <Breadcrumbs items={[{ label: 'Buying Guides', href: '/#guides' }, { label: guide.title }]} showCurrentPage={false} />
       <article>
         <header className="mx-auto max-w-4xl">
-          <p className="text-xs font-bold tracking-[0.18em] text-[#c65325]">{guide.category}</p>
-          <h1 className="mt-3 max-w-5xl font-sans text-4xl font-black leading-[1.04] tracking-[-0.04em] sm:text-6xl lg:text-7xl">{guide.title}</h1>
+          <h1 className="max-w-5xl font-sans text-4xl font-black leading-[1.04] tracking-[-0.04em] sm:text-6xl lg:text-7xl">{guide.title}</h1>
           <EditorialRichText value={guide.introHtml || guide.intro} className="mt-5 max-w-4xl text-xl font-bold leading-snug text-[#24231f] sm:text-2xl" />
           <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#68675f]">
             {(guide.author || !guide.cmsManaged) && <span>By <strong className="text-[#161616]">{guide.author || 'SOLEMART Editorial Team'}</strong></span>}
@@ -153,7 +152,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
             {guide.updatedAt && <time dateTime={guide.updatedAt}>Updated <strong className="text-[#161616]">{new Date(guide.updatedAt.includes('T') ? guide.updatedAt : `${guide.updatedAt}T12:00:00Z`).toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</strong></time>}
           </div>
           <p className="mt-5 border-l-2 border-[#d9d8d2] pl-4 text-xs leading-5 text-[#68675f]">{guide.disclosure || 'As an Amazon Associate, SOLEMART may earn from qualifying purchases. Our recommendations are independently researched.'}</p>
-          {guide.cmsManaged && guide.image && <Image src={guide.image} alt={guide.imageAlt} width={1200} height={800} priority sizes="(max-width: 896px) 100vw, 896px" className="mt-8 h-auto w-full rounded-xl" />}
+          {guide.cmsManaged && guide.image && <div className="relative mx-auto mt-8 aspect-video w-full max-w-[800px] overflow-hidden rounded-xl"><Image src={guide.image} alt={guide.imageAlt} fill priority sizes="(max-width: 840px) calc(100vw - 40px), 800px" className="object-cover" /></div>}
         </header>
 
         {(!guide.cmsManaged || guide.quickAnswerBody) && <section aria-labelledby="quick-answer-heading" className="mx-auto mt-8 max-w-4xl rounded-2xl border border-[#e5e4df] bg-[#f3f2ee] p-5 sm:p-7">
@@ -163,7 +162,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
 
         {show.picks && <section id="top-picks" aria-labelledby="top-picks-heading" className="relative mx-auto mt-14 max-w-5xl scroll-mt-36 overflow-visible rounded-sm border-[3px] border-[#e86d35] bg-white pt-4 shadow-sm">
           <span aria-hidden="true" className="top-picks-ribbon absolute -top-[19px] left-5 z-10">TOP PICKS</span>
-          <div className="border-b border-[#e7e5de] px-5 pb-5 pt-4 sm:px-7"><p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">THE SHORTLIST</p><h2 id="top-picks-heading" className="mt-1 font-sans text-3xl font-black tracking-tight sm:text-4xl">Our Top Picks</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-[#68675f]">A quick comparison to help you choose where to start. Confirm fit, current model details, and availability before buying.</p></div>
+          <div className="border-b border-[#e7e5de] px-5 pb-5 pt-4 sm:px-7"><p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">THE SHORTLIST</p><h2 id="top-picks-heading" className="mt-1 font-sans text-3xl font-black tracking-tight sm:text-4xl">Our Top Picks</h2><p className="mt-3 max-w-2xl text-base font-medium leading-7 text-[#4f4e49] sm:text-lg">A quick comparison to help you choose where to start. Confirm fit, current model details, and availability before buying.</p></div>
           {picks.length ? picks.map((product, index) => <TopPickCard key={product.slug} product={product} index={index} preview={preview} />) : <p className="p-6 text-sm text-[#68675f]">Recommendations are being updated. Check back soon.</p>}
         </section>}
 
@@ -224,7 +223,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
             </section>}
 
             {show.verdict && <section aria-labelledby="verdict-heading" className="rounded-2xl bg-[#f3f2ee] p-6 sm:p-8">
-              <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">OUR TAKE</p><h2 id="verdict-heading" className="mt-2 font-sans text-3xl font-black tracking-tight">Final Verdict</h2><EditorialRichText value={guide.finalVerdictHtml || guide.finalVerdict || guide.quickAnswerBody} className="mt-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />
+              <h2 id="verdict-heading" className="font-sans text-3xl font-black tracking-tight">Final Verdict</h2><EditorialRichText value={guide.finalVerdictHtml || guide.finalVerdict || guide.quickAnswerBody} className="mt-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />
             </section>}
           </div>
 

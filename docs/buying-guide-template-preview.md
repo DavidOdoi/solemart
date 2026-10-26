@@ -30,6 +30,21 @@ anchors and structured data. Preview bookmark IDs are prefixed with `preview-`
 so testing them does not change saved states for live products. Review links
 scroll to the populated detailed profiles within the preview.
 
+The shared layout now displays only Home / Buying Guides above the headline,
+omitting the repeated article title and category eyebrow. The complete breadcrumb
+remains in structured data. Featured images use a centered 800 × 450 frame (16:9),
+scale down on smaller screens and crop to fill the frame. Rank badges and the
+shortlist introduction are larger, and the Final Verdict no longer has an
+“Our take” eyebrow.
+
+Specification tables reserve at least 160 px per column, with a 420 px minimum
+table width. The table scrolls within its column instead of compressing each word
+or expanding the page. The scroll region supports keyboard focus; small screens
+keep the existing stacked specifications. WordPress field names, stored values
+and the `Label | Value` entry format remain unchanged. Browser checks cover a
+portrait featured image and seven specifications at 360, 390, 768, 1024, 1440
+and 1920 px, alongside the complete preview and rendering without JavaScript.
+
 Validation: production build/type checks, mobile/tablet/desktop browser checks
 for complete sections and four cards, FAQ/bookmark/anchor interactions, no
 horizontal overflow, metadata and disabled retailer controls. A CMS fixture
