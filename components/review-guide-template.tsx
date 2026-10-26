@@ -72,7 +72,7 @@ export function SpecsTable({ specs }: { specs: Product['specs'] }) {
   )
 }
 
-function FullReviewCard({ product, index, preview }: { product: Product; index: number; preview: boolean }) {
+function FullReviewCard({ product, preview }: { product: Product; preview: boolean }) {
   const href = product.cmsManaged ? product.affiliateUrl : product.affiliateUrl || affiliateUrl
   const showPrice = preview || Boolean(href)
   return (
@@ -84,22 +84,21 @@ function FullReviewCard({ product, index, preview }: { product: Product; index: 
           {showPrice && <p className="mt-2 text-center text-xs text-[#77766f]">Price may vary by size and color.</p>}
         </div>
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#c65325]">#{index + 1} · {product.badge || `Pick ${index + 1}`} · {product.bestFor}</span>
-          <h3 className="mt-2 font-serif text-2xl leading-tight sm:text-3xl">{product.name}</h3>
+          <h3 className="font-serif text-2xl leading-tight sm:text-3xl">{product.name}</h3>
           <EditorialRichText value={product.reviewHtml || product.review.join('\n\n')} className="mt-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />
           {!product.cmsManaged && <p className="mt-3 text-xs leading-5 text-[#77766f]">Sample editorial profile. Confirm current model details, fit, and availability with the retailer.</p>}
           {product.avoidIf && <p className="mt-4 text-base leading-7 text-[#4f4e49]"><strong>Avoid if:</strong> {product.avoidIf}</p>}
         </div>
       </div>
-      <div className="mt-7 grid min-w-0 gap-6 lg:grid-cols-2">
-        <div className="grid min-w-0 gap-5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <div className="mt-7 grid min-w-0 gap-6">
+        <div className="grid min-w-0 gap-5 sm:grid-cols-2">
           {(!product.cmsManaged || product.pros.length > 0) && <section aria-label={`${product.name} strengths`} className="rounded-xl border border-[#e5e4df] p-4">
-            <h4 className="text-sm font-black uppercase tracking-[0.12em] text-[#46705e]">Pros</h4>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-[#4f4e49]">{product.pros.map((pro) => <li key={pro} className="flex gap-2"><Check aria-hidden="true" className="mt-1 size-4 shrink-0 text-[#46705e]" />{pro}</li>)}</ul>
+            <h4 className="text-[17px] font-black uppercase tracking-[0.12em] text-[#46705e] sm:text-[19px]">Pros</h4>
+            <ul className="mt-3 space-y-2 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{product.pros.map((pro) => <li key={pro} className="flex gap-2"><Check aria-hidden="true" className="mt-2 size-4 shrink-0 text-[#46705e]" />{pro}</li>)}</ul>
           </section>}
           {(!product.cmsManaged || product.cons.length > 0) && <section aria-label={`${product.name} limitations`} className="rounded-xl border border-[#e5e4df] p-4">
-            <h4 className="text-sm font-black uppercase tracking-[0.12em] text-[#b64c1e]">Cons</h4>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-[#4f4e49]">{product.cons.map((con) => <li key={con} className="flex gap-2"><X aria-hidden="true" className="mt-1 size-4 shrink-0 text-[#8b6657]" />{con}</li>)}</ul>
+            <h4 className="text-[17px] font-black uppercase tracking-[0.12em] text-[#b64c1e] sm:text-[19px]">Cons</h4>
+            <ul className="mt-3 space-y-2 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{product.cons.map((con) => <li key={con} className="flex gap-2"><X aria-hidden="true" className="mt-2 size-4 shrink-0 text-[#8b6657]" />{con}</li>)}</ul>
           </section>}
         </div>
         {(!product.cmsManaged || product.specs.length > 0) && <section aria-label={`${product.name} specifications`} className="min-w-0">
@@ -144,14 +143,13 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
       <article>
         <header className="mx-auto max-w-4xl">
           <h1 className="max-w-5xl font-sans text-4xl font-black leading-[1.04] tracking-[-0.04em] sm:text-6xl lg:text-7xl">{guide.title}</h1>
-          <EditorialRichText value={guide.introHtml || guide.intro} className="mt-5 max-w-4xl text-xl font-bold leading-snug text-[#24231f] sm:text-2xl" />
+          <EditorialRichText value={guide.introHtml || guide.intro} className="mt-5 max-w-4xl font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />
           <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#68675f]">
             {(guide.author || !guide.cmsManaged) && <span>By <strong className="text-[#161616]">{guide.author || 'SOLEMART Editorial Team'}</strong></span>}
             {guide.reviewedBy && <span>Reviewed by <strong className="text-[#161616]">{guide.reviewedBy}</strong></span>}
             {guide.cmsManaged && guide.publishedAt && <time dateTime={guide.publishedAt}>Published {new Date(guide.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</time>}
             {guide.updatedAt && <time dateTime={guide.updatedAt}>Updated <strong className="text-[#161616]">{new Date(guide.updatedAt.includes('T') ? guide.updatedAt : `${guide.updatedAt}T12:00:00Z`).toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</strong></time>}
           </div>
-          <p className="mt-5 border-l-2 border-[#d9d8d2] pl-4 text-xs leading-5 text-[#68675f]">{guide.disclosure || 'As an Amazon Associate, SOLEMART may earn from qualifying purchases. Our recommendations are independently researched.'}</p>
           {guide.cmsManaged && guide.image && <div className="relative mx-auto mt-8 aspect-video w-full max-w-[800px] overflow-hidden rounded-xl"><Image src={guide.image} alt={guide.imageAlt} fill priority sizes="(max-width: 840px) calc(100vw - 40px), 800px" className="object-cover" /></div>}
         </header>
 
@@ -198,7 +196,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
 
             {picks.length > 0 && <section id="full-reviews" className="scroll-mt-36">
               <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">THE DETAILS</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">Full Reviews</h2>
-              <div className="mt-6 space-y-5">{picks.map((product, index) => <FullReviewCard key={product.slug} product={product} index={index} preview={preview} />)}</div>
+              <div className="mt-6 space-y-5">{picks.map((product) => <FullReviewCard key={product.slug} product={product} preview={preview} />)}</div>
             </section>}
 
             {show.buying && <section id="buying-guide" className="scroll-mt-36">

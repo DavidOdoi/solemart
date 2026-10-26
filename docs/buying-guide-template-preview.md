@@ -12,7 +12,7 @@ fixture also contains fewer optional values than a fully populated guide.
 
 The preview supplies those values through `data/guide-template-preview.ts`:
 four picks and full reviews, images, badge/reason, Best for, Avoid if, pros/cons,
-specifications, comparison values, byline, dates, disclosure, Quick Answer,
+specifications, comparison values, byline, dates, Quick Answer,
 methodology, article body, buying-advice sections, audience, mistakes, four FAQs
 and final verdict. The original first two walking-guide picks retain their order.
 The existing illustrative assets and sample product profiles supply the content.
@@ -36,6 +36,14 @@ remains in structured data. Featured images use a centered 800 × 450 frame (16:
 scale down on smaller screens and crop to fill the frame. Rank badges and the
 shortlist introduction are larger, and the Final Verdict no longer has an
 “Our take” eyebrow.
+
+The introduction and Pros/Cons copy match the article body's 17 px mobile / 19 px
+desktop size and reading style. Pros and Cons sit side by side from the small
+breakpoint upward, with the specifications spanning the full card width below
+both panels. Full reviews begin with the product name, without the repeated
+rank/award/best-for line; Top Picks keep their larger rank and award badges.
+The disclosure paragraph below the article byline is no longer displayed. Its
+CMS field and stored content remain available.
 
 Specification tables reserve at least 160 px per column, with a 420 px minimum
 table width. The table scrolls within its column instead of compressing each word
