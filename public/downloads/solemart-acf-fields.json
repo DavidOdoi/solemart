@@ -1231,6 +1231,82 @@
         "placeholder": ""
       },
       {
+        "key": "field_solemart_shoe_retailer_2_name",
+        "label": "Retailer 2 name",
+        "name": "retailer_2_name",
+        "type": "text",
+        "instructions": "Optional retailer label for the product sandbox.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "retailer2Name",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_retailer_2_url",
+        "label": "Retailer 2 affiliate URL",
+        "name": "retailer_2_url",
+        "type": "url",
+        "instructions": "Optional real HTTPS retailer / affiliate URL. Leave blank if unavailable.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "retailer2Url",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_retailer_3_name",
+        "label": "Retailer 3 name",
+        "name": "retailer_3_name",
+        "type": "text",
+        "instructions": "Optional retailer label for the product sandbox.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "retailer3Name",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_retailer_3_url",
+        "label": "Retailer 3 affiliate URL",
+        "name": "retailer_3_url",
+        "type": "url",
+        "instructions": "Optional real HTTPS retailer / affiliate URL. Leave blank if unavailable.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "retailer3Url",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
         "key": "field_solemart_shoe_review_url",
         "label": "Full-review URL",
         "name": "review_url",
