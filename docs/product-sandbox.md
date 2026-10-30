@@ -4,27 +4,25 @@ Route: `/sandbox/product-preview?slug=YOUR-SAVED-SHOE-SLUG`.
 There are no public navigation, product-card, search or sitemap links to it.
 No public product directory routes or 250-product static build are introduced.
 
-## Direct design preview
+## Product directory and review preview
 
-To see the design immediately, open
-`https://thesolemart.com/template-preview/product`. This separate, unlinked
-page needs no password, WordPress configuration or slug. It uses the **same**
-`ProductPreviewTemplate` with explicitly labeled illustrative content, an
-illustrative photograph and three disabled retailer controls. It has no CMS
-fetch, product/offer schema or real retailer destinations. Both its robots meta
-tag and `X-Robots-Tag` are `noindex, nofollow, noarchive`.
+Open `https://thesolemart.com/template-preview/product` for the directory layout.
+It now uses published WordPress Shoe records instead of the earlier illustrative
+product. Cards form a four-column desktop grid with actual saved images/names,
+links to on-page reviews and actual retailer destinations. A comparison matrix
+and full review sections follow. Prices and bestseller labels are not fabricated.
 
-This sample-only design reference is reachable by anyone with its URL. It does
-not expose live Shoe records, disable the sandbox login, or become a fallback
-for the live SSR data adapter. The protected `/sandbox/product-preview` route
-and its password requirements described below remain unchanged.
+This unlinked/noindex preview is anonymously reachable by its URL and uses only
+already-published, anonymously readable WordPress data. It is not the password-
+protected sandbox. Draft/private records remain excluded; the original sandbox
+login is unchanged. The example-data module has been removed, and no sample
+product is substituted when the CMS has no data or cannot respond.
 
-The direct design route passed production-build checks at six screen widths,
-including opening without credentials or a slug, no CMS requests, disabled
-retailer controls, robots meta/header protection and rendering without JavaScript.
-The same checks confirmed that the live sandbox still returns 404 when disabled,
-requires authentication when enabled, and retains working retailer links after
-login. The existing 77 automated tests also passed.
+Use `?q=sea+turtle+boots` to search the title/body of published Shoe records, or
+`?article=your-published-post-slug` to include a real Gutenberg buying/research
+article. Search is a WordPress title/body search, not an automatic material or
+category classifier. No matching records produces an honest empty state, not
+invented boots. See [directory editorial workflow](product-directory-preview.md).
 
 ## Enable access
 

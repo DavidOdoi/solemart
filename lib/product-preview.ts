@@ -1,6 +1,6 @@
 import 'server-only'
 import { decodeHTML } from 'entities'
-import { editorialPlainText, hasRichMarkup, sanitizeEditorialHtml } from './cms-rich-text.ts'
+import { editorialPlainText, hasRichMarkup, sanitizeCmsArticleHtml, sanitizeEditorialHtml } from './cms-rich-text.ts'
 
 export type ProductPreview = {
   slug: string; name: string; brand: string; descriptionHtml: string; commentaryHtml: string
@@ -8,6 +8,7 @@ export type ProductPreview = {
   pros: string[]; cons: string[]; specs: { label: string; value: string }[]
   retailers: { name: string; url: string }[]
   retailerFieldsAvailable: boolean
+  reviewBodyHtml?: string
 }
 
 const object = (value: unknown): Record<string, unknown> => value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
@@ -67,41 +68,78 @@ export function mapProductPreview(input: unknown, slug: string, retailerFieldsAv
     descriptionHtml: sanitizeEditorialHtml(text(fields.description), 'paragraphs', retailerUrls),
     commentaryHtml: sanitizeEditorialHtml(text(fields.commentary), 'paragraphs', retailerUrls),
     pros: lines(fields.pros), cons: lines(fields.cons), specs, retailers, retailerFieldsAvailable,
+    reviewBodyHtml: sanitizeCmsArticleHtml(text(shoe.content), retailerUrls),
   }
 }
 
 const extraRetailerFields = ['retailer2Name', 'retailer2Url', 'retailer3Name', 'retailer3Url']
-const productQuery = (retailers: boolean) => `query SandboxShoe($slug: ID!) {
-  shoe(id: $slug, idType: SLUG) {
-    title slug status
+const shoeSelection = (retailers: boolean, content: boolean) => `title slug status ${content ? 'content' : ''}
     featuredImage { node { sourceUrl altText } }
     solemartShoeFields {
       brand description affiliateUrl pros cons specs cushioning widthOptions mainStrength commentary
       ${retailers ? extraRetailerFields.join(' ') : ''}
-    }
+    }`
+const productQuery = (retailers: boolean, content: boolean) => `query SandboxShoe($slug: ID!) {
+  shoe(id: $slug, idType: SLUG) {
+    ${shoeSelection(retailers, content)}
   }
 }`
 
-/** Only this private preview bypasses ISR; published buying guides keep 60-second caching. */
-export async function getProductPreview(slug: string): Promise<ProductPreview | null> {
-  if (!isProductPreviewSlug(slug)) return null
+async function queryProducts<T>(query: (retailers: boolean, content: boolean) => string, variables: Record<string, string | null>): Promise<{ data: T; expanded: boolean }> {
   let endpoint: URL
   try {
     endpoint = new URL(process.env.WORDPRESS_GRAPHQL_URL || '')
     if (!['http:', 'https:'].includes(endpoint.protocol) || endpoint.username || endpoint.password) throw new Error()
   } catch { throw new Error('WordPress is not configured for product previews.') }
-  for (const expanded of [true, false]) {
+  let expanded = true, content = true
+  for (let attempt = 0; attempt < 3; attempt++) {
     const response = await fetch(endpoint, {
       method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ query: productQuery(expanded), variables: { slug } }),
+      body: JSON.stringify({ query: query(expanded, content), variables }),
       cache: 'no-store', signal: AbortSignal.timeout(10_000),
     })
     if (!response.ok && response.status !== 400) throw new Error('WordPress product previews are temporarily unavailable.')
-    const result = await response.json() as { data?: { shoe?: unknown }; errors?: { message?: string }[] }
-    const missingOnlyRetailers = expanded && result.errors?.length && result.errors.every(error => extraRetailerFields.some(field => error.message?.startsWith(`Cannot query field "${field}" on type `)))
-    if (missingOnlyRetailers) continue
-    if (!response.ok || result.errors?.length || !result.data || !Object.hasOwn(result.data, 'shoe')) throw new Error('WordPress could not return the requested product.')
-    return mapProductPreview(result.data.shoe, slug, expanded)
+    const result = await response.json() as { data?: T; errors?: { message?: string }[] }
+    const missingRetailer = (message?: string) => expanded && extraRetailerFields.some(field => message?.startsWith(`Cannot query field "${field}" on type `))
+    const missingContent = (message?: string) => content && message?.startsWith('Cannot query field "content" on type "Shoe".')
+    if (result.errors?.length && result.errors.every(error => missingRetailer(error.message) || missingContent(error.message))) {
+      if (result.errors.some(error => missingRetailer(error.message))) expanded = false
+      if (result.errors.some(error => missingContent(error.message))) content = false
+      continue
+    }
+    if (!response.ok || result.errors?.length || !result.data) throw new Error('WordPress could not return the requested product.')
+    return { data: result.data, expanded }
   }
   throw new Error('WordPress could not return the requested product.')
+}
+
+/** Preview requests bypass ISR; published buying guides retain their current cache. */
+export async function getProductPreview(slug: string): Promise<ProductPreview | null> {
+  if (!isProductPreviewSlug(slug)) return null
+  const { data, expanded } = await queryProducts<{ shoe?: unknown }>(productQuery, { slug })
+  if (!Object.hasOwn(data, 'shoe')) throw new Error('WordPress returned an incomplete product.')
+  return mapProductPreview(data.shoe, slug, expanded)
+}
+
+export type ProductDirectory = { products: ProductPreview[]; hasNextPage: boolean; endCursor: string | null }
+export const isProductDirectoryCursor = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9+/_-]{1,510}={0,2}$/.test(value)
+
+export async function getProductDirectory(search = '', after: string | null = null): Promise<ProductDirectory> {
+  if (search.length > 150 || /[\u0000-\u001f]/.test(search) || (after !== null && !isProductDirectoryCursor(after))) throw new Error('Invalid directory filters.')
+  const { data, expanded } = await queryProducts<{ shoes?: { nodes?: unknown[]; pageInfo?: { hasNextPage?: boolean; endCursor?: string | null } } }>((retailers, content) => `query ProductDirectory($search: String, $after: String) {
+    shoes(first: 12, after: $after, where: { status: PUBLISH, search: $search }) {
+      nodes { ${shoeSelection(retailers, content)} }
+      pageInfo { hasNextPage endCursor }
+    }
+  }`, { search: search.trim() || null, after })
+  const connection = data.shoes
+  if (!Array.isArray(connection?.nodes) || typeof connection.pageInfo?.hasNextPage !== 'boolean' || (connection.pageInfo.hasNextPage && !isProductDirectoryCursor(connection.pageInfo.endCursor))) throw new Error('WordPress returned an incomplete product directory.')
+  const products = connection.nodes.flatMap(node => {
+    if (node === null) return []
+    const slug = object(node).slug
+    if (!isProductPreviewSlug(slug)) throw new Error('WordPress returned an invalid product slug.')
+    const product = mapProductPreview(node, slug, expanded)
+    return product ? [product] : []
+  })
+  return { products, hasNextPage: connection.pageInfo.hasNextPage, endCursor: connection.pageInfo.endCursor || null }
 }

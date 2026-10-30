@@ -1,9 +1,12 @@
 import Image from 'next/image'
 import { ArrowUpRight, Check, X } from 'lucide-react'
 import { EditorialRichText } from '@/components/editorial-rich-text'
+import { EditorialArticleBody } from '@/components/editorial-article-body'
+import { getEditorialArticle } from '@/lib/editorial-article'
 import type { ProductPreview } from '@/lib/product-preview'
 
 export function ProductPreviewTemplate({ product, preview = false }: { product: ProductPreview; preview?: boolean }) {
+  const review = product.reviewBodyHtml || product.commentaryHtml
   return <article className="mt-9">
     <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)] lg:gap-12">
       <div className="relative aspect-square min-w-0 overflow-hidden rounded-2xl border border-[#e5e4df] bg-[#f6f5f1]">
@@ -46,9 +49,9 @@ export function ProductPreviewTemplate({ product, preview = false }: { product: 
         </section>)}
       </div>
     </div>
-    {product.commentaryHtml && <section aria-labelledby="product-notes-heading" className="mt-12 max-w-3xl">
-      <h2 id="product-notes-heading" className="text-3xl font-black tracking-tight">Product notes</h2>
-      <EditorialRichText value={product.commentaryHtml} className="mt-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />
+    {review && <section aria-labelledby="product-notes-heading" className="mt-12 max-w-3xl">
+      <h2 id="product-notes-heading" className="mb-6 text-3xl font-black tracking-tight">Product review</h2>
+      <EditorialArticleBody parts={getEditorialArticle(review, { quickAnswer: true }).parts} />
     </section>}
   </article>
 }
