@@ -4,25 +4,25 @@ Route: `/sandbox/product-preview?slug=YOUR-SAVED-SHOE-SLUG`.
 There are no public navigation, product-card, search or sitemap links to it.
 No public product directory routes or 250-product static build are introduced.
 
-## Product directory and review preview
+## Frontend-only directory and review preview
 
-Open `https://thesolemart.com/template-preview/product` for the directory layout.
-It now uses published WordPress Shoe records instead of the earlier illustrative
-product. Cards form a four-column desktop grid with actual saved images/names,
-links to on-page reviews and actual retailer destinations. A comparison matrix
-and full review sections follow. Prices and bestseller labels are not fabricated.
+Open `https://thesolemart.com/template-preview/product` to inspect the design
+without WordPress, a slug, credentials or any configuration. This route now
+renders the local `data/product-directory-preview.ts` fixture, not CMS data.
+The page contains a four-column product grid, comparison matrix, four full
+example reviews, native FAQ accordions and full specification panels. Save
+hearts use isolated browser storage; retailer buttons are disabled.
 
-This unlinked/noindex preview is anonymously reachable by its URL and uses only
-already-published, anonymously readable WordPress data. It is not the password-
-protected sandbox. Draft/private records remain excluded; the original sandbox
-login is unchanged. The example-data module has been removed, and no sample
-product is substituted when the CMS has no data or cannot respond.
+The boot illustrations are generated fictional faux-material designs. Example
+copy and specs are clearly labeled, and no real inventory, prices, test results
+or material authenticity are asserted. The image sheet is kept intact and its
+four quadrants are displayed through CSS; it is served from the local public
+assets directory, without an external image host.
 
-Use `?q=sea+turtle+boots` to search the title/body of published Shoe records, or
-`?article=your-published-post-slug` to include a real Gutenberg buying/research
-article. Search is a WordPress title/body search, not an automatic material or
-category classifier. No matching records produces an honest empty state, not
-invented boots. See [directory editorial workflow](product-directory-preview.md).
+This frontend-only page is reachable by anyone with its unlinked URL. It remains
+`noindex, nofollow, noarchive` in both metadata and HTTP headers, emits no product
+schema and is not added to public navigation or sitemaps. No CMS request is made.
+The private live-data sandbox below and its access controls remain unchanged.
 
 ## Enable access
 
