@@ -4,6 +4,28 @@ Route: `/sandbox/product-preview?slug=YOUR-SAVED-SHOE-SLUG`.
 There are no public navigation, product-card, search or sitemap links to it.
 No public product directory routes or 250-product static build are introduced.
 
+## Direct design preview
+
+To see the design immediately, open
+`https://thesolemart.com/template-preview/product`. This separate, unlinked
+page needs no password, WordPress configuration or slug. It uses the **same**
+`ProductPreviewTemplate` with explicitly labeled illustrative content, an
+illustrative photograph and three disabled retailer controls. It has no CMS
+fetch, product/offer schema or real retailer destinations. Both its robots meta
+tag and `X-Robots-Tag` are `noindex, nofollow, noarchive`.
+
+This sample-only design reference is reachable by anyone with its URL. It does
+not expose live Shoe records, disable the sandbox login, or become a fallback
+for the live SSR data adapter. The protected `/sandbox/product-preview` route
+and its password requirements described below remain unchanged.
+
+The direct design route passed production-build checks at six screen widths,
+including opening without credentials or a slug, no CMS requests, disabled
+retailer controls, robots meta/header protection and rendering without JavaScript.
+The same checks confirmed that the live sandbox still returns 404 when disabled,
+requires authentication when enabled, and retains working retailer links after
+login. The existing 77 automated tests also passed.
+
 ## Enable access
 
 Keep the existing server-only `WORDPRESS_GRAPHQL_URL`. Add these server-only

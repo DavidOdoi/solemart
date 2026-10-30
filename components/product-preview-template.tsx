@@ -3,7 +3,7 @@ import { ArrowUpRight, Check, X } from 'lucide-react'
 import { EditorialRichText } from '@/components/editorial-rich-text'
 import type { ProductPreview } from '@/lib/product-preview'
 
-export function ProductPreviewTemplate({ product }: { product: ProductPreview }) {
+export function ProductPreviewTemplate({ product, preview = false }: { product: ProductPreview; preview?: boolean }) {
   return <article className="mt-9">
     <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,.9fr)] lg:gap-12">
       <div className="relative aspect-square min-w-0 overflow-hidden rounded-2xl border border-[#e5e4df] bg-[#f6f5f1]">
@@ -16,9 +16,11 @@ export function ProductPreviewTemplate({ product }: { product: ProductPreview })
         <section aria-labelledby="retailers-heading" className="mt-7 rounded-2xl border border-[#e4ddd0] bg-[#f6f3ec] p-5 sm:p-6">
           <h2 id="retailers-heading" className="text-2xl font-black tracking-tight">Where to buy</h2>
           <p className="mt-2 text-base leading-7 text-[#68675f]">Check current prices, sizes and availability with each retailer.</p>
-          <div className="mt-5 space-y-3">{product.retailers.map((retailer, index) => <a key={retailer.url} href={retailer.url} target="_blank" rel="sponsored nofollow noopener noreferrer" className={`flex min-h-14 items-center justify-between gap-3 rounded-lg border px-4 py-3 text-base font-bold transition ${index === 0 ? 'border-[#161616] bg-[#161616] text-white hover:bg-[#a74520]' : 'border-[#c7c3b8] bg-white text-[#161616] hover:border-[#a74520] hover:text-[#a74520]'}`}>
-            <span>{retailer.name === 'Amazon' ? 'Check Price on Amazon' : `Check price at ${retailer.name}`}</span><ArrowUpRight aria-hidden="true" className="size-5 shrink-0" />
-          </a>)}</div>
+          <div className="mt-5 space-y-3">{product.retailers.map((retailer, index) => {
+            const className = `flex min-h-14 w-full items-center justify-between gap-3 rounded-lg border px-4 py-3 text-left text-base font-bold transition ${index === 0 ? 'border-[#161616] bg-[#161616] text-white hover:bg-[#a74520]' : 'border-[#c7c3b8] bg-white text-[#161616] hover:border-[#a74520] hover:text-[#a74520]'}`
+            const label = <><span className="min-w-0 break-words">{retailer.name === 'Amazon' ? 'Check Price on Amazon' : `Check price at ${retailer.name}`}</span><ArrowUpRight aria-hidden="true" className="size-5 shrink-0" /></>
+            return preview ? <button key={index} type="button" disabled aria-describedby="product-preview-note" className={className}>{label}</button> : <a key={retailer.url} href={retailer.url} target="_blank" rel="sponsored nofollow noopener noreferrer" className={className}>{label}</a>
+          })}</div>
           {!product.retailers.length && <p className="mt-4 text-base text-[#68675f]">No retailer links have been added for this shoe.</p>}
           <p className="mt-4 text-sm leading-6 text-[#68675f]">Links may be affiliate links. Prices, shipping and returns depend on the retailer and your location.</p>
         </section>
