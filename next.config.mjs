@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async headers() {
-    return [{ source: '/template-preview/product', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }] }]
-  },
   images: {
     remotePatterns: [
       {
