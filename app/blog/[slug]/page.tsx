@@ -22,18 +22,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getPost(slug)
   if (!post) notFound()
   const url = `https://thesolemart.com/blog/${encodeURIComponent(post.slug)}`
+  const title = post.seoTitle || post.title
+  const description = post.metaDescription || post.excerpt || undefined
+  const imageUrl = post.featuredImage ? new URL(post.featuredImage.src, 'https://thesolemart.com').href : undefined
   return {
-    title: post.title,
-    description: post.excerpt || undefined,
+    title,
+    description,
     alternates: { canonical: url },
     openGraph: {
-      type: 'article', title: post.title, description: post.excerpt || undefined, url,
+      type: 'article', title: post.title, description, url,
       publishedTime: post.publishedAt,
       modifiedTime: post.modifiedAt,
       authors: post.author ? [post.author] : undefined,
-      images: post.featuredImage ? [{ url: post.featuredImage.src, alt: post.featuredImage.alt }] : undefined,
+      images: post.featuredImage && imageUrl ? [{ url: imageUrl, alt: post.featuredImage.alt, width: post.featuredImage.width, height: post.featuredImage.height }] : undefined,
     },
-    twitter: { card: post.featuredImage ? 'summary_large_image' : 'summary', title: post.title, description: post.excerpt || undefined },
+    twitter: { card: post.featuredImage ? 'summary_large_image' : 'summary', title, description },
   }
 }
 

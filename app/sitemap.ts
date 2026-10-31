@@ -33,12 +33,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categories.map(({ slug }) => `/${encodeURIComponent(slug)}`),
     ...products.map(({ slug }) => `/reviews/${encodeURIComponent(slug)}`),
     ...comparisons.map(({ slug }) => `/comparisons/${encodeURIComponent(slug)}`),
-    // Blog routes retain their local fallback even with WordPress configured.
-    ...blogPosts.map(({ slug }) => `/blog/${encodeURIComponent(slug)}`),
     // Buying-guide fallbacks only exist when WordPress is not configured.
     ...(articles === null ? guides.map(({ slug }) => `/best-shoes/${encodeURIComponent(slug)}`) : []),
   ]
   const entries: MetadataRoute.Sitemap = paths.map(path => ({ url: `${origin}${path === '/' ? '' : path}` }))
+  // Blog routes retain their local fallback even with WordPress configured.
+  for (const post of blogPosts) entries.push({
+    url: `${origin}/blog/${encodeURIComponent(post.slug)}`,
+    ...(post.modifiedAt ? { lastModified: post.modifiedAt } : {}),
+  })
   for (const article of articles ?? []) {
     const prefix = article.type === 'post' ? '/blog' : '/best-shoes'
     entries.push({

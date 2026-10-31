@@ -108,10 +108,11 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
+    description: post.metaDescription || post.excerpt || undefined,
     datePublished: publishedAt,
     dateModified: post.modifiedAt,
-    author: post.author ? { '@type': 'Person', name: post.author } : undefined,
-    image: post.featuredImage?.src,
+    author: post.author ? { '@type': post.authorType || 'Person', name: post.author } : undefined,
+    image: post.featuredImage ? new URL(post.featuredImage.src, 'https://thesolemart.com').href : undefined,
     mainEntityOfPage: url,
     publisher: { '@type': 'Organization', name: 'SOLEMART' },
   }
@@ -131,13 +132,16 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
         </header>
         <div className="mx-auto mt-10 max-w-4xl">
           <div className="min-w-0">
-            {post.featuredImage && <div className="relative mb-8 aspect-video w-full max-w-[800px] overflow-hidden rounded-xl bg-[#f3f2ee]">
-              <Image
-                src={post.featuredImage.src} alt={post.featuredImage.alt} fill priority
-                sizes="(max-width: 840px) calc(100vw - 40px), 800px"
-                className="object-cover object-center"
-              />
-            </div>}
+            {post.featuredImage && <figure className="mb-8 w-full max-w-[800px]">
+              <div className="relative aspect-video overflow-hidden rounded-xl bg-[#f3f2ee]">
+                <Image
+                  src={post.featuredImage.src} alt={post.featuredImage.alt} fill priority
+                  sizes="(max-width: 840px) calc(100vw - 40px), 800px"
+                  className="object-cover object-center"
+                />
+              </div>
+              {post.featuredImage.caption && <figcaption className="mt-3 text-sm leading-6 text-[#68675f]">{post.featuredImage.caption}</figcaption>}
+            </figure>}
             <ArticleContents headings={contents.headings} />
             {post.contentHtml !== undefined
               ? <EditorialArticleBody parts={contents.parts} />

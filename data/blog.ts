@@ -1,16 +1,23 @@
+import { chooseWalkingShoesHtml } from './articles/choose-walking-shoes.ts'
+import { replaceRunningShoesHtml } from './articles/replace-running-shoes.ts'
+import { expensiveShoesHtml } from './articles/expensive-shoes.ts'
+
 export type BlogPost = {
   title: string
   slug: string
   category: string
   date: string
   excerpt: string
+  seoTitle?: string
+  metaDescription?: string
   paragraphs: string[]
   publishedAt?: string
   modifiedAt?: string
   author?: string
+  authorType?: 'Person' | 'Organization'
   authorProfile?: { bio?: string; avatarUrl?: string }
   contentHtml?: string
-  featuredImage?: { src: string; alt: string; width: number; height: number }
+  featuredImage?: { src: string; alt: string; width: number; height: number; caption?: string }
 }
 
 export const blogPosts: BlogPost[] = [
@@ -20,11 +27,15 @@ export const blogPosts: BlogPost[] = [
     category: 'BUYING ADVICE',
     date: 'October 4, 2026',
     excerpt: 'A simple checklist for comparing fit, support, and cushioning before your next pair.',
-    paragraphs: [
-      'Start by thinking about where and how far you walk. Daily errands, travel, and longer walks may call for different features.',
-      'Try shoes on with the socks you plan to wear. Check for a secure heel, comfortable width, and enough room for your toes to move.',
-      'If you have persistent foot pain or a medical concern, ask a qualified healthcare professional for individual advice.',
-    ],
+    seoTitle: 'How to Choose Walking Shoes: Fit, Support & Comfort',
+    metaDescription: 'Learn how to choose walking shoes with practical checks for toe room, heel fit, cushioning, grip, and comfort. Use a simple try-on checklist before buying.',
+    author: 'SOLEMART', authorType: 'Organization', modifiedAt: '2026-10-31',
+    paragraphs: [], contentHtml: chooseWalkingShoesHtml,
+    featuredImage: {
+      src: '/articles/choose-walking-shoes.png', width: 1672, height: 941,
+      alt: 'Illustration of gray walking shoes with rounded toe boxes on a bench beside a leafy path',
+      caption: 'AI-generated editorial illustration of generic walking shoes; no named product or hands-on test is shown.',
+    },
   },
   {
     title: 'How Often Should You Replace Running Shoes?',
@@ -32,11 +43,15 @@ export const blogPosts: BlogPost[] = [
     category: 'RUNNING',
     date: 'September 28, 2026',
     excerpt: 'Mileage can help, but visible wear and changes in comfort are useful things to check too.',
-    paragraphs: [
-      'There is no single replacement schedule that fits every runner or shoe. Training surface, body mechanics, and shoe construction all affect wear.',
-      'Inspect the outsole and upper regularly, and notice whether the shoe still feels comfortable and stable during your usual runs.',
-      'For new or worsening pain, consider pausing activity and speaking with a qualified healthcare professional.',
-    ],
+    seoTitle: 'How Often Should You Replace Running Shoes? A Guide',
+    metaDescription: 'Find out when to replace running shoes using mileage, outsole wear, cushioning, and fit. Learn what to inspect and why there is no fixed expiry date.',
+    author: 'SOLEMART', authorType: 'Organization', modifiedAt: '2026-10-31',
+    paragraphs: [], contentHtml: replaceRunningShoesHtml,
+    featuredImage: {
+      src: '/articles/replace-running-shoes.png', width: 1672, height: 941,
+      alt: 'Illustration of navy running shoes with one outsole facing forward to show the tread',
+      caption: 'AI-generated illustration of shoe inspection areas, rather than evidence of wear testing or a measured lifespan.',
+    },
   },
   {
     title: 'Are Expensive Shoes Worth It?',
@@ -44,10 +59,14 @@ export const blogPosts: BlogPost[] = [
     category: 'EXPLAINER',
     date: 'September 19, 2026',
     excerpt: 'A practical way to weigh price, fit, features, and how you plan to use a pair.',
-    paragraphs: [
-      'Price alone does not tell you whether a shoe is right for you. Fit, construction, intended use, and comfort are all worth comparing.',
-      'Make a shortlist within your budget and check current retailer details, including return policies and availability.',
-      'If two pairs meet your needs, the less expensive option may be the better choice for your budget.',
-    ],
+    seoTitle: 'Are Expensive Shoes Worth It? How to Judge Value',
+    metaDescription: 'Are expensive shoes worth it? Compare fit, materials, useful features, cost per wear, and return terms to decide when paying more makes sense for you.',
+    author: 'SOLEMART', authorType: 'Organization', modifiedAt: '2026-10-31',
+    paragraphs: [], contentHtml: expensiveShoesHtml,
+    featuredImage: {
+      src: '/articles/expensive-shoes.png', width: 1672, height: 941,
+      alt: 'Illustration of light and dark athletic shoe designs displayed side by side on a neutral background',
+      caption: 'AI-generated illustration of generic shoe designs. Appearance alone does not establish price, quality, or durability.',
+    },
   },
 ]
