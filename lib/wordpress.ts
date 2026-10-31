@@ -222,6 +222,61 @@ export const getWordPressPosts = cache(async (after?: string): Promise<{
   }
 })
 
+export type WordPressSitemapArticle = {
+  type: 'post' | 'buyingGuide'
+  slug: string
+  modifiedAt?: string
+}
+
+/** Walk both public article connections; never truncate the sitemap at 100. */
+export async function getWordPressSitemapArticles(): Promise<WordPressSitemapArticle[] | null> {
+  if (!process.env.WORDPRESS_GRAPHQL_URL) return null
+  type SitemapNode = { slug?: string | null; status?: string | null; modifiedGmt?: string | null }
+  type Connection = { nodes?: (SitemapNode | null)[]; pageInfo?: { hasNextPage?: boolean; endCursor?: string | null } }
+  const collections = [
+    { root: 'posts', type: 'post', tag: 'wordpress:posts' },
+    { root: 'buyingGuides', type: 'buyingGuide', tag: 'wordpress:buying-guides' },
+  ] as const
+  const articles = await Promise.all(collections.map(async ({ root, type, tag }) => {
+    const entries = new Map<string, WordPressSitemapArticle>()
+    const cursors = new Set<string>()
+    let after: string | null = null
+    const query = `
+      query Sitemap_${root}($after: String) {
+        ${root}(first: 100, after: $after, where: { status: PUBLISH, orderby: [{ field: DATE, order: DESC }] }) {
+          nodes { slug status modifiedGmt }
+          pageInfo { hasNextPage endCursor }
+        }
+      }
+    `
+    while (true) {
+      const data: Record<string, Connection | null> = await queryWordPress(query, { after }, [tag, 'wordpress:sitemap'])
+      const connection = data[root]
+      if (!Array.isArray(connection?.nodes) || typeof connection.pageInfo?.hasNextPage !== 'boolean') {
+        throw new Error('WordPress could not return the sitemap article listing.')
+      }
+      for (const node of connection.nodes) {
+        if (node?.status !== 'publish' || typeof node.slug !== 'string'
+          || !/^[^\s/?#\\\u0000-\u001f\u007f]{1,200}$/u.test(node.slug) || ['.', '..'].includes(node.slug)) continue
+        const modifiedAt = utcDate(typeof node.modifiedGmt === 'string' ? node.modifiedGmt : null)
+        const previous = entries.get(node.slug)
+        if (!previous || (modifiedAt && (!previous.modifiedAt || modifiedAt > previous.modifiedAt))) {
+          entries.set(node.slug, { type, slug: node.slug, ...(modifiedAt ? { modifiedAt } : {}) })
+        }
+      }
+      if (!connection.pageInfo.hasNextPage) break
+      const cursor = connection.pageInfo.endCursor
+      if (!isWordPressCursor(cursor) || cursors.has(cursor)) {
+        throw new Error('WordPress returned invalid or repeated sitemap pagination.')
+      }
+      cursors.add(cursor)
+      after = cursor
+    }
+    return [...entries.values()]
+  }))
+  return articles.flat()
+}
+
 /** Buying guides are separate from ordinary posts and never inherit sample picks. */
 export const getWordPressBuyingGuide = cache(async (slug: string): Promise<BlogPost | null> => {
   if (!process.env.WORDPRESS_GRAPHQL_URL || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
