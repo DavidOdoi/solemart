@@ -9,9 +9,9 @@ precedence, following the existing CMS integration.
 
 | Article / H1 | SEO title | Slug | Body words |
 | --- | --- | --- | --- |
-| How to Choose the Right Walking Shoes | How to Choose Walking Shoes: Fit, Support & Comfort | `how-to-choose-walking-shoes` | 1,462 |
-| How Often Should You Replace Running Shoes? | How Often Should You Replace Running Shoes? A Guide | `when-to-replace-running-shoes` | 1,465 |
-| Are Expensive Shoes Worth It? | Are Expensive Shoes Worth It? How to Judge Value | `are-expensive-shoes-worth-it` | 1,465 |
+| How to Choose the Right Walking Shoes | How to Choose Walking Shoes: Fit, Support & Comfort | `how-to-choose-walking-shoes` | 1,474 |
+| How Often Should You Replace Running Shoes? | How Often Should You Replace Running Shoes? A Guide | `when-to-replace-running-shoes` | 1,480 |
+| Are Expensive Shoes Worth It? | Are Expensive Shoes Worth It? How to Judge Value | `are-expensive-shoes-worth-it` | 1,478 |
 
 Counts include visible body headings, inline image captions, FAQs, and reference
 lists, excluding the separate H1, featured-image caption, metadata, navigation,
@@ -53,14 +53,17 @@ plus two distinct supporting images within the body. The featured-image area
 and body images use a responsive size up to 800 pixels wide. Next.js optimizes
 the local image assets, and the inline images load lazily with reserved layout
 dimensions. A descriptive alt attribute and visible caption accompany each
-image. All are clearly labelled AI-generated editorial illustrations; they
-depict generic designs rather than named products or actual tests.
+image. Public captions now give useful advice about the pictured subject, and
+alt text describes what is visible. For the editorial record, the source assets
+were generated illustrations of unnamed designs; they do not document product
+tests or real-world measurements. The source files and their provenance have
+not been altered.
 
 | Article | Asset | Alt text |
 | --- | --- | --- |
-| Walking shoes | `/articles/choose-walking-shoes.png` | Illustration of gray walking shoes with rounded toe boxes on a bench beside a leafy path |
-| Replacement | `/articles/replace-running-shoes.png` | Illustration of navy running shoes with one outsole facing forward to show the tread |
-| Value | `/articles/expensive-shoes.png` | Illustration of light and dark athletic shoe designs displayed side by side on a neutral background |
+| Walking shoes | `/articles/choose-walking-shoes.png` | Gray walking shoes with rounded toe boxes on a wooden bench beside a leafy path |
+| Replacement | `/articles/replace-running-shoes.png` | Navy running shoes with one outsole facing forward to show the tread |
+| Value | `/articles/expensive-shoes.png` | Off-white and charcoal athletic shoes displayed side by side on a neutral background |
 
 The six supporting images appear beside the relevant advice, outside the
 quick-answer and FAQ sections:
@@ -94,9 +97,32 @@ quick-answer and FAQ sections:
 
 ## Verification limits
 
-The managed workspace does not allow the referenced external domains or the
-live CMS. The source URLs are supplied as references, but live reachability and
-the current wording on those external pages could not be independently checked
-here. No external quotation, source access date, or claim of live source
-verification is fabricated. The article rendering, internal links, image files,
-word counts, schema, and metadata can be checked locally.
+The copy review checked that:
+
+- The 300–500-mile range is an inspection starting point, not a universal life
+  limit; 300–500 miles is approximately 483–805 kilometres, rounded in the copy
+  to roughly 480–800 kilometres.
+- At 25 kilometres per week, 500 kilometres takes 20 weeks. The example is not
+  a replacement deadline.
+- US$100 / 100 wears = US$1 per wear, and US$150 / 30 wears = US$5 per wear.
+  These examples do not claim any product will last for that number of wears.
+- Price, softness, outsole appearance, and brand names are not treated as proof
+  of injury prevention, lifespan, or suitability for every reader.
+- Wear patterns and midsole creases are not used to diagnose gait or remaining
+  cushioning; persistent pain is directed to a qualified healthcare professional.
+- Rotation is optional, with no guaranteed increase in each pair's useful life.
+- Paragraphs are short, practical checks use lists, and each FAQ directly
+  answers a reader's question. No testing history or personal experience was added.
+
+Live source verification is still pending. Direct HTTPS requests to AAOS, NHS,
+Nike, and the Cochrane DOI were rejected by the workspace proxy before reaching
+those sites (CONNECT 403, not an HTTP response from the publishers). A restricted
+network-access draft preserving `images.unsplash.com` and adding
+`orthoinfo.aaos.org`, `www.nhs.uk`, `www.nike.com`, `doi.org`,
+`www.cochranelibrary.com`, and `www.cochrane.org` was saved for review. It must
+be reviewed/saved in Environment settings and the environment published before
+access can be rechecked. Saving the draft did not activate the policy.
+
+Do not describe this review as a live source fact-check, source-access-date
+verification, or medical review. The article rendering, internal links, image
+files, word counts, schema, and metadata can be checked locally.

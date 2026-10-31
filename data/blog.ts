@@ -33,8 +33,8 @@ export const blogPosts: BlogPost[] = [
     paragraphs: [], contentHtml: chooseWalkingShoesHtml,
     featuredImage: {
       src: '/articles/choose-walking-shoes.png', width: 1672, height: 941,
-      alt: 'Illustration of gray walking shoes with rounded toe boxes on a bench beside a leafy path',
-      caption: 'AI-generated editorial illustration of generic walking shoes; no named product or hands-on test is shown.',
+      alt: 'Gray walking shoes with rounded toe boxes on a wooden bench beside a leafy path',
+      caption: 'Start with comfortable toe room, a secure heel, and a sole suited to your daily walks.',
     },
   },
   {
@@ -49,8 +49,8 @@ export const blogPosts: BlogPost[] = [
     paragraphs: [], contentHtml: replaceRunningShoesHtml,
     featuredImage: {
       src: '/articles/replace-running-shoes.png', width: 1672, height: 941,
-      alt: 'Illustration of navy running shoes with one outsole facing forward to show the tread',
-      caption: 'AI-generated illustration of shoe inspection areas, rather than evidence of wear testing or a measured lifespan.',
+      alt: 'Navy running shoes with one outsole facing forward to show the tread',
+      caption: 'Check the tread, upper, and heel alongside changes in comfort as your mileage builds.',
     },
   },
   {
@@ -65,8 +65,8 @@ export const blogPosts: BlogPost[] = [
     paragraphs: [], contentHtml: expensiveShoesHtml,
     featuredImage: {
       src: '/articles/expensive-shoes.png', width: 1672, height: 941,
-      alt: 'Illustration of light and dark athletic shoe designs displayed side by side on a neutral background',
-      caption: 'AI-generated illustration of generic shoe designs. Appearance alone does not establish price, quality, or durability.',
+      alt: 'Off-white and charcoal athletic shoes displayed side by side on a neutral background',
+      caption: 'A useful purchase starts with the right fit and features you will actually use.',
     },
   },
 ]

@@ -17,6 +17,10 @@ for (const post of blogPosts) {
     const text = editorialPlainText(post.contentHtml)
     const words = text.split(/\s+/).filter(Boolean).length
     assert.ok(words >= 1400 && words <= 1500, `${words} body words`)
+    assert.doesNotMatch(`${text} ${post.featuredImage.alt} ${post.featuredImage.caption}`, /\bAI[-\s]+generated\b|\bno named product\b|\bno hands-on test\b/i)
+    for (const paragraph of post.contentHtml.matchAll(/<p>([\s\S]*?)<\/p>/g)) {
+      assert.ok(editorialPlainText(paragraph[1]).split(/\s+/).length <= 80, 'Keep paragraphs short enough to scan')
+    }
     assert.ok(post.seoTitle.length <= 60)
     assert.ok(post.metaDescription.length >= 130 && post.metaDescription.length <= 160)
     assert.equal(post.authorType, 'Organization')
@@ -49,7 +53,8 @@ for (const post of blogPosts) {
       assert.match(attributes, /decoding="async"/)
       assert.match(attributes, /width="800" height="450"/)
       assert.match(attributes, /alt="[^"]{30,}"/)
-      assert.match(caption, /AI-generated illustration/)
+      assert.ok(caption.length > 30)
+      assert.doesNotMatch(caption, /\bAI[-\s]+generated\b/i)
       const url = new URL(decodeHTML(attributes.match(/src="([^"]+)"/)[1]), 'https://thesolemart.com')
       assert.equal(url.pathname, '/_next/image')
       assert.equal(url.searchParams.get('w'), '1200')
@@ -63,7 +68,7 @@ for (const post of blogPosts) {
     assert.equal(new Set(sources).size, 2)
     const image = post.featuredImage
     assert.ok(image.alt.length > 30)
-    assert.match(image.caption, /AI-generated/)
+    assert.ok(image.caption.length > 30)
     const bytes = await readFile(new URL(`../public${image.src}`, import.meta.url))
     assert.equal(bytes.readUInt32BE(16), image.width)
     assert.equal(bytes.readUInt32BE(20), image.height)

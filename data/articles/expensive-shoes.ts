@@ -1,10 +1,10 @@
 import { articleFigure } from './article-figure.ts'
 
 export const expensiveShoesHtml = `
-<p>An expensive shoe can be a useful purchase, but a high price does not automatically mean better comfort, longer life, or a better fit. You may be paying for specialist materials, a particular design, a brand name, or features that matter very little to your daily routine.</p>
-<p>So, are expensive shoes worth it? The useful question is whether the extra cost solves a real problem for you. This guide shows how to compare footwear value without assuming that the cheapest pair is a bargain or that the most expensive pair is best.</p>
+<p>You find two pairs that seem to do the same job, but one costs much more. What are you getting for the difference? Sometimes it is a useful feature or a better fit. Sometimes it is a colour, a collaboration, or a name on the box.</p>
+<p>Expensive shoes can be worth it. The decision becomes easier when you can explain what the extra money buys and why that matters to your routine. Start there, before being persuaded by the price tag or discount.</p>
 
-<h2>Shoe price and value essentials</h2>
+<h2>When is a higher price worth paying?</h2>
 <h3>The quick answer</h3>
 <p>Expensive shoes can be worth it when they fit well and offer features you genuinely need, such as suitable weather protection, workplace certification, or construction you can maintain. They are poor value when the extra cost mainly buys a label or an unwanted feature. Compare fit, intended use, care, return terms, and likely use before choosing.</p>
 
@@ -17,7 +17,7 @@ export const expensiveShoesHtml = `
 <p>Check the actual specification rather than assuming an expensive shoe has it. A fashionable boot, for example, should not be treated as protective work footwear unless it meets the requirements for your job.</p>
 <h3>Branding, styling, and scarcity</h3>
 <p>Some of the price can reflect marketing, design, collaborations, or limited availability. You may reasonably enjoy those things, but separate enjoyment or collecting from practical performance. A rare colour does not prove better cushioning, fit, grip, or durability.</p>
-${articleFigure('shoe-materials', 'Illustration of a leather casual shoe and a mesh athletic shoe showing different upper materials', 'AI-generated illustration: compare materials for your intended activity and care needs, rather than price alone.')}
+${articleFigure('shoe-materials', 'A brown leather casual shoe and a gray mesh athletic shoe showing different upper materials', 'Choose upper materials for your activity, conditions, and preferred care routine.')}
 
 <h2>Put fit ahead of the price tag</h2>
 <p>A costly pair that squeezes your toes or rubs your heel is a poor purchase for everyday use. A less expensive pair that fits your foot and intended activity can be better value. Start with comfort and function before comparing extra features.</p>
@@ -39,14 +39,21 @@ ${articleFigure('shoe-materials', 'Illustration of a leather casual shoe and a m
 <p>You may not need specialist footwear for occasional, uncomplicated use. A comfortable basic model can meet that need without advanced features. A discounted previous-season colourway can also provide value if the condition, fit, and return terms are suitable.</p>
 <p>Be careful with the discount itself. A large reduction from an advertised original price does not tell you whether the shoe is right for you. Compare the final cost with other suitable pairs, rather than judging the size of the markdown.</p>
 <p>Do not stretch your budget because an expensive pair is described as an investment. Footwear wears out, personal needs can change, and resale value is uncertain. Money left for replacing a worn pair can be more useful than buying an unsuitable premium option now.</p>
-<p>Use reviews to identify practical questions rather than letting a star rating make the decision. Look for details about fit, return experiences, and the conditions in which someone used the shoes. A reviewer’s foot shape and routine may differ from yours. Clear product information and a realistic try-on are more useful than a confident claim that one pair is perfect for everybody.</p>
+<h3>Read reviews for useful details</h3>
+<p>Look for comments about fit, return experiences, and the conditions in which someone used the shoes. A reviewer’s foot shape and routine may differ from yours, so a high rating cannot settle the decision.</p>
+<p>A review is most useful when it helps you ask a better question: is the toe box wide enough, can the upper be cleaned easily, or does the seller accept returns after an indoor try-on?</p>
 
-<h2>Use cost per wear without guessing durability</h2>
-<p>Cost per wear divides the purchase price by the number of times you actually use a pair. It can help you compare spending, but predictions are uncertain. Use the same currency and similar wearing situations when comparing options.</p>
-<p>For a simple example, a pair costing 100 used 100 times costs 1 per wear. A pair costing 150 used only 30 times costs 5 per wear. These are arithmetic examples, not claims about any model’s lifespan.</p>
+<h2>Work out the cost per wear</h2>
+<p>Cost per wear can put the price in perspective. It is most useful when based on how often you actually wear a pair, rather than an optimistic guess about how long it might last.</p>
+<p><strong>Cost per wear = purchase price ÷ number of wears.</strong></p>
+<ul>
+<li>A US$100 pair worn 100 times costs US$1 per wear.</li>
+<li>A US$150 pair worn 30 times costs US$5 per wear.</li>
+</ul>
+<p>These are examples, not lifespan predictions. The same calculation works in any currency; keep the currency and type of use consistent when comparing pairs.</p>
 <p>Include likely cleaning, maintenance, and repair costs if they are relevant. Then ask whether you will really wear the pair often enough. A comfortable, affordable shoe you use regularly can provide more value than an expensive shoe that stays in its box.</p>
 
-<h2>Check health and performance promises carefully</h2>
+<h2>Look closely at health and performance claims</h2>
 <p>A higher price is not proof that a shoe will prevent injuries, correct your movement, or remove pain. The <a href="https://doi.org/10.1002/14651858.CD013368.pub2">Cochrane review on running shoes and lower-limb injury prevention</a> is a more useful starting point for that question than a price tag. Evidence about footwear categories should not be turned into a guarantee for an individual buyer.</p>
 <p>Specialised running features also need context. A shoe designed for racing is not automatically the best choice for walking, work, or every training session. Match the intended use to your needs. For activity differences, see our <a href="/comparisons/walking-shoes-vs-running-shoes">walking and running shoe comparison</a>.</p>
 <p>If you have persistent pain or a diagnosed condition, seek appropriate professional advice. Paying more without understanding the problem can leave you with the same discomfort and less money.</p>
@@ -60,9 +67,9 @@ ${articleFigure('shoe-materials', 'Illustration of a leather casual shoe and a m
 <li>Would I still choose it without the brand name or advertised discount?</li>
 </ol>
 <p>Once you own a pair, judge its condition instead of protecting the purchase decision. Our guide to <a href="/blog/when-to-replace-running-shoes">when to replace running shoes</a> explains why wear and function matter more than getting a particular number of months from an expensive purchase.</p>
-${articleFigure('shoe-buying-checklist', 'Illustration of everyday shoes beside a blank notebook, pencil, and plain shoe box', 'AI-generated illustration: compare fit, useful features, maintenance costs, and return terms before buying.')}
+${articleFigure('shoe-buying-checklist', 'Everyday shoes beside an open notebook, pencil, and plain cardboard shoe box', 'Before buying, compare fit, useful features, care costs, and return terms.')}
 
-<h2>Conclusion: pay for a clear benefit</h2>
+<h2>Choose the pair that earns its place</h2>
 <p>Expensive shoes are worth considering when the fit and useful features justify the additional cost for your routine. They are not automatically better value. Set a budget, compare practical specifications, and check the return policy. The right purchase is a pair you can comfortably afford and use, with benefits you can explain beyond its price.</p>
 
 <h2>Frequently asked questions</h2>
