@@ -9,12 +9,13 @@ precedence, following the existing CMS integration.
 
 | Article / H1 | SEO title | Slug | Body words |
 | --- | --- | --- | --- |
-| How to Choose the Right Walking Shoes | How to Choose Walking Shoes: Fit, Support & Comfort | `how-to-choose-walking-shoes` | 1,436 |
-| How Often Should You Replace Running Shoes? | How Often Should You Replace Running Shoes? A Guide | `when-to-replace-running-shoes` | 1,437 |
-| Are Expensive Shoes Worth It? | Are Expensive Shoes Worth It? How to Judge Value | `are-expensive-shoes-worth-it` | 1,437 |
+| How to Choose the Right Walking Shoes | How to Choose Walking Shoes: Fit, Support & Comfort | `how-to-choose-walking-shoes` | 1,462 |
+| How Often Should You Replace Running Shoes? | How Often Should You Replace Running Shoes? A Guide | `when-to-replace-running-shoes` | 1,465 |
+| Are Expensive Shoes Worth It? | Are Expensive Shoes Worth It? How to Judge Value | `are-expensive-shoes-worth-it` | 1,465 |
 
-Counts include visible body headings, FAQs, and reference lists, excluding the
-separate H1, image caption, metadata, navigation, and interface controls.
+Counts include visible body headings, inline image captions, FAQs, and reference
+lists, excluding the separate H1, featured-image caption, metadata, navigation,
+and interface controls.
 
 ### How to Choose the Right Walking Shoes
 
@@ -47,17 +48,31 @@ separate H1, image caption, metadata, navigation, and interface controls.
 
 ## Image placements
 
-Each article has a separate 1672 × 941 image displayed in the existing responsive
-800 × 450 featured-image area, above the contents list. Next.js serves responsive
-optimized versions. A descriptive alt attribute and visible caption accompany
-each image. The images are AI-generated editorial illustrations, clearly labelled
-as such; they depict generic designs rather than named products or actual tests.
+Each article has its existing 1672 × 941 featured image above the contents list,
+plus two distinct supporting images within the body. The featured-image area
+and body images use a responsive size up to 800 pixels wide. Next.js optimizes
+the local image assets, and the inline images load lazily with reserved layout
+dimensions. A descriptive alt attribute and visible caption accompany each
+image. All are clearly labelled AI-generated editorial illustrations; they
+depict generic designs rather than named products or actual tests.
 
 | Article | Asset | Alt text |
 | --- | --- | --- |
 | Walking shoes | `/articles/choose-walking-shoes.png` | Illustration of gray walking shoes with rounded toe boxes on a bench beside a leafy path |
 | Replacement | `/articles/replace-running-shoes.png` | Illustration of navy running shoes with one outsole facing forward to show the tread |
 | Value | `/articles/expensive-shoes.png` | Illustration of light and dark athletic shoe designs displayed side by side on a neutral background |
+
+The six supporting images appear beside the relevant advice, outside the
+quick-answer and FAQ sections:
+
+| Article | Supporting asset | Position |
+| --- | --- | --- |
+| Walking shoes | `/articles/walking-fit-check.png` | After the toe-room and heel-fit discussion |
+| Walking shoes | `/articles/walking-surfaces.png` | After the grip and upper-material advice |
+| Replacement | `/articles/running-outsole-inspection.png` | After the outsole-wear inspection advice |
+| Replacement | `/articles/running-shoe-care.png` | After the care and air-drying advice |
+| Value | `/articles/shoe-materials.png` | After the materials, features, and branding discussion |
+| Value | `/articles/shoe-buying-checklist.png` | After the five-question buying check |
 
 ## Structure and schema recommendations
 

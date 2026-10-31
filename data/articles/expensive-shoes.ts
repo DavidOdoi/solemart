@@ -1,3 +1,5 @@
+import { articleFigure } from './article-figure.ts'
+
 export const expensiveShoesHtml = `
 <p>An expensive shoe can be a useful purchase, but a high price does not automatically mean better comfort, longer life, or a better fit. You may be paying for specialist materials, a particular design, a brand name, or features that matter very little to your daily routine.</p>
 <p>So, are expensive shoes worth it? The useful question is whether the extra cost solves a real problem for you. This guide shows how to compare footwear value without assuming that the cheapest pair is a bargain or that the most expensive pair is best.</p>
@@ -15,6 +17,7 @@ export const expensiveShoesHtml = `
 <p>Check the actual specification rather than assuming an expensive shoe has it. A fashionable boot, for example, should not be treated as protective work footwear unless it meets the requirements for your job.</p>
 <h3>Branding, styling, and scarcity</h3>
 <p>Some of the price can reflect marketing, design, collaborations, or limited availability. You may reasonably enjoy those things, but separate enjoyment or collecting from practical performance. A rare colour does not prove better cushioning, fit, grip, or durability.</p>
+${articleFigure('shoe-materials', 'Illustration of a leather casual shoe and a mesh athletic shoe showing different upper materials', 'AI-generated illustration: compare materials for your intended activity and care needs, rather than price alone.')}
 
 <h2>Put fit ahead of the price tag</h2>
 <p>A costly pair that squeezes your toes or rubs your heel is a poor purchase for everyday use. A less expensive pair that fits your foot and intended activity can be better value. Start with comfort and function before comparing extra features.</p>
@@ -57,6 +60,7 @@ export const expensiveShoesHtml = `
 <li>Would I still choose it without the brand name or advertised discount?</li>
 </ol>
 <p>Once you own a pair, judge its condition instead of protecting the purchase decision. Our guide to <a href="/blog/when-to-replace-running-shoes">when to replace running shoes</a> explains why wear and function matter more than getting a particular number of months from an expensive purchase.</p>
+${articleFigure('shoe-buying-checklist', 'Illustration of everyday shoes beside a blank notebook, pencil, and plain shoe box', 'AI-generated illustration: compare fit, useful features, maintenance costs, and return terms before buying.')}
 
 <h2>Conclusion: pay for a clear benefit</h2>
 <p>Expensive shoes are worth considering when the fit and useful features justify the additional cost for your routine. They are not automatically better value. Set a budget, compare practical specifications, and check the return policy. The right purchase is a pair you can comfortably afford and use, with benefits you can explain beyond its price.</p>

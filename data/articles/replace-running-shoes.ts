@@ -1,3 +1,5 @@
+import { articleFigure } from './article-figure.ts'
+
 export const replaceRunningShoesHtml = `
 <p>Running shoes do not come with a reliable expiry date. Two people can buy the same model and wear it out at different rates because their mileage, surfaces, habits, and shoe fit differ. That makes replacement a practical inspection decision, not just a calendar reminder.</p>
 <p>If you are wondering how often to replace running shoes, use distance as a starting point and then check their condition. This guide explains what to look for, how to track wear, and when a shoe deserves closer attention.</p>
@@ -15,6 +17,7 @@ export const replaceRunningShoesHtml = `
 <h3>1. Outsole wear that affects grip</h3>
 <p>Turn the shoe over and inspect the rubber. Look for areas worn smooth, exposed underlying foam, cuts, or separating sections. On trail shoes, notice whether the lugs still have enough shape for the terrain you use.</p>
 <p>Uneven wear can be useful information, but it does not diagnose a problem with your running style. Shoes often wear differently across the sole. The practical question is whether the remaining outsole gives you dependable contact and traction in your normal conditions.</p>
+${articleFigure('running-outsole-inspection', 'Illustration of a running shoe outsole with visible tread and modest surface wear', 'AI-generated illustration of outsole inspection areas; it does not show measured wear or test results.')}
 <h3>2. A change in cushioning or stability</h3>
 <p>Pay attention if the pair consistently feels flatter, less comfortable, or less controlled than it did during normal use. Visible midsole creases alone do not prove failure: foam can crease without becoming unusable.</p>
 <p>Set both shoes on a flat surface and look for obvious collapse, distortion, or a difference between them. This is a simple condition check, not a measurement of remaining cushioning. Do not assume a thumb press can accurately reveal how much useful life is left.</p>
@@ -39,6 +42,7 @@ export const replaceRunningShoesHtml = `
 <p>Follow the manufacturer’s cleaning instructions. Remove loose dirt, let damp shoes dry with airflow, and avoid direct high heat unless the care guidance specifically permits it. Inspect them after demanding or muddy outings, when damage might otherwise be hidden.</p>
 <p>Loosen the laces before removing your shoes instead of repeatedly crushing the heel. Store them in a dry, ventilated place. These habits cannot prevent normal wear, but they make it easier to spot changes and avoid unnecessary damage.</p>
 <p>Do not rely on appearance alone. An outsole can look tidy while the shoe feels different underfoot, and a dirty upper does not necessarily mean a shoe is worn out. Assess several signs together.</p>
+${articleFigure('running-shoe-care', 'Illustration of running shoes with loosened laces, a removable insole, a cloth, and a soft brush', 'AI-generated illustration: follow the manufacturer’s care instructions and allow damp shoes to air-dry.')}
 
 <h2>Choose the replacement for your current routine</h2>
 <p>Before ordering the same size again, consider whether your needs have changed. You might now run on different surfaces, prefer a different fit, or need more width. Even when a familiar model has a similar name, an updated version can feel different.</p>

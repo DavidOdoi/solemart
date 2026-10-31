@@ -1,3 +1,5 @@
+import { articleFigure } from './article-figure.ts'
+
 export const chooseWalkingShoesHtml = `
 <p>Choosing walking shoes is easier when you start with your feet and your routine, rather than a popular logo. A pair for short errands may feel different from one you want for long city walks, travel, or a job that keeps you moving. The right choice should feel comfortable, hold your foot securely, and suit the ground you use most.</p>
 <p>This guide explains how to choose walking shoes without treating price, softness, or a fashionable shape as proof of quality. Use it to build a shortlist and check the fit before buying.</p>
@@ -19,6 +21,7 @@ export const chooseWalkingShoesHtml = `
 <h3>Check the heel and middle of your foot</h3>
 <p>Your heel should feel held without a hard edge digging into your skin. A little movement is different from repeated lifting that causes rubbing. Adjust the laces, then walk again. If you need to overtighten them to stop sliding, the shape may be wrong for you.</p>
 <p>Check the middle of your foot too. Firm pressure is not automatically useful support. If the shoe presses painfully beneath your arch or across the top of your foot, compare another design rather than expecting discomfort to disappear.</p>
+${articleFigure('walking-fit-check', 'Illustration of a walking shoe, removable insole, and socks arranged for a fit check', 'AI-generated illustration: compare toe room and heel hold with your usual socks and insoles.')}
 
 <h2>Compare cushioning, stability, and flexibility</h2>
 <h3>Softness should feel controlled</h3>
@@ -32,6 +35,7 @@ export const chooseWalkingShoesHtml = `
 <p>Look at the outsole and consider your normal walking conditions. A smooth, lightly worn indoor shoe and a trail shoe have different jobs. Tread appearance alone does not prove that a shoe will resist slipping on every wet or polished surface.</p>
 <p>Read the manufacturer’s description and any relevant workplace requirements. If you need occupational slip resistance or protective footwear, ordinary walking shoes may not meet those requirements.</p>
 <p>For warm conditions, compare breathable uppers and comfortable linings. For frequent rain, consider water protection alongside drying time and ventilation. Check seams and overlays near sensitive areas. Even a small rough edge can become annoying over a long walk.</p>
+${articleFigure('walking-surfaces', 'Illustration of walking shoes at the transition between a paved park path and gravel', 'AI-generated illustration: choose footwear suited to the surfaces you walk on most.')}
 
 <h2>Use a simple shop or home try-on checklist</h2>
 <p>Try shoes when your feet are representative of a normal active day. Wear the socks you expect to use, and check both feet. When shopping online, read the return conditions before walking outdoors or removing labels.</p>
