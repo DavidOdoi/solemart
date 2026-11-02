@@ -219,3 +219,24 @@ PENDING, not become a plausible-looking fact. Complete the JSON model, write
 readable source-grounded prose to the total budget, check live internal links,
 and run the validation CLI before saving a private draft. No source in these
 briefs is described as already checked.
+
+## Website review links
+
+The prepared briefs can be viewed directly on the Next.js frontend at
+`https://thesolemart.com/template-preview/articles`, with individual pages under
+`/template-preview/articles/[slug]`. They are labelled draft briefs, use
+`noindex, nofollow, noarchive`, and are excluded from the sitemap and public
+navigation. These are accessible by URL; no password protection is claimed.
+The full 1,700-word articles remain pending writing and product verification.
+
+Preview data is kept in `data/ingestion/article-briefs.json`, preserving only the
+nine selected topics and their existing planning notes. These pages do not query
+WordPress, need Amazon credentials, show invented product recommendations, or
+emit Article/Product structured data. When editing the briefs, keep this data
+snapshot consistent with the approved CSV selection and the notes above.
+
+Validation: production build and TypeScript passed; browser checks confirmed all
+nine pages return 200, unknown slugs return 404, preview robots metadata is
+inherited, no preview appears in the sitemap or homepage links, and layouts fit
+390, 768 and 1440 pixel viewports. Live Vercel deployment must finish before the
+new URLs become available; no live deployment result is asserted here.
