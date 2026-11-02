@@ -1,14 +1,16 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { guides } from '@/data/guides'
 import { getGuide } from '@/lib/content'
 import { GuidePage } from '@/components/page-templates'
 import { ReviewGuideTemplate } from '@/components/review-guide-template'
 import { cache } from 'react'
 import { hasAcfGuideContent, mapAcfGuideFields, mapGuideFields } from '@/lib/guide-fields'
 import { getWordPressAcfBuyingGuide, getWordPressBuyingGuide, getWordPressGuideFields } from '@/lib/wordpress'
+import { getGuideAmazonOffers, getTrackedGuideProducts } from '@/lib/amazon-guide-offers'
 
-export const revalidate = 60
+// Prices must never enter the full-route ISR cache. Explicit CMS fetches retain
+// their existing 60-second data cache; the page itself renders per request.
+export const revalidate = 0
 export const dynamicParams = true
 
 const getCmsGuide = cache(async (slug: string) => {
@@ -24,10 +26,6 @@ const getCmsGuide = cache(async (slug: string) => {
   const post = await getWordPressBuyingGuide(slug)
   return post ? { ...mapGuideFields(post, await getWordPressGuideFields(slug)), post } : null
 })
-
-export function generateStaticParams() {
-  return process.env.WORDPRESS_GRAPHQL_URL ? [] : guides.map(({ slug }) => ({ slug }))
-}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -55,7 +53,9 @@ export default async function BuyingGuideRoute({ params }: { params: Promise<{ s
   const { slug } = await params
   const content = await getCmsGuide(slug)
   if (content) {
-    return <ReviewGuideTemplate guide={content.guide} products={content.products} />
+    const products = getTrackedGuideProducts(content.products)
+    const offers = await getGuideAmazonOffers(products)
+    return <ReviewGuideTemplate guide={content.guide} products={products} offers={offers} />
   }
   if (process.env.WORDPRESS_GRAPHQL_URL) notFound()
   const guide = getGuide(slug)

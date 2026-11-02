@@ -1390,6 +1390,223 @@
         "toolbar": "basic",
         "media_upload": 0,
         "delay": 0
+      },
+      {
+        "key": "field_solemart_shoe_model",
+        "label": "Model",
+        "name": "model",
+        "type": "text",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "model",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_asin",
+        "label": "Amazon ASIN",
+        "name": "asin",
+        "type": "text",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "asin",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_manufacturer_url",
+        "label": "Manufacturer product URL",
+        "name": "manufacturer_url",
+        "type": "url",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "manufacturerUrl",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_product_category",
+        "label": "Product category",
+        "name": "product_category",
+        "type": "text",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "productCategory",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_sizing_information",
+        "label": "Sizing information",
+        "name": "sizing_information",
+        "type": "textarea",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "sizingInformation",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_available_colors",
+        "label": "Manufacturer-listed colors",
+        "name": "available_colors",
+        "type": "text",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "availableColors",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_variant",
+        "label": "Verified size / color variant",
+        "name": "variant",
+        "type": "text",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "variant",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_evidence_sources",
+        "label": "Claim verification report (JSON)",
+        "name": "evidence_sources",
+        "type": "textarea",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "evidenceSources",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_verification_status",
+        "label": "Verification status",
+        "name": "verification_status",
+        "type": "select",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "verificationStatus",
+        "graphql_non_null": 0,
+        "choices": {
+          "PENDING": "Pending review",
+          "VERIFIED": "Verified",
+          "REJECTED": "Rejected"
+        },
+        "default_value": "PENDING",
+        "allow_null": 0,
+        "multiple": 0,
+        "ui": 0,
+        "return_format": "value"
+      },
+      {
+        "key": "field_solemart_shoe_verification_date",
+        "label": "Verification date (UTC)",
+        "name": "verification_date",
+        "type": "text",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "verificationDate",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
+      },
+      {
+        "key": "field_solemart_shoe_verification_notes",
+        "label": "Verification notes",
+        "name": "verification_notes",
+        "type": "textarea",
+        "instructions": "Populated by the draft-ingestion workflow. Product facts require source review; never store live prices here.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "show_in_graphql": 1,
+        "graphql_field_name": "verificationNotes",
+        "graphql_non_null": 0,
+        "default_value": "",
+        "placeholder": ""
       }
     ],
     "location": [

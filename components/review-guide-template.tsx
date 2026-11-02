@@ -10,13 +10,18 @@ import { PickActions } from '@/components/pick-actions'
 import { EditorialRichText } from '@/components/editorial-rich-text'
 import { EditorialFaqList } from '@/components/editorial-faq-list'
 import { editorialPlainText } from '@/lib/cms-rich-text'
+import { AmazonPrice } from '@/components/amazon-price'
+import { isCurrentAmazonOffer, type AmazonProductOffer } from '@/lib/amazon-creators'
+import { isAmazonProductImage, marketplaces } from '@/lib/affiliate-products'
 
 function reviewHref(product: Product) {
   return product.cmsManaged ? product.reviewUrl || `#review-${product.slug}` : `/reviews/${product.slug}`
 }
 
 function priceButtonLabel(product: Product, preview = false) {
-  if (preview || !product.cmsManaged || /https:\/\/(?:[^/]+\.)?(?:amazon\.com|amzn\.to)(?:\/|$)/i.test(product.affiliateUrl || '')) return 'Check Price on Amazon'
+  let amazon = false
+  try { const host = new URL(product.affiliateUrl || '').hostname; amazon = host === 'amzn.to' || Object.keys(marketplaces).some(market => host.replace(/^www\./, '') === market.replace(/^www\./, '')) } catch { /* A missing retailer URL produces no CTA. */ }
+  if (preview || !product.cmsManaged || amazon) return 'Check Price on Amazon'
   return 'Check latest price'
 }
 
@@ -30,13 +35,13 @@ function RetailerAction({ href, preview, className, children }: { href?: string;
   return href ? <a href={href} target="_blank" rel="sponsored nofollow noopener noreferrer" className={className}>{children}</a> : null
 }
 
-function TopPickCard({ product, index, preview }: { product: Product; index: number; preview: boolean }) {
+function TopPickCard({ product, index, preview, offer }: { product: Product; index: number; preview: boolean; offer?: AmazonProductOffer }) {
   const href = product.cmsManaged ? product.affiliateUrl : product.affiliateUrl || affiliateUrl
   const showPrice = preview || Boolean(href)
   return (
     <article className="relative grid gap-5 border-b border-[#e7e5de] p-5 last:border-b-0 sm:p-7 md:grid-cols-2 md:items-center md:gap-8 md:p-8">
       {product.image && <Link href={reviewHref(product)} className="group relative block overflow-hidden rounded-xl bg-[#f3f2ee]">
-        <Image src={product.image} alt={product.imageAlt} width={900} height={700} sizes="(max-width: 768px) 90vw, 40vw" priority={index === 0} className="h-56 w-full object-cover mix-blend-multiply transition duration-500 group-hover:scale-[1.03] sm:h-64 md:h-[300px]" />
+        <Image src={product.image} alt={product.imageAlt} width={900} height={700} unoptimized={isAmazonProductImage(product.image)} sizes="(max-width: 768px) 90vw, 40vw" priority={index === 0} className="h-56 w-full object-cover mix-blend-multiply transition duration-500 group-hover:scale-[1.03] sm:h-64 md:h-[300px]" />
       </Link>}
       <div className="min-w-0">
         <div className="flex items-start justify-between gap-3">
@@ -46,7 +51,7 @@ function TopPickCard({ product, index, preview }: { product: Product; index: num
         <h3 className="mt-4 text-2xl font-bold leading-tight text-[#c65325] sm:text-3xl"><Link href={reviewHref(product)} className="hover:underline hover:underline-offset-4">{product.name}</Link></h3>
         <p className="mt-3 text-base leading-7 text-[#68675f]">{product.shortReason || product.bestFor}</p>
         <div className="mt-6 max-w-[360px]">
-          {showPrice && <p className="text-sm font-semibold">{product.priceLabel || 'Check latest price'}</p>}
+          {!preview && offer && isCurrentAmazonOffer(offer) ? <AmazonPrice offer={offer} /> : showPrice && <p className="text-sm font-semibold">Check latest price</p>}
           {showPrice && <RetailerAction href={href} preview={preview} className="mt-3 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#161616] px-4 py-3 text-center text-base font-bold text-white transition hover:bg-[#e86d35]">{priceButtonLabel(product, preview)} <ArrowRight aria-hidden="true" className="size-5 shrink-0" /></RetailerAction>}
           {showPrice && <p className="mt-2 text-sm text-[#77766f]">Price may vary by size and color.</p>}
           <Link href={reviewHref(product)} className="mt-5 inline-block text-base font-bold underline decoration-[#c9c7bf] underline-offset-4 hover:text-[#c65325]">Read full review</Link>
@@ -73,14 +78,15 @@ export function SpecsTable({ specs }: { specs: Product['specs'] }) {
   )
 }
 
-function FullReviewCard({ product, preview }: { product: Product; preview: boolean }) {
+function FullReviewCard({ product, preview, offer }: { product: Product; preview: boolean; offer?: AmazonProductOffer }) {
   const href = product.cmsManaged ? product.affiliateUrl : product.affiliateUrl || affiliateUrl
   const showPrice = preview || Boolean(href)
   return (
     <article id={`review-${product.slug}`} className="scroll-mt-36 rounded-2xl border border-[#e5e4df] bg-white p-5 sm:p-7">
       <div className="grid gap-6 lg:grid-cols-[minmax(250px,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
         <div>
-          {product.image && <div className="overflow-hidden rounded-xl bg-[#f3f2ee]"><Image src={product.image} alt={product.imageAlt} width={900} height={900} sizes="(max-width: 1024px) 90vw, 35vw" className="aspect-[4/3] w-full object-cover mix-blend-multiply" /></div>}
+          {product.image && <div className="overflow-hidden rounded-xl bg-[#f3f2ee]"><Image src={product.image} alt={product.imageAlt} width={900} height={900} unoptimized={isAmazonProductImage(product.image)} sizes="(max-width: 1024px) 90vw, 35vw" className="aspect-[4/3] w-full object-cover mix-blend-multiply" /></div>}
+          {!preview && offer && isCurrentAmazonOffer(offer) && <div className="mt-4"><AmazonPrice offer={offer} /></div>}
           {showPrice && <RetailerAction href={href} preview={preview} className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#161616] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#e86d35]">{priceButtonLabel(product, preview)} <ArrowRight aria-hidden="true" className="size-4" /></RetailerAction>}
           {showPrice && <p className="mt-2 text-center text-xs text-[#77766f]">Price may vary by size and color.</p>}
         </div>
@@ -117,8 +123,17 @@ function StickyReviewNav({ items }: { items: string[][] }) {
   </nav>
 }
 
-export function ReviewGuideTemplate({ guide, products, preview = false }: { guide: Guide; products: Product[]; preview?: boolean }) {
-  const picks = products.slice(0, 4)
+export function ReviewGuideTemplate({ guide, products, preview = false, offers = {} }: { guide: Guide; products: Product[]; preview?: boolean; offers?: Record<string, AmazonProductOffer> }) {
+  const currentOffers = Object.fromEntries(Object.entries(offers).filter(([, offer]) => !preview && isCurrentAmazonOffer(offer)))
+  const picks = products.slice(0, 4).map(product => {
+    const offer = currentOffers[product.slug]
+    return offer ? { ...product, affiliateUrl: offer.url, image: offer.imageUrl || product.image } : product
+  })
+  const laceGuide = guide.slug === 'best-dress-shoe-laces'
+  const comparisonLabel = laceGuide ? 'Material' : 'Cushioning'
+  const sizingLabel = laceGuide ? 'Lengths' : 'Width Options'
+  const comparisonDetail = (pick: Product, value?: string) => laceGuide ? pick.specs.find(row => /material/i.test(row.label))?.value || 'Check product specifications' : value || 'Check product specifications'
+  const sizingDetail = (pick: Product, value?: string) => laceGuide ? pick.specs.find(row => /length/i.test(row.label))?.value || 'Check available lengths' : value || 'Check available sizing'
   const show = {
     picks: !guide.cmsManaged || picks.length > 0,
     methodology: !guide.cmsManaged || Boolean(guide.howWeChose?.length || guide.advice.length),
@@ -136,7 +151,10 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
     ...(show.faqs ? [['FAQs', '#faqs']] : []),
   ]
   const faqSchema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: guide.faqs.map(({ question, answer, answerHtml }) => ({ '@type': 'Question', name: question, acceptedAnswer: { '@type': 'Answer', text: answerHtml ? editorialPlainText(answerHtml) : answer } })) }
-  const articleSchema = { '@context': 'https://schema.org', '@type': 'Article', headline: guide.title, description: guide.metaDescription || guide.excerpt, datePublished: guide.publishedAt, dateModified: guide.updatedAt, mainEntityOfPage: `https://thesolemart.com/best-shoes/${encodeURIComponent(guide.slug)}`, author: guide.author || !guide.cmsManaged ? { '@type': 'Organization', name: guide.author || 'SOLEMART Editorial Team' } : undefined, publisher: { '@type': 'Organization', name: 'SOLEMART' }, mainEntity: picks.map((product) => ({ '@type': 'Product', name: product.name, image: product.image, description: product.shortReason || product.description })) }
+  const publicUrl = `https://thesolemart.com/best-shoes/${encodeURIComponent(guide.slug)}`
+  const productSchemas = picks.map(product => ({ '@type': 'Product', name: product.name, ...(product.image ? { image: product.image } : {}), ...(product.asin ? { sku: product.asin } : {}), ...(product.brand ? { brand: { '@type': 'Brand', name: product.brand } } : {}), description: product.shortReason || product.description }))
+  const articleSchema = { '@context': 'https://schema.org', '@type': 'Article', headline: guide.title, description: guide.metaDescription || guide.excerpt, datePublished: guide.publishedAt, dateModified: guide.updatedAt, mainEntityOfPage: publicUrl, author: guide.author || !guide.cmsManaged ? { '@type': 'Organization', name: guide.author || 'SOLEMART Editorial Team' } : undefined, publisher: { '@type': 'Organization', name: 'SOLEMART' }, mainEntity: productSchemas }
+  const itemListSchema = { '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: picks.map((product, index) => ({ '@type': 'ListItem', position: index + 1, url: `${publicUrl}#review-${encodeURIComponent(product.slug)}`, item: productSchemas[index] })) }
   const breadcrumbSchema = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thesolemart.com/' }, { '@type': 'ListItem', position: 2, name: 'Buying Guides', item: 'https://thesolemart.com/#guides' }, { '@type': 'ListItem', position: 3, name: guide.title }] }
   return (
     <main id="top" className={shell}>
@@ -162,18 +180,19 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
         {show.picks && <section id="top-picks" aria-labelledby="top-picks-heading" className="relative mx-auto mt-14 max-w-5xl scroll-mt-36 overflow-visible rounded-sm border-[3px] border-[#e86d35] bg-white pt-4 shadow-sm">
           <span aria-hidden="true" className="top-picks-ribbon absolute -top-[19px] left-5 z-10">TOP PICKS</span>
           <div className="border-b border-[#e7e5de] px-5 pb-5 pt-4 sm:px-7"><h2 id="top-picks-heading" className="font-sans text-3xl font-black tracking-tight sm:text-4xl">Our Top Picks</h2><p className="mt-3 max-w-2xl text-base font-medium leading-7 text-[#4f4e49] sm:text-lg">A quick comparison to help you choose where to start. Confirm fit, current model details, and availability before buying.</p></div>
-          {picks.length ? picks.map((product, index) => <TopPickCard key={product.slug} product={product} index={index} preview={preview} />) : <p className="p-6 text-sm text-[#68675f]">Recommendations are being updated. Check back soon.</p>}
+          {!preview && picks.some(product => product.asin) && <p className="border-b border-[#e7e5de] px-5 py-4 text-sm leading-6 text-[#68675f] sm:px-7">{guide.disclosure || 'As an Amazon Associate, SOLEMART earns from qualifying purchases.'}</p>}
+          {picks.length ? picks.map((product, index) => <TopPickCard key={product.slug} product={product} index={index} preview={preview} offer={currentOffers[product.slug]} />) : <p className="p-6 text-sm text-[#68675f]">Recommendations are being updated. Check back soon.</p>}
         </section>}
 
         {picks.length > 0 && <section aria-labelledby="comparison-heading" className="mx-auto mt-8 max-w-5xl">
           <h2 id="comparison-heading" className="font-sans text-2xl font-black tracking-tight sm:text-3xl">Compare the top picks</h2>
           <div className="mt-4 hidden overflow-x-auto rounded-xl border border-[#e5e4df] bg-white md:block">
             <table className="w-full min-w-[760px] table-fixed text-left text-[15px]">
-              <caption className="sr-only">Comparison of the recommended shoe picks</caption>
-              <thead className="bg-[#f3f2ee]"><tr>{['Pick', 'Best For', 'Cushioning', 'Width Options', 'Main Strength', 'Check Price'].map((heading) => <th key={heading} scope="col" className="p-3 font-bold">{heading}</th>)}</tr></thead>
+              <caption className="sr-only">Comparison of the recommended products</caption>
+              <thead className="bg-[#f3f2ee]"><tr>{['Pick', 'Best For', comparisonLabel, sizingLabel, 'Main Strength', 'Check Price'].map((heading) => <th key={heading} scope="col" className="p-3 font-bold">{heading}</th>)}</tr></thead>
               <tbody className="divide-y divide-[#e5e4df]">{picks.map((pick) => {
                 const comparison = guide.topPicks?.find(({ productSlug }) => productSlug === pick.slug)
-                return <tr key={pick.slug}><th scope="row" className="break-words p-3 font-bold"><Link href={reviewHref(pick)} className="underline decoration-[#c9c7bf] underline-offset-2 hover:text-[#c65325]">{pick.name}</Link></th><td className="break-words p-3 text-[#68675f]">{pick.bestFor}</td><td className="break-words p-3 text-[#68675f]">{comparison?.cushioning || 'Check product specifications'}</td><td className="break-words p-3 text-[#68675f]">{comparison?.widthOptions || 'Check available sizing'}</td><td className="break-words p-3 text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</td><td className="p-3">{(preview || !pick.cmsManaged || pick.affiliateUrl) && <RetailerAction href={pick.cmsManaged ? pick.affiliateUrl : pick.affiliateUrl || affiliateUrl} preview={preview} className="font-bold text-[#c65325] underline underline-offset-2">See Latest Price</RetailerAction>}</td></tr>
+                return <tr key={pick.slug}><th scope="row" className="break-words p-3 font-bold"><Link href={reviewHref(pick)} className="underline decoration-[#c9c7bf] underline-offset-2 hover:text-[#c65325]">{pick.name}</Link></th><td className="break-words p-3 text-[#68675f]">{pick.bestFor}</td><td className="break-words p-3 text-[#68675f]">{comparisonDetail(pick, comparison?.cushioning)}</td><td className="break-words p-3 text-[#68675f]">{sizingDetail(pick, comparison?.widthOptions)}</td><td className="break-words p-3 text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</td><td className="p-3">{(preview || !pick.cmsManaged || pick.affiliateUrl) && <RetailerAction href={pick.cmsManaged ? pick.affiliateUrl : pick.affiliateUrl || affiliateUrl} preview={preview} className="font-bold text-[#c65325] underline underline-offset-2">See Latest Price</RetailerAction>}</td></tr>
               })}</tbody>
             </table>
           </div>
@@ -181,7 +200,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
             const comparison = guide.topPicks?.find(({ productSlug }) => productSlug === pick.slug)
             return <article key={pick.slug} className="rounded-xl border border-[#e5e4df] bg-white p-4">
             <h3 className="font-bold"><Link href={reviewHref(pick)} className="hover:text-[#c65325]">{pick.name}</Link></h3>
-            <dl className="mt-3 grid grid-cols-[minmax(6.5rem,0.8fr)_minmax(0,1.2fr)] gap-x-3 gap-y-2 text-[15px]"><dt className="font-semibold">Best for</dt><dd className="break-words text-[#68675f]">{pick.bestFor}</dd><dt className="font-semibold">Cushioning</dt><dd className="break-words text-[#68675f]">{comparison?.cushioning || 'Check product specifications'}</dd><dt className="font-semibold">Width options</dt><dd className="break-words text-[#68675f]">{comparison?.widthOptions || 'Check available sizing'}</dd><dt className="font-semibold">Main strength</dt><dd className="break-words text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</dd></dl>
+            <dl className="mt-3 grid grid-cols-[minmax(6.5rem,0.8fr)_minmax(0,1.2fr)] gap-x-3 gap-y-2 text-[15px]"><dt className="font-semibold">Best for</dt><dd className="break-words text-[#68675f]">{pick.bestFor}</dd><dt className="font-semibold">{comparisonLabel}</dt><dd className="break-words text-[#68675f]">{comparisonDetail(pick, comparison?.cushioning)}</dd><dt className="font-semibold">{sizingLabel}</dt><dd className="break-words text-[#68675f]">{sizingDetail(pick, comparison?.widthOptions)}</dd><dt className="font-semibold">Main strength</dt><dd className="break-words text-[#68675f]">{comparison?.mainStrength || pick.pros[0]}</dd></dl>
             {(preview || !pick.cmsManaged || pick.affiliateUrl) && <RetailerAction href={pick.cmsManaged ? pick.affiliateUrl : pick.affiliateUrl || affiliateUrl} preview={preview} className="mt-3 inline-block text-sm font-bold text-[#c65325] underline underline-offset-2">See Latest Price</RetailerAction>}
           </article>})}</div>
         </section>}
@@ -191,13 +210,13 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
           <div className="mx-auto mt-12 grid max-w-5xl gap-12 lg:grid-cols-[minmax(0,1fr)_240px]">
           <div className="min-w-0 space-y-14">
             {show.methodology && <section id="how-we-chose" className="scroll-mt-36">
-              <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">OUR APPROACH</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">How We Chose These Shoes</h2>
+              <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">OUR APPROACH</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">{laceGuide ? 'How We Chose These Laces' : 'How We Chose These Shoes'}</h2>
               <ul className="mt-5 space-y-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{(guide.howWeChose?.length ? guide.howWeChose : guide.advice).map((item) => <li key={item} className="flex gap-3"><Check aria-hidden="true" className="mt-2 size-4 shrink-0 text-[#46705e]" />{item}</li>)}</ul>
             </section>}
 
             {picks.length > 0 && <section id="full-reviews" className="scroll-mt-36">
               <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">THE DETAILS</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">Full Reviews</h2>
-              <div className="mt-6 space-y-5">{picks.map((product) => <FullReviewCard key={product.slug} product={product} preview={preview} />)}</div>
+              <div className="mt-6 space-y-5">{picks.map((product) => <FullReviewCard key={product.slug} product={product} preview={preview} offer={currentOffers[product.slug]} />)}</div>
             </section>}
 
             {show.buying && <section id="buying-guide" className="scroll-mt-36">
@@ -237,6 +256,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false }: { guid
       </article>
       {!preview && <>
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(articleSchema)} />
+        {picks.length > 0 && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(itemListSchema)} />}
         {guide.faqs.length > 0 && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(faqSchema)} />}
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(breadcrumbSchema)} />
       </>}

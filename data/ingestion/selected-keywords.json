@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "source": "best-shoe-keywords.csv",
+  "affiliateTracking": "DEFERRED_BY_USER",
+  "autoPublish": false,
+  "articles": [
+    {
+      "keyword": "best hiking shoes for kids",
+      "slug": "best-hiking-shoes-for-kids",
+      "volume": 3600,
+      "keywordDifficulty": 12,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": null
+    },
+    {
+      "keyword": "best shoes for ballroom dancing",
+      "slug": "best-shoes-for-ballroom-dancing",
+      "volume": 3600,
+      "keywordDifficulty": 13,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": null
+    },
+    {
+      "keyword": "best disc golf shoes for wet courses",
+      "slug": "best-disc-golf-shoes-for-wet-courses",
+      "volume": 2900,
+      "keywordDifficulty": 10,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": null
+    },
+    {
+      "keyword": "best fencing shoes for grip and movement",
+      "slug": "best-fencing-shoes-for-grip-and-movement",
+      "volume": 1900,
+      "keywordDifficulty": 4,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": null
+    },
+    {
+      "keyword": "best boxing shoes",
+      "slug": "best-boxing-shoes",
+      "volume": 1300,
+      "keywordDifficulty": 8,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": null
+    },
+    {
+      "keyword": "best dress shoe laces",
+      "slug": "best-dress-shoe-laces",
+      "volume": 1300,
+      "keywordDifficulty": 9,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": null
+    },
+    {
+      "keyword": "best shoes for metatarsalgia",
+      "slug": "best-shoes-for-metatarsalgia",
+      "volume": 1300,
+      "keywordDifficulty": 9,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": "forefoot-pain"
+    },
+    {
+      "keyword": "best shoes for teachers",
+      "slug": "best-shoes-for-teachers",
+      "volume": 1300,
+      "keywordDifficulty": 10,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": null
+    },
+    {
+      "keyword": "best shoes for ball of foot pain",
+      "slug": "best-shoes-for-ball-of-foot-pain",
+      "volume": 1000,
+      "keywordDifficulty": 10,
+      "targetWords": 1700,
+      "productsRequired": 4,
+      "status": "RESEARCH_REQUIRED",
+      "scope": "green plus user-approved some green",
+      "searchIntentOverlap": "forefoot-pain"
+    }
+  ]
+}

@@ -24,6 +24,10 @@ export type Product = {
   shortReason?: string
   priceLabel?: string
   affiliateUrl?: string
+  asin?: string
+  brand?: string
+  model?: string
+  verificationStatus?: string
 }
 
 const imageBase = 'https://images.unsplash.com/'

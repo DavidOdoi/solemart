@@ -1,0 +1,195 @@
+/**
+ * SOLEMART editorial bridge for the maintained Code Snippets plugin.
+ * Paste as a PHP snippet (without an opening PHP tag), run everywhere.
+ * Creates no public write endpoint and does not change existing field names.
+ */
+if (!defined('ABSPATH')) { return; }
+
+add_action('init', function () {
+    $role = get_role('solemart_draft_writer');
+    if (!$role) {
+        add_role('solemart_draft_writer', 'SoleMart Draft Writer', array('read' => true, 'edit_posts' => true, 'upload_files' => true, 'solemart_ingest_guides' => true));
+        $role = get_role('solemart_draft_writer');
+    }
+    if ($role) {
+        foreach (array('read', 'edit_posts', 'upload_files', 'solemart_ingest_guides') as $cap) { $role->add_cap($cap); }
+        foreach (array('publish_posts', 'edit_published_posts', 'edit_others_posts', 'delete_posts', 'delete_published_posts', 'manage_options') as $cap) { $role->remove_cap($cap); }
+        foreach (array('shoe', 'buying_guides') as $type) {
+            $object = get_post_type_object($type);
+            if (!$object) { continue; }
+            $role->add_cap($object->cap->edit_posts);
+            $role->remove_cap($object->cap->publish_posts);
+            $role->remove_cap($object->cap->edit_published_posts);
+            $role->remove_cap($object->cap->edit_others_posts);
+        }
+    }
+    if (post_type_exists('buying_guides')) {
+        add_post_type_support('buying_guides', 'excerpt');
+        register_taxonomy_for_object_type('category', 'buying_guides');
+        register_taxonomy_for_object_type('post_tag', 'buying_guides');
+    }
+    foreach (array('shoe', 'buying_guides') as $type) {
+        add_post_type_support($type, 'custom-fields');
+        $fields = array(
+            '_solemart_workflow_status' => 'string', '_solemart_material_hash' => 'string',
+            '_solemart_ingestion_hash' => 'string', '_solemart_verification_report' => 'string',
+            '_solemart_target_keyword' => 'string', '_solemart_word_target' => 'integer',
+            'rank_math_focus_keyword' => 'string', 'rank_math_title' => 'string',
+            'rank_math_description' => 'string', 'rank_math_canonical_url' => 'string',
+            'rank_math_facebook_title' => 'string', 'rank_math_facebook_description' => 'string',
+            'rank_math_facebook_image' => 'string',
+        );
+        foreach ($fields as $key => $kind) {
+            $private = strpos($key, '_solemart_') === 0;
+            register_post_meta($type, $key, array(
+                'single' => true, 'type' => $kind,
+                'show_in_rest' => array('schema' => array('type' => $kind, 'context' => array('edit'))),
+                'auth_callback' => function ($allowed, $meta_key, $post_id) use ($private) {
+                    return current_user_can('edit_post', $post_id) && (!$private || current_user_can('solemart_ingest_guides') || current_user_can('manage_options'));
+                },
+                'sanitize_callback' => function ($value) use ($key, $kind) {
+                    if ($kind === 'integer') { return absint($value); }
+                    if ($key === '_solemart_verification_report') {
+                        if (!is_string($value) || strlen($value) > 500000) { return ''; }
+                        $decoded = json_decode($value, true);
+                        return is_array($decoded) ? wp_json_encode($decoded) : '';
+                    }
+                    if (in_array($key, array('rank_math_canonical_url', 'rank_math_facebook_image'), true)) { return esc_url_raw($value, array('https')); }
+                    return sanitize_text_field($value);
+                },
+            ));
+        }
+    }
+}, 30);
+
+add_action('admin_init', function () {
+    register_setting('writing', 'solemart_amazon_marketplace', array('type' => 'string', 'sanitize_callback' => function ($value) {
+        return in_array($value, array('www.amazon.com', 'www.amazon.co.uk', 'www.amazon.co.jp', 'www.amazon.ca', 'www.amazon.de', 'www.amazon.fr', 'www.amazon.it', 'www.amazon.es', 'www.amazon.com.au', 'www.amazon.in'), true) ? $value : 'www.amazon.com';
+    }));
+    add_settings_field('solemart_amazon_marketplace', 'SoleMart Amazon marketplace', function () {
+        echo '<input name="solemart_amazon_marketplace" type="text" value="' . esc_attr(get_option('solemart_amazon_marketplace', 'www.amazon.com')) . '" class="regular-text" />';
+        echo '<p class="description">Match the server AMAZON_MARKETPLACE hostname, for example www.amazon.com.</p>';
+    }, 'writing');
+    register_setting('writing', 'solemart_amazon_partner_tag', array('type' => 'string', 'sanitize_callback' => function ($value) {
+        return preg_match('/^[A-Za-z0-9][A-Za-z0-9-]{2,63}$/', (string) $value) ? $value : '';
+    }));
+    add_settings_field('solemart_amazon_partner_tag', 'SoleMart Amazon tracking ID', function () {
+        echo '<input name="solemart_amazon_partner_tag" type="text" value="' . esc_attr(get_option('solemart_amazon_partner_tag', '')) . '" class="regular-text" />';
+        echo '<p class="description">Use the same tracking ID as the server AMAZON_PARTNER_TAG setting. Leaving this blank blocks publication of new automated guides; drafts remain editable.</p>';
+    }, 'writing');
+});
+
+function solemart_editorial_value($name, $post_id, $incoming) {
+    if (is_array($incoming) && array_key_exists($name, $incoming)) { return $incoming[$name]; }
+    return function_exists('get_field') ? get_field($name, $post_id, false) : '';
+}
+
+function solemart_editorial_product_error($post_id, $incoming = array(), $title = null) {
+    $get = function ($name) use ($post_id, $incoming) { return solemart_editorial_value($name, $post_id, $incoming); };
+    if (get_post_meta($post_id, '_solemart_workflow_status', true) !== 'READY_FOR_REVIEW' || $get('verification_status') !== 'VERIFIED') { return 'This Shoe still requires product verification.'; }
+    $asin = (string) $get('asin');
+    if (!preg_match('/^[A-Z0-9]{10}$/', $asin)) { return 'The Shoe needs a valid ASIN.'; }
+    $tag = defined('SOLEMART_AMAZON_PARTNER_TAG') ? SOLEMART_AMAZON_PARTNER_TAG : get_option('solemart_amazon_partner_tag', '');
+    if (!$tag) { return 'Set the real Amazon tracking ID under Settings → Writing before publishing.'; }
+    $link = wp_parse_url((string) $get('affiliate_url'));
+    $hosts = array('amazon.com', 'www.amazon.com', 'amazon.co.uk', 'www.amazon.co.uk', 'amazon.co.jp', 'www.amazon.co.jp', 'amazon.ca', 'www.amazon.ca', 'amazon.de', 'www.amazon.de', 'amazon.fr', 'www.amazon.fr', 'amazon.it', 'www.amazon.it', 'amazon.es', 'www.amazon.es', 'amazon.com.au', 'www.amazon.com.au', 'amazon.in', 'www.amazon.in');
+    if (!is_array($link) || ($link['scheme'] ?? '') !== 'https' || !in_array($link['host'] ?? '', $hosts, true) || isset($link['user']) || isset($link['pass']) || isset($link['port']) || isset($link['fragment'])) { return 'Use a direct HTTPS Amazon affiliate URL.'; }
+    $market = defined('SOLEMART_AMAZON_MARKETPLACE') ? SOLEMART_AMAZON_MARKETPLACE : get_option('solemart_amazon_marketplace', 'www.amazon.com');
+    if (preg_replace('/^www\./', '', $link['host']) !== preg_replace('/^www\./', '', $market)) { return 'The affiliate URL must use the configured marketplace.'; }
+    if (!in_array($link['path'] ?? '', array('/dp/' . $asin, '/dp/' . $asin . '/', '/gp/product/' . $asin, '/gp/product/' . $asin . '/'), true)) { return 'The affiliate URL does not match the Shoe ASIN.'; }
+    $query = array(); parse_str($link['query'] ?? '', $query);
+    $tag_count = 0;
+    foreach (explode('&', $link['query'] ?? '') as $pair) { if (urldecode(explode('=', $pair, 2)[0]) === 'tag') { $tag_count++; } }
+    if (($query['tag'] ?? '') !== $tag || $tag_count !== 1) { return 'The affiliate URL must contain the configured tracking ID exactly once.'; }
+    if (wp_parse_url((string) $get('manufacturer_url'), PHP_URL_SCHEME) !== 'https' || !wp_http_validate_url((string) $get('manufacturer_url'))) { return 'An HTTPS manufacturer product source is required.'; }
+    $date = strtotime((string) $get('verification_date'));
+    if (!$date || $date > time() + 300 || $date < time() - 30 * DAY_IN_SECONDS) { return 'Product verification must be current before publication.'; }
+    $values = array(
+        $title === null ? get_post_field('post_title', $post_id, 'raw') : wp_strip_all_tags($title),
+        $get('brand'), $get('model'), $get('asin'), $get('manufacturer_url'),
+        wp_strip_all_tags((string) $get('description')), $get('specs'), $get('pros'), $get('cons'),
+        $get('sizing_information'), $get('width_options'), $get('available_colors'), $get('variant'),
+    );
+    foreach ($values as &$value) { $value = trim(str_replace("\r\n", "\n", (string) $value)); } unset($value);
+    $expected = get_post_meta($post_id, '_solemart_material_hash', true);
+    if (!$expected || !hash_equals($expected, hash('sha256', implode("\0", $values)))) { return 'Material product details changed or lack verification. Recheck them before publishing.'; }
+    foreach (array('description', 'commentary', 'specs', 'pros', 'cons') as $field) {
+        if (preg_match('/(?:[$£€]\s*\d|\b(?:USD|GBP|EUR)\s*\d|\b\d+(?:\.\d+)?\s*%\s*off\b|\b(?:in stock|out of stock|prime eligible|delivery by)\b)/iu', (string) $get($field))) { return 'Remove static offer prices, stock, discounts, Prime and delivery text.'; }
+    }
+    return '';
+}
+
+function solemart_editorial_guide_error($post_id, $incoming = array()) {
+    if (!function_exists('get_field')) { return 'ACF must be active.'; }
+    if (get_post_meta($post_id, '_solemart_workflow_status', true) !== 'READY_FOR_REVIEW') { return 'This guide is an incomplete editorial draft. Run verification before publishing.'; }
+    $report = json_decode(get_post_meta($post_id, '_solemart_verification_report', true), true);
+    if (!is_array($report) || ($report['status'] ?? '') !== 'PASS' || !empty($report['criticalErrors'])) { return 'The product/source verification report has not passed.'; }
+    foreach (array('intro', 'quick_answer_body', 'advice', 'how_we_chose', 'who_its_for', 'mistakes_to_avoid', 'final_verdict', 'disclosure', 'seo_title', 'meta_description') as $name) {
+        if (!trim(wp_strip_all_tags((string) solemart_editorial_value($name, $post_id, $incoming)))) { return 'A required guide field is empty: ' . $name; }
+    }
+    $prose_fields = array('intro', 'quick_answer_body', 'advice', 'final_verdict');
+    for ($i = 1; $i <= 4; $i++) {
+        foreach (array('reason', 'best_for', 'avoid_if', 'commentary') as $field) { $prose_fields[] = 'pick_' . $i . '_' . $field; }
+        $prose_fields[] = 'faq_' . $i . '_answer';
+    }
+    foreach ($prose_fields as $name) {
+        if (preg_match('/(?:[$£€]\s*\d|\b(?:USD|GBP|EUR)\s*\d|\b\d+(?:\.\d+)?\s*%\s*off\b|\b(?:in stock|out of stock|prime eligible|delivery by)\b)/iu', (string) solemart_editorial_value($name, $post_id, $incoming))) { return 'Remove static prices, stock and offer claims from guide prose.'; }
+    }
+    $seen = array();
+    for ($i = 1; $i <= 4; $i++) {
+        $shoe_id = absint(solemart_editorial_value('pick_' . $i . '_shoe', $post_id, $incoming));
+        if (!$shoe_id || get_post_type($shoe_id) !== 'shoe' || get_post_status($shoe_id) !== 'publish') { return 'Manually review and publish each linked Shoe before the Buying Guide.'; }
+        $error = solemart_editorial_product_error($shoe_id);
+        if ($error) { return $error; }
+        $asin = get_field('asin', $shoe_id, false);
+        if (isset($seen[$asin])) { return 'The same ASIN cannot occupy two pick slots.'; } $seen[$asin] = true;
+        foreach (array('award', 'reason', 'best_for', 'avoid_if', 'commentary') as $field) {
+            if (!trim(wp_strip_all_tags((string) solemart_editorial_value('pick_' . $i . '_' . $field, $post_id, $incoming)))) { return 'A required product-pick field is empty.'; }
+        }
+        foreach (array('question', 'answer') as $field) {
+            if (!trim(wp_strip_all_tags((string) solemart_editorial_value('faq_' . $i . '_' . $field, $post_id, $incoming)))) { return 'Complete all four FAQ questions and answers.'; }
+        }
+    }
+    if (!get_post_thumbnail_id($post_id)) { return 'Choose a real featured image before publishing.'; }
+    return '';
+}
+
+foreach (array('shoe', 'buying_guides') as $solemart_type) {
+    add_filter('rest_pre_insert_' . $solemart_type, function ($prepared, $request) use ($solemart_type) {
+        $id = absint($request->get_param('id'));
+        if (!$id || !get_post_meta($id, '_solemart_workflow_status', true)) { return $prepared; }
+        $status = isset($prepared->post_status) ? $prepared->post_status : get_post_status($id);
+        if ($status !== 'publish') { return $prepared; }
+        $incoming = $request->get_param('acf');
+        $incoming = is_array($incoming) ? $incoming : array();
+        $error = $solemart_type === 'shoe'
+            ? solemart_editorial_product_error($id, $incoming, $prepared->post_title ?? null)
+            : solemart_editorial_guide_error($id, $incoming);
+        return $error ? new WP_Error('solemart_verification_required', $error, array('status' => 400)) : $prepared;
+    }, 10, 2);
+}
+
+// Classic-editor/other write paths also keep incomplete automated records draft.
+add_filter('wp_insert_post_data', function ($data, $postarr) {
+    $id = absint($postarr['ID'] ?? 0);
+    if (!$id || ($data['post_status'] ?? '') !== 'publish' || !get_post_meta($id, '_solemart_workflow_status', true)) { return $data; }
+    $type = $data['post_type'] ?? '';
+    $error = $type === 'shoe' ? solemart_editorial_product_error($id, array(), $data['post_title'] ?? null) : ($type === 'buying_guides' ? solemart_editorial_guide_error($id) : '');
+    if ($error) { $data['post_status'] = 'draft'; }
+    return $data;
+}, 10, 2);
+
+// ACF writes happen after core post insertion. Recheck the final saved fields
+// as well, so a changed specification cannot bypass the pre-insert guard.
+function solemart_editorial_recheck_saved($post_id) {
+    static $checking = false;
+    $post_id = absint($post_id);
+    if ($checking || !$post_id || get_post_status($post_id) !== 'publish' || !get_post_meta($post_id, '_solemart_workflow_status', true)) { return; }
+    $type = get_post_type($post_id);
+    $error = $type === 'shoe' ? solemart_editorial_product_error($post_id) : ($type === 'buying_guides' ? solemart_editorial_guide_error($post_id) : '');
+    if ($error) { $checking = true; wp_update_post(array('ID' => $post_id, 'post_status' => 'draft')); $checking = false; }
+}
+add_action('acf/save_post', 'solemart_editorial_recheck_saved', 30);
+foreach (array('shoe', 'buying_guides') as $solemart_type) {
+    add_action('rest_after_insert_' . $solemart_type, function ($post) { solemart_editorial_recheck_saved($post->ID); }, 30);
+}

@@ -2,6 +2,7 @@ import type { BlogPost } from '../data/blog'
 import type { Guide } from '../data/guides'
 import type { Product } from '../data/products'
 import { editorialPlainText, sanitizeEditorialHtml } from './cms-rich-text.ts'
+import { validateAmazonAsin } from './affiliate-products.ts'
 
 function record(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {}
@@ -37,6 +38,8 @@ export function mapGuideFields(post: BlogPost, input: unknown): { guide: Guide; 
     name: text(row.name), slug: `${post.slug}-pick-${index + 1}`,
     badge: text(row.badge), image: imageUrl(row.image), imageAlt: text(row.imageAlt),
     affiliateUrl: safeUrl(row.affiliateUrl), reviewUrl: safeUrl(row.reviewUrl),
+    ...(validateAmazonAsin(row.asin) ? { asin: row.asin } : {}),
+    brand: text(row.brand), model: text(row.model), verificationStatus: text(row.verificationStatus),
     shortReason: text(row.shortReason), bestFor: text(row.bestFor), avoidIf: text(row.avoidIf),
     description: text(row.description), pros: lines(row.pros), cons: lines(row.cons),
     specs: lines(row.specs).flatMap(line => {
@@ -100,6 +103,7 @@ export function mapAcfGuideFields(post: BlogPost, input: unknown, shoeInput: unk
     products.push({
       name: text(shoe.title), image: image.sourceUrl, imageAlt: image.altText,
       affiliateUrl: values.affiliateUrl, reviewUrl: values.reviewUrl,
+      asin: values.asin, brand: values.brand, model: values.model, verificationStatus: values.verificationStatus,
       description: values.description, pros: values.pros, cons: values.cons, specs: values.specs,
       cushioning: values.cushioning, widthOptions: values.widthOptions, mainStrength: values.mainStrength,
       badge: fields[`pick${index}Award`], shortReason: fields[`pick${index}Reason`],

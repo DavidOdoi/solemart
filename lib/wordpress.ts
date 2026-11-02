@@ -108,6 +108,7 @@ class MissingGuideFieldsError extends Error {
 }
 
 class MissingGuideExcerptError extends Error {}
+class MissingShoeCommerceFieldsError extends Error {}
 
 async function queryWordPress<T>(query: string, variables: Record<string, string | null>, tags: string[]): Promise<T> {
   const endpoint = process.env.WORDPRESS_GRAPHQL_URL
@@ -135,6 +136,9 @@ async function queryWordPress<T>(query: string, variables: Record<string, string
   }
 
   const result = await response.json() as { data?: T; errors?: { message?: string }[] }
+  if (result.errors?.length && result.errors.every(error => /^Cannot query field "(?:asin|model|verificationStatus)" on type "[A-Za-z][_0-9A-Za-z]*"\./.test(error.message || ''))) {
+    throw new MissingShoeCommerceFieldsError('Optional Shoe commerce fields are not imported yet.')
+  }
   const missingExcerpt = 'Cannot query field "excerpt" on type "BuyingGuide".'
   if (result.errors?.some(error => error.message?.startsWith(missingExcerpt))
     && result.errors.every(error => [missingExcerpt, 'Cannot query field "solemartGuideData" on type "BuyingGuide".', 'Cannot query field "solemartBuyingGuideFields" on type "BuyingGuide".'].some(prefix => error.message?.startsWith(prefix)))) {
@@ -355,7 +359,7 @@ export type WordPressAcfShoe = {
 
 /** A shared Shoe response is cached independently of guides that reference it. */
 const getWordPressAcfShoe = cache(async (id: string): Promise<WordPressAcfShoe | null> => {
-  const data = await queryWordPress<{ node?: WordPressAcfShoe | null }>(`
+  const query = `
     query PublishedAcfShoe($id: ID!) {
       node(id: $id) {
         ... on Shoe {
@@ -364,11 +368,18 @@ const getWordPressAcfShoe = cache(async (id: string): Promise<WordPressAcfShoe |
           solemartShoeFields {
             brand description affiliateUrl reviewUrl pros cons specs
             cushioning widthOptions mainStrength commentary
+            asin model verificationStatus
           }
         }
       }
     }
-  `, { id }, ['wordpress:shoes', `wordpress:shoe:${id}`])
+  `
+  let data: { node?: WordPressAcfShoe | null }
+  try { data = await queryWordPress(query, { id }, ['wordpress:shoes', `wordpress:shoe:${id}`]) }
+  catch (error) {
+    if (!(error instanceof MissingShoeCommerceFieldsError)) throw error
+    data = await queryWordPress(query.replace(/\b(?:asin|model|verificationStatus)\b/g, ''), { id }, ['wordpress:shoes', `wordpress:shoe:${id}`])
+  }
   if (!Object.hasOwn(data, 'node')) throw new Error('WordPress returned an incomplete Shoe response.')
   const shoe = data.node
   if (!shoe || shoe.status !== 'publish') return null
