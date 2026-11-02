@@ -147,6 +147,13 @@ test('broken or cyclic pagination fails instead of publishing a truncated sitema
 })
 
 test('CMS outages, GraphQL errors and invalid endpoints never produce a misleading static-only sitemap', async () => {
+  const refused = Object.assign(new Error('connect ECONNREFUSED'), { code: 'ECONNREFUSED' })
+  globalThis.fetch = async () => { throw new TypeError('fetch failed', { cause: refused }) }
+  await assert.rejects(sitemap(), error => {
+    assert.equal(error.message, 'WordPress articles are temporarily unavailable.')
+    assert.equal(error.cause.cause.code, 'ECONNREFUSED')
+    return true
+  })
   globalThis.fetch = async () => new Response('Unavailable', { status: 503 })
   await assert.rejects(sitemap(), /temporarily unavailable/)
   globalThis.fetch = async () => Response.json({ data: { posts: connection() }, errors: [{ message: 'Schema unavailable' }] })

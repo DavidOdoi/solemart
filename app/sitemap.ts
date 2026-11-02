@@ -6,7 +6,9 @@ import { guides } from '../data/guides.ts'
 import { products } from '../data/products.ts'
 import { getWordPressSitemapArticles } from '../lib/wordpress.ts'
 
-export const revalidate = 60
+// Generate XML per request so an unavailable CMS cannot fail the deployment.
+// WordPress fetches keep their explicit 60-second data cache.
+export const revalidate = 0
 
 const origin = 'https://thesolemart.com'
 

@@ -61,3 +61,27 @@ Pushing to `main` triggers deployment if the existing Vercel Git integration is 
 If deployment cannot load a post, inspect Vercel server logs for HTTP/GraphQL errors, verify the variable is set for the deployment's environment, and confirm the post is published and publicly queryable. Do not expose credentials in logs or source code. InMotion security rules must allow legitimate WPGraphQL POST requests from Vercel.
 
 Next stages: verify the live ACF guide connection; migrate listing/search queries and remaining review/comparison templates; complete sitemap, taxonomy and CMS-indexing configuration. Authenticated on-demand revalidation can follow the initial time-based publishing flow.
+
+## Deployment and sitemap availability
+
+`/sitemap.xml` renders on demand (`app/sitemap.ts`, `revalidate = 0`). Its explicit
+WordPress fetches retain their 60-second data cache. An unavailable CMS therefore
+does not abort `next build`, including deployments of local template previews.
+Published CMS posts/guides are still fetched with pagination and real modification
+dates when the sitemap is requested. CMS errors are not replaced with an empty
+article list or an incomplete sitemap presented as a successful response.
+
+If Vercel reports `ECONNREFUSED` for the CMS, compilation and TypeScript may already
+have passed. Check that the production `WORDPRESS_GRAPHQL_URL` is exactly
+`https://cms.thesolemart.com/graphql`, then check that hostname's DNS, hosting,
+HTTPS service and firewall. Moving the sitemap to request time removes the
+build dependency; it does not repair the CMS connection. CMS-backed routes and
+the sitemap still require a reachable CMS at request time.
+
+Regression check: with no server listening at the test endpoint, run
+`WORDPRESS_GRAPHQL_URL=http://127.0.0.1:39991/graphql pnpm build`. The build must
+succeed and list `/sitemap.xml` as dynamic. Serve that build and confirm the brief
+preview pages still load during the outage. A sitemap request should fail instead
+of returning a misleading static-only XML document; after a test CMS is available,
+verify published posts and guides appear, including entries after the first 100.
+Use local synthetic data for this check, never real credentials in a build log.
