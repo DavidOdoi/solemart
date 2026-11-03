@@ -4,6 +4,7 @@ import { blogPosts } from '@/data/blog'
 import { getBlogPost } from '@/lib/content'
 import { BlogPostPage } from '@/components/page-templates'
 import { getWordPressPost } from '@/lib/wordpress'
+import { getWordPressGraphqlUrl } from '@/lib/content-source'
 
 export const revalidate = 60
 export const dynamicParams = true
@@ -14,7 +15,7 @@ async function getPost(slug: string) {
 }
 
 export function generateStaticParams() {
-  return process.env.WORDPRESS_GRAPHQL_URL ? [] : blogPosts.map(({ slug }) => ({ slug }))
+  return getWordPressGraphqlUrl() ? [] : blogPosts.map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

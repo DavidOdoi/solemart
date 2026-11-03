@@ -6,14 +6,15 @@ import { hasAcfGuideContent, mapAcfGuideFields } from '../lib/guide-fields.ts'
 const originalFetch = globalThis.fetch
 const originalEndpoint = process.env.WORDPRESS_GRAPHQL_URL
 const originalSource = process.env.WORDPRESS_GUIDE_FIELDS_SOURCE
+const originalContentSource = process.env.SOLEMART_CONTENT_SOURCE
 const post = { id: 'guide-1', title: 'Best Wide Toe Box Sandals', slug: 'best-wide-toe-box-sandals', status: 'publish', content: '<h1>Fit guide</h1><p>Real article.</p>', excerpt: '<p>Real summary.</p>', dateGmt: '2026-10-24T08:00:00', modifiedGmt: '2026-10-24T09:00:00', featuredImage: null }
 const fields = { intro: 'Real ACF introduction', author: 'David', quickAnswerTitle: 'Quick Answer', quickAnswerBody: 'Compare fit and intended use.', pick1Shoe: { node: { __typename: 'Shoe', id: 'shoe-1' } }, pick1Award: 'Best for everyday wear', pick1Reason: 'Guide-specific reason', pick1BestFor: 'Daily use', pick1AvoidIf: 'You need a different fit', pick1Commentary: 'Guide-specific analysis.', faq1Question: 'How should they fit?', faq1Answer: 'Check toe room.' }
 const shoe = { id: 'shoe-1', title: 'Actual Sandal &amp; Model', slug: 'actual-sandal-model', status: 'publish', featuredImage: { node: { sourceUrl: 'https://cms.thesolemart.com/wp-content/uploads/sandal.jpg', altText: 'Sandal &amp; sole', mediaDetails: { width: 900, height: 700 } } }, solemartShoeFields: { brand: 'Actual brand', description: 'Verified general description.', affiliateUrl: 'https://www.amazon.com/dp/TEST?tag=sample-20', reviewUrl: '', pros: 'Adjustable straps\nRoomy fit', cons: 'Limited use', specs: 'Upper | Synthetic\nClosure | Adjustable', cushioning: 'Balanced', widthOptions: 'Standard', mainStrength: 'Fit', commentary: 'Reusable general analysis.' } }
 
-beforeEach(() => { process.env.WORDPRESS_GRAPHQL_URL = 'https://cms.thesolemart.com/graphql'; delete process.env.WORDPRESS_GUIDE_FIELDS_SOURCE })
+beforeEach(() => { process.env.SOLEMART_CONTENT_SOURCE = 'wordpress'; process.env.WORDPRESS_GRAPHQL_URL = 'https://cms.thesolemart.com/graphql'; delete process.env.WORDPRESS_GUIDE_FIELDS_SOURCE })
 afterEach(() => {
  globalThis.fetch = originalFetch
- for (const [key,value] of [['WORDPRESS_GRAPHQL_URL',originalEndpoint],['WORDPRESS_GUIDE_FIELDS_SOURCE',originalSource]]) {
+ for (const [key,value] of [['WORDPRESS_GRAPHQL_URL',originalEndpoint],['WORDPRESS_GUIDE_FIELDS_SOURCE',originalSource],['SOLEMART_CONTENT_SOURCE',originalContentSource]]) {
   if (value === undefined) delete process.env[key]
   else process.env[key] = value
  }

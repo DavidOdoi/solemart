@@ -19,6 +19,11 @@ documentation and the CMS are blocked by this workspace's current network policy
 Amazon and WordPress credentials have not been configured. Those are live rollout
 blockers, not test failures. Do not replace research with invented specifications.
 
+**WordPress is paused by default.** The Next.js frontend uses local content until
+`SOLEMART_CONTENT_SOURCE=wordpress` is explicitly selected and redeployed. See
+[frontend-only mode](frontend-only-mode.md). The WordPress writer also respects
+this switch.
+
 **WordPress setup is deferred by the user's latest instruction.** Keep preparing
 local editorial payloads and testing the frontend. The WordPress instructions
 below are for a later rollout; do not require a WordPress login, install a snippet,
@@ -124,6 +129,7 @@ credentials in `NEXT_PUBLIC_*`, payloads, commits, screenshots or chat.
 
 | Variable | Purpose |
 | --- | --- |
+| `SOLEMART_CONTENT_SOURCE` | Default `local`; select `wordpress` only when reconnecting |
 | `WORDPRESS_GRAPHQL_URL` | Existing public endpoint, `https://cms.thesolemart.com/graphql` |
 | `WORDPRESS_API_URL` | `https://cms.thesolemart.com/wp-json/wp/v2/` |
 | `WORDPRESS_USERNAME` | Dedicated draft writer |

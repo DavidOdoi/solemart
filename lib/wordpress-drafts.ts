@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto'
 import { editorialPlainText } from './cms-rich-text.ts'
 import { articleFingerprint, sanitizeIngestionArticle, validateBuyingGuide, type IngestionArticle, type IngestionReport } from './guide-ingestion.ts'
 import { publicHttpsUrl, type IngestionProduct } from './affiliate-products.ts'
+import { isWordPressEnabled } from './content-source.ts'
 
 export type WordPressWriteConfig = { apiUrl: string; username: string; applicationPassword: string }
 type Row = Record<string, unknown>
@@ -11,6 +12,7 @@ type DraftOptions = { config?: WordPressWriteConfig; fetcher?: typeof fetch; all
 function object(value: unknown): Row { return value && typeof value === 'object' && !Array.isArray(value) ? value as Row : {} }
 
 export function getWordPressWriteConfig(): WordPressWriteConfig | null {
+  if (!isWordPressEnabled()) return null
   const apiUrl = process.env.WORDPRESS_API_URL || 'https://cms.thesolemart.com/wp-json/wp/v2/'
   const username = process.env.WORDPRESS_USERNAME || ''
   const applicationPassword = process.env.WORDPRESS_APPLICATION_PASSWORD || ''
@@ -35,6 +37,7 @@ function evidenceJson(product: IngestionProduct) {
 }
 
 export async function saveWordPressBuyingGuideDraft(input: IngestionArticle, options: DraftOptions = {}) {
+  if (!isWordPressEnabled()) throw new Error('WordPress is paused in local-content mode. Re-enable SOLEMART_CONTENT_SOURCE=wordpress before saving CMS drafts.')
   const report = await validateBuyingGuide(input, { existingArticles: options.existingArticles })
   if (report.status !== 'PASS' && !options.allowIncomplete) throw new Error('Publication gate blocked this draft. Review the structured report or explicitly save an incomplete editorial draft.')
   if (!input || input.version !== 1 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(input.slug)

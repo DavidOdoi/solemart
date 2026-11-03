@@ -4,6 +4,7 @@ import { getWordPressPost, getWordPressPosts } from '../lib/wordpress.ts'
 
 const originalFetch = globalThis.fetch
 const originalEndpoint = process.env.WORDPRESS_GRAPHQL_URL
+const originalContentSource = process.env.SOLEMART_CONTENT_SOURCE
 const endpoint = 'https://cms.thesolemart.com/graphql'
 
 function post(overrides = {}) {
@@ -20,9 +21,11 @@ function respond(value) {
   globalThis.fetch = async () => Response.json(value)
 }
 
-beforeEach(() => { process.env.WORDPRESS_GRAPHQL_URL = endpoint })
+beforeEach(() => { process.env.WORDPRESS_GRAPHQL_URL = endpoint; process.env.SOLEMART_CONTENT_SOURCE = 'wordpress' })
 afterEach(() => {
   globalThis.fetch = originalFetch
+  if (originalContentSource === undefined) delete process.env.SOLEMART_CONTENT_SOURCE
+  else process.env.SOLEMART_CONTENT_SOURCE = originalContentSource
   if (originalEndpoint === undefined) delete process.env.WORDPRESS_GRAPHQL_URL
   else process.env.WORDPRESS_GRAPHQL_URL = originalEndpoint
 })

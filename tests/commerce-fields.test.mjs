@@ -5,9 +5,9 @@ import { mapAcfGuideFields } from '../lib/guide-fields.ts'
 import { getTrackedGuideProducts, getGuideAmazonOffers } from '../lib/amazon-guide-offers.ts'
 
 const originalFetch = globalThis.fetch
-const keys = ['WORDPRESS_GRAPHQL_URL', 'AMAZON_CREDENTIAL_ID', 'AMAZON_CREDENTIAL_SECRET', 'AMAZON_CREDENTIAL_VERSION', 'AMAZON_PARTNER_TAG', 'AMAZON_MARKETPLACE']
+const keys = ['SOLEMART_CONTENT_SOURCE', 'WORDPRESS_GRAPHQL_URL', 'AMAZON_CREDENTIAL_ID', 'AMAZON_CREDENTIAL_SECRET', 'AMAZON_CREDENTIAL_VERSION', 'AMAZON_PARTNER_TAG', 'AMAZON_MARKETPLACE']
 const saved = Object.fromEntries(keys.map(key => [key, process.env[key]]))
-beforeEach(() => { for (const key of keys) delete process.env[key]; process.env.WORDPRESS_GRAPHQL_URL = 'https://cms.thesolemart.com/graphql' })
+beforeEach(() => { for (const key of keys) delete process.env[key]; process.env.SOLEMART_CONTENT_SOURCE = 'wordpress'; process.env.WORDPRESS_GRAPHQL_URL = 'https://cms.thesolemart.com/graphql' })
 afterEach(() => { globalThis.fetch = originalFetch; for (const key of keys) { if (saved[key] === undefined) delete process.env[key]; else process.env[key] = saved[key] } })
 
 const guide = { id: 'fixture-guide', title: 'Fixture guide', slug: 'fixture-guide', status: 'publish', content: '', excerpt: '', dateGmt: null, modifiedGmt: null, featuredImage: null, solemartBuyingGuideFields: { author: 'Fixture author', intro: 'Fixture introduction.', pick1Shoe: { node: { __typename: 'Shoe', id: 'fixture-shoe' } } } }

@@ -96,13 +96,14 @@ test('an empty WYSIWYG override falls back to the reusable Product Full Review',
 })
 
 test('metadata summaries flatten rich introduction paragraphs without joining words or exposing markup',async()=>{
- const originalFetch=globalThis.fetch,endpoint=process.env.WORDPRESS_GRAPHQL_URL,source=process.env.WORDPRESS_GUIDE_FIELDS_SOURCE
- process.env.WORDPRESS_GRAPHQL_URL='https://cms.thesolemart.com/graphql';delete process.env.WORDPRESS_GUIDE_FIELDS_SOURCE
+ const originalFetch=globalThis.fetch,endpoint=process.env.WORDPRESS_GRAPHQL_URL,source=process.env.WORDPRESS_GUIDE_FIELDS_SOURCE,contentSource=process.env.SOLEMART_CONTENT_SOURCE
+ process.env.SOLEMART_CONTENT_SOURCE='wordpress';process.env.WORDPRESS_GRAPHQL_URL='https://cms.thesolemart.com/graphql';delete process.env.WORDPRESS_GUIDE_FIELDS_SOURCE
  try{
   globalThis.fetch=async()=>Response.json({data:{buyingGuide:{title:post.title,slug:post.slug,status:'publish',content:'<p>Body</p>',excerpt:null,dateGmt:null,modifiedGmt:null,featuredImage:null,solemartBuyingGuideFields:{author:'David',intro:'<p>First paragraph.</p><p>Second <a href="/blog/fit">paragraph</a>.</p>'}}}})
   assert.equal((await getWordPressAcfBuyingGuide(post.slug)).post.excerpt,'First paragraph. Second paragraph.')
  }finally{
   globalThis.fetch=originalFetch
+  if(contentSource===undefined)delete process.env.SOLEMART_CONTENT_SOURCE;else process.env.SOLEMART_CONTENT_SOURCE=contentSource
   if(endpoint===undefined)delete process.env.WORDPRESS_GRAPHQL_URL;else process.env.WORDPRESS_GRAPHQL_URL=endpoint
   if(source===undefined)delete process.env.WORDPRESS_GUIDE_FIELDS_SOURCE;else process.env.WORDPRESS_GUIDE_FIELDS_SOURCE=source
  }

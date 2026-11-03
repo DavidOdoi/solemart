@@ -1,5 +1,9 @@
 # WordPress blog integration
 
+The CMS is currently paused by default. The frontend uses local content even if
+a WordPress URL remains configured. Set `SOLEMART_CONTENT_SOURCE=wordpress` and
+redeploy when reconnecting; see [frontend-only mode](frontend-only-mode.md).
+
 Buying-guide configuration uses ACF and WPGraphQL for ACF; see
 [ACF setup](wordpress-acf-setup.md). The existing GraphQL connection remains in
 use. The companion-plugin instructions below describe the legacy guide adapter
@@ -79,7 +83,7 @@ build dependency; it does not repair the CMS connection. CMS-backed routes and
 the sitemap still require a reachable CMS at request time.
 
 Regression check: with no server listening at the test endpoint, run
-`WORDPRESS_GRAPHQL_URL=http://127.0.0.1:39991/graphql pnpm build`. The build must
+`SOLEMART_CONTENT_SOURCE=wordpress WORDPRESS_GRAPHQL_URL=http://127.0.0.1:39991/graphql pnpm build`. The build must
 succeed and list `/sitemap.xml` as dynamic. Serve that build and confirm the brief
 preview pages still load during the outage. A sitemap request should fail instead
 of returning a misleading static-only XML document; after a test CMS is available,

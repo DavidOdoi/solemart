@@ -7,6 +7,7 @@ import { cache } from 'react'
 import { hasAcfGuideContent, mapAcfGuideFields, mapGuideFields } from '@/lib/guide-fields'
 import { getWordPressAcfBuyingGuide, getWordPressBuyingGuide, getWordPressGuideFields } from '@/lib/wordpress'
 import { getGuideAmazonOffers, getTrackedGuideProducts } from '@/lib/amazon-guide-offers'
+import { getWordPressGraphqlUrl } from '@/lib/content-source'
 
 // Prices must never enter the full-route ISR cache. Explicit CMS fetches retain
 // their existing 60-second data cache; the page itself renders per request.
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       twitter: { card: cmsGuide.featuredImage ? 'summary_large_image' : 'summary', title: templateGuide.seoTitle, description: templateGuide.metaDescription || undefined },
     }
   }
-  if (process.env.WORDPRESS_GRAPHQL_URL) notFound()
+  if (getWordPressGraphqlUrl()) notFound()
   const guide = getGuide(slug)
   if (!guide) notFound()
   return { title: guide.seoTitle || guide.title, description: guide.metaDescription || guide.excerpt }
@@ -57,7 +58,7 @@ export default async function BuyingGuideRoute({ params }: { params: Promise<{ s
     const offers = await getGuideAmazonOffers(products)
     return <ReviewGuideTemplate guide={content.guide} products={products} offers={offers} />
   }
-  if (process.env.WORDPRESS_GRAPHQL_URL) notFound()
+  if (getWordPressGraphqlUrl()) notFound()
   const guide = getGuide(slug)
   if (!guide) notFound()
   return <GuidePage guide={guide} />

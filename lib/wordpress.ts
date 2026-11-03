@@ -5,6 +5,7 @@ import { decodeHTML } from 'entities'
 import sanitizeHtml from 'sanitize-html'
 import type { BlogPost } from '@/data/blog'
 import { sanitizeCmsArticleHtml as articleHtml } from './cms-rich-text.ts'
+import { getWordPressGraphqlUrl, isWordPressEnabled } from './content-source.ts'
 
 type WordPressPost = {
   title: string | null
@@ -111,7 +112,7 @@ class MissingGuideExcerptError extends Error {}
 class MissingShoeCommerceFieldsError extends Error {}
 
 async function queryWordPress<T>(query: string, variables: Record<string, string | null>, tags: string[]): Promise<T> {
-  const endpoint = process.env.WORDPRESS_GRAPHQL_URL
+  const endpoint = getWordPressGraphqlUrl()
 
   let response: Response
   try {
@@ -184,7 +185,7 @@ function postPreview(post: WordPressPreview): BlogPostPreview {
 
 /** Published public posts only. React cache shares the metadata/page request. */
 export const getWordPressPost = cache(async (slug: string): Promise<BlogPost | null> => {
-  if (!process.env.WORDPRESS_GRAPHQL_URL || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
+  if (!getWordPressGraphqlUrl() || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
   const data = await queryWordPress<{ post?: WordPressPost | null }>(postQuery, { slug }, ['wordpress:posts', `wordpress:post:${slug}`])
   if (!Object.hasOwn(data, 'post')) throw new Error('WordPress could not return the requested article.')
   const post = data.post
@@ -206,7 +207,7 @@ export const getWordPressPosts = cache(async (after?: string): Promise<{
   endCursor: string | null
 } | null> => {
   if (after !== undefined && !isWordPressCursor(after)) throw new RangeError('Invalid article cursor')
-  if (!process.env.WORDPRESS_GRAPHQL_URL) return null
+  if (!getWordPressGraphqlUrl()) return null
   const data = await queryWordPress<{
     posts?: { nodes?: (WordPressPreview | null)[]; pageInfo?: { hasNextPage: boolean; endCursor: string | null } }
   }>(postsQuery, { after: after || null }, ['wordpress:posts', 'wordpress:archive'])
@@ -234,7 +235,7 @@ export type WordPressSitemapArticle = {
 
 /** Walk both public article connections; never truncate the sitemap at 100. */
 export async function getWordPressSitemapArticles(): Promise<WordPressSitemapArticle[] | null> {
-  if (!process.env.WORDPRESS_GRAPHQL_URL) return null
+  if (!getWordPressGraphqlUrl()) return null
   type SitemapNode = { slug?: string | null; status?: string | null; modifiedGmt?: string | null }
   type Connection = { nodes?: (SitemapNode | null)[]; pageInfo?: { hasNextPage?: boolean; endCursor?: string | null } }
   const collections = [
@@ -283,7 +284,7 @@ export async function getWordPressSitemapArticles(): Promise<WordPressSitemapArt
 
 /** Buying guides are separate from ordinary posts and never inherit sample picks. */
 export const getWordPressBuyingGuide = cache(async (slug: string): Promise<BlogPost | null> => {
-  if (!process.env.WORDPRESS_GRAPHQL_URL || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
+  if (!getWordPressGraphqlUrl() || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
   const query = `
     query PublishedBuyingGuide($slug: ID!) {
       buyingGuide(id: $slug, idType: SLUG) {
@@ -310,7 +311,7 @@ export const getWordPressBuyingGuide = cache(async (slug: string): Promise<BlogP
 
 /** An absent companion plugin must not break the original template. Other failures remain errors. */
 export const getWordPressGuideFields = cache(async (slug: string): Promise<unknown> => {
-  if (!process.env.WORDPRESS_GRAPHQL_URL || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
+  if (!getWordPressGraphqlUrl() || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
   try {
     const data = await queryWordPress<{ buyingGuide?: { solemartGuideData?: string | null } | null }>(`
       query BuyingGuideTemplateFields($slug: ID!) {
@@ -410,7 +411,7 @@ export const getWordPressAcfBuyingGuide = cache(async (slug: string): Promise<{
   fields: AcfGuideFields
   shoes: WordPressAcfShoe[]
 } | null | undefined> => {
-  if (!process.env.WORDPRESS_GRAPHQL_URL || process.env.WORDPRESS_GUIDE_FIELDS_SOURCE === 'legacy') return undefined
+  if (!getWordPressGraphqlUrl() || process.env.WORDPRESS_GUIDE_FIELDS_SOURCE === 'legacy') return undefined
   if (!/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
   let data: { buyingGuide?: (Omit<WordPressPost, 'author'> & { id: string; solemartBuyingGuideFields?: AcfGuideFields | null }) | null }
   try {
@@ -462,7 +463,7 @@ function avatarUrl(value: unknown): string | undefined {
 
 /** Public core WordPress profiles only. Optional profile failures must not hide an article. */
 export const getWordPressAuthorProfile = cache(async (id: number): Promise<BlogPost['authorProfile'] | undefined> => {
-  if (!Number.isSafeInteger(id) || id < 1) return undefined
+  if (!isWordPressEnabled() || !Number.isSafeInteger(id) || id < 1) return undefined
   try {
     const restBase = process.env.WORDPRESS_API_URL
       || (process.env.WORDPRESS_GRAPHQL_URL ? new URL('/wp-json/wp/v2/', process.env.WORDPRESS_GRAPHQL_URL).href : '')

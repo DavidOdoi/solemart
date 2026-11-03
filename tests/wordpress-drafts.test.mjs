@@ -4,10 +4,10 @@ import { saveWordPressBuyingGuideDraft } from '../lib/wordpress-drafts.ts'
 import { fixtureArticle, apiItem } from './fixtures/ingestion.mjs'
 
 const originalFetch = globalThis.fetch
-const keys = ['AMAZON_CREDENTIAL_ID', 'AMAZON_CREDENTIAL_SECRET', 'AMAZON_CREDENTIAL_VERSION', 'AMAZON_PARTNER_TAG', 'AMAZON_MARKETPLACE']
+const keys = ['SOLEMART_CONTENT_SOURCE', 'AMAZON_CREDENTIAL_ID', 'AMAZON_CREDENTIAL_SECRET', 'AMAZON_CREDENTIAL_VERSION', 'AMAZON_PARTNER_TAG', 'AMAZON_MARKETPLACE']
 const environment = Object.fromEntries(keys.map(key => [key, process.env[key]]))
 const config = { apiUrl: 'https://cms.thesolemart.com/wp-json/wp/v2/', username: 'fixture-writer', applicationPassword: 'not-a-real-application-password' }
-beforeEach(() => { for (const key of keys) delete process.env[key] })
+beforeEach(() => { for (const key of keys) delete process.env[key]; process.env.SOLEMART_CONTENT_SOURCE = 'wordpress' })
 afterEach(() => { globalThis.fetch = originalFetch; for (const key of keys) { if (environment[key] === undefined) delete process.env[key]; else process.env[key] = environment[key] } })
 
 function wordpress(options = {}) {
