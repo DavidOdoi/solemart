@@ -2,6 +2,7 @@ import { test, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert/strict'
 import { saveWordPressBuyingGuideDraft } from '../lib/wordpress-drafts.ts'
 import { fixtureArticle, apiItem } from './fixtures/ingestion.mjs'
+import { GUIDE_WORD_TARGET } from '../lib/guide-editorial-settings.ts'
 
 const originalFetch = globalThis.fetch
 const keys = ['SOLEMART_CONTENT_SOURCE', 'AMAZON_CREDENTIAL_ID', 'AMAZON_CREDENTIAL_SECRET', 'AMAZON_CREDENTIAL_VERSION', 'AMAZON_PARTNER_TAG', 'AMAZON_MARKETPLACE']
@@ -68,7 +69,7 @@ test('explicit incomplete mode writes five private drafts using actual REST base
   assert.equal(guide.meta.rank_math_focus_keyword, article.targetKeyword)
   assert.equal(guide.meta.rank_math_canonical_url, 'https://thesolemart.com/best-shoes/best-fixture-shoes')
   assert.equal(guide.meta._solemart_workflow_status, 'NEEDS_REVIEW')
-  assert.equal(guide.meta._solemart_word_target, 1700)
+  assert.equal(guide.meta._solemart_word_target, GUIDE_WORD_TARGET)
   assert.equal(guide.content, '', 'Do not duplicate the full structured guide inside its supplemental body')
   assert.match(result.editorUrl, /post\.php\?post=\d+&action=edit/)
   assert.ok([...mock.shoes.values()].every(row => row.acf.verification_status === 'PENDING'))

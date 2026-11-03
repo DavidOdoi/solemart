@@ -5,6 +5,7 @@ import { editorialPlainText } from './cms-rich-text.ts'
 import { articleFingerprint, sanitizeIngestionArticle, validateBuyingGuide, type IngestionArticle, type IngestionReport } from './guide-ingestion.ts'
 import { publicHttpsUrl, type IngestionProduct } from './affiliate-products.ts'
 import { isWordPressEnabled } from './content-source.ts'
+import { GUIDE_WORD_TARGET } from './guide-editorial-settings.ts'
 
 export type WordPressWriteConfig = { apiUrl: string; username: string; applicationPassword: string }
 type Row = Record<string, unknown>
@@ -163,7 +164,7 @@ export async function saveWordPressBuyingGuideDraft(input: IngestionArticle, opt
     meta: {
       _solemart_workflow_status: verified ? 'READY_FOR_REVIEW' : 'NEEDS_REVIEW',
       _solemart_material_hash: '', _solemart_ingestion_hash: articleFingerprint(article),
-      _solemart_verification_report: JSON.stringify(report), _solemart_target_keyword: article.targetKeyword, _solemart_word_target: 1700,
+      _solemart_verification_report: JSON.stringify(report), _solemart_target_keyword: article.targetKeyword, _solemart_word_target: GUIDE_WORD_TARGET,
       rank_math_focus_keyword: article.targetKeyword, rank_math_title: article.seoTitle, rank_math_description: article.metaDescription,
       rank_math_canonical_url: canonical, rank_math_facebook_title: article.seoTitle, rank_math_facebook_description: article.metaDescription,
       ...(featured ? { rank_math_facebook_image: featured.source_url } : {}),

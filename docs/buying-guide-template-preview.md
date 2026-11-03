@@ -59,3 +59,19 @@ horizontal overflow, metadata and disabled retailer controls. A CMS fixture
 check verifies that published guides retain sponsored retailer links and schema.
 External photographs were substituted in local browser tests; these tests do
 not verify the public deployment or image host connectivity.
+
+## Expanded audience and mistakes sections
+
+Both sections now render as paragraphs in the existing body font, with three
+paragraphs authored for the preview and each local guide. The walking template's
+audience and mistakes copy adds 152 words compared with the earlier preview.
+Product-card summaries also include more practical comparison/try-on guidance.
+The four illustrative product profiles and preview status remain unchanged.
+
+The selected-guide editorial target is now 1,850 words, allowing roughly 150 more
+words than the original plan. Each future guide needs three topic-specific
+paragraphs in `whoItsFor` and three in `mistakesToAvoid`; the ingestion gate checks
+that structure. Existing CMS arrays retain their field names and are rendered in
+full, so the display change does not truncate previously saved editorial content.
+The common target and paragraph requirement live in
+`lib/guide-editorial-settings.ts`.

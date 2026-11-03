@@ -9,7 +9,7 @@ publisher, new product directory, or browser API credential.
 
 Nine approved green keywords are queued in
 `data/ingestion/selected-keywords.json`, including the explicitly approved
-partial-green kids hiking keyword. All target **1,700 editorial words**. The
+partial-green kids hiking keyword. All target **1,850 editorial words**. The
 other CSV rows are excluded. The tracking ID is deferred at the user's request.
 
 The queue and `docs/green-keyword-content-briefs.md` are research plans, not
@@ -62,6 +62,7 @@ access to public manufacturer sources. The tracking ID can be added later.
    `sponsored nofollow noopener noreferrer`.
 
 The types are in `lib/affiliate-products.ts` and `lib/guide-ingestion.ts`.
+The shared word target and paragraph count are in `lib/guide-editorial-settings.ts`.
 `components/review-guide-template.tsx` preserves the design, adds an ItemList
 alongside Article/Breadcrumb/Product markup, and puts disclosure near new ASIN
 recommendations. Products have no invented review ratings or permanent Offer
@@ -199,7 +200,7 @@ The blank `docs/examples/buying-guide.pending.json` shows every field and the fo
 slots. It is **not publishable** and deliberately fails validation. Add real
 `featuredMediaId`, optional product `wordpressMediaId`, taxonomy IDs, your actual
 research and actual review timestamps. Do not copy synthetic test data to the CMS.
-`tests/fixtures/ingestion.mjs` provides a complete 1,700-word synthetic PASS case
+`tests/fixtures/ingestion.mjs` provides a complete 1,850-word synthetic PASS case
 for mocked tests only; it is not the requested real verified sample article.
 A real verified sample remains blocked until source/API access is configured.
 
@@ -217,13 +218,13 @@ live offers. FAQ questions are included. Inline links do not add hidden words.
 | Selection method | 90 |
 | Four products, 250 each | 1,000 |
 | Buying advice | 180 |
-| Who it suits | 50 |
-| Mistakes to avoid | 50 |
+| Who it suits, three paragraphs | 125 |
+| Mistakes to avoid, three paragraphs | 125 |
 | Final verdict | 70 |
 | Four FAQs including questions | 100 |
-| **Total** | **1,700** |
+| **Total** | **1,850** |
 
-Each 250-word product allocation can use summary 35, full commentary 155, best-for
+Each 250-word product allocation can use summary 45, full commentary 145, best-for
 10, avoid-if 15, pros 17 and cons 18. Rebalance naturally without filler.
 The focus phrase goes in the H1, SEO title, slug, intro and the quick-answer H2
 (`quickAnswerTitle`). Use short paragraphs and relevant internal/editorial source

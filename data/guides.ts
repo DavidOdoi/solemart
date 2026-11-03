@@ -78,8 +78,16 @@ export const guides: Guide[] = [
       'We compared product details and retailer listings as research references; availability and specifications can change.',
       'These sample profiles are starting points for comparison, not claims of hands-on testing.',
     ],
-    whoItsFor: ['People who spend much of the day standing or walking at work.', 'Readers comparing everyday comfort shoes for long shifts.'],
-    mistakesToAvoid: ['Choosing by cushioning alone without checking fit and stability.', 'Ignoring workplace requirements such as slip resistance or protective toes.', 'Assuming a listed size or model detail is current without checking the retailer.'],
+    whoItsFor: [
+      'This guide is for people comparing footwear for workdays that involve both standing and walking. Start with your actual routine: the flooring, your usual socks and any footwear rules your employer expects you to follow.',
+      'It also suits readers replacing a pair that no longer meets their needs. Consider what worked well before and what you want to change, such as the fastening, available widths or how easily the shoes can be cleaned.',
+      'Use the shortlist to organise a comparison before trying shoes or ordering. Your choice should account for personal fit and workplace requirements; a recommendation cannot establish how a particular pair will feel throughout your own shift.',
+    ],
+    mistakesToAvoid: [
+      'Avoid choosing from a cushioning description alone. Compare the complete shoe and check for pressure points, heel movement and toe room during a try-on. A feature that sounds appealing still needs to suit your foot and routine.',
+      'Do not overlook workplace footwear rules while comparing everyday styles. Check any required protective features or stated slip-resistance requirements with your employer, then confirm that the exact product you are considering meets those requirements.',
+      'Before ordering, confirm the model, size, width and return conditions on the current listing. Keep packaging and follow the retailer’s try-on rules so that an unsuitable pair can be returned when its policy permits.',
+    ],
     buyingGuideSections: [{ heading: 'Fit and toe room', paragraphs: ['A secure heel and room for the toes are useful starting points. Try shoes on later in the day if your feet tend to swell, and compare width options when available.'] }, { heading: 'Match the work surface', paragraphs: ['Consider the flooring and conditions you encounter. Some jobs call for slip-resistant soles or protective features, so check workplace requirements before choosing.'] }],
     finalVerdict: 'Start with a comfortable fit and the needs of your work environment. Compare the shortlist, then confirm current sizing, features, and price with the retailer.',
   },
@@ -115,6 +123,16 @@ export const guides: Guide[] = [
     reviewedBy: 'Footwear Research Desk',
     updatedAt: '2026-10-10',
     disclosure: 'As an Amazon Associate, SOLEMART may earn from qualifying purchases. Our recommendations are independently researched.',
+    whoItsFor: [
+      'This guide is for readers comparing shoes for everyday walks, errands and travel. Start with the routes you use most often, then consider whether your shortlist makes sense for those surfaces and the distances you usually cover.',
+      'It also helps shoppers replacing a familiar pair or comparing a different brand. Use each profile to decide what to check next, including the current size chart, width choices and the retailer’s return terms.',
+      'Treat the recommendations as a starting point for a try-on. Compare them using your usual socks and walking routine, and keep your own fit preferences central to the decision rather than relying on an award label alone.',
+    ],
+    mistakesToAvoid: [
+      'Do not choose from the product photo or colour alone. Check the exact model, size and width before ordering, and read the listing carefully when several versions share a similar name.',
+      'During a try-on, check for pressure points, unwanted heel movement and enough room to move your toes. Do not assume that a familiar size number will give the same fit in every shoe.',
+      'Check return conditions before buying, especially any rules about indoor try-ons, packaging and deadlines. Keep those requirements in mind while comparing pairs so you know your options if the fit is unsuitable.',
+    ],
   },
   {
     title: 'Best Budget Sneakers on Amazon',
@@ -147,5 +165,15 @@ export const guides: Guide[] = [
     reviewedBy: 'Footwear Research Desk',
     updatedAt: '2026-10-10',
     disclosure: 'As an Amazon Associate, SOLEMART may earn from qualifying purchases. Our recommendations are independently researched.',
+    whoItsFor: [
+      'This guide is for shoppers setting a spending limit for everyday sneakers. Think about how you plan to wear them, then compare fit, materials and care instructions alongside the amount you are willing to spend.',
+      'It also suits readers deciding between a discounted familiar style and a less familiar alternative. Use the product details to identify what you are buying rather than assuming that the larger advertised reduction makes the better choice.',
+      'Use the shortlist to prepare questions for the retailer and organise a try-on. A lower purchase price does not tell you whether the fit will suit you or whether the return conditions work for your circumstances.',
+    ],
+    mistakesToAvoid: [
+      'Avoid choosing a pair solely because it is the cheapest option in a search result. Check its intended use, sizing information and material details before deciding whether it belongs on your shortlist.',
+      'Do not assume that similar-looking listings describe the same model or include the same seller terms. Confirm the selected size, colour and product version, then check who handles any return or refund.',
+      'Compare the total shown at checkout and review the current return policy before paying. Keep the packaging and follow any indoor try-on conditions while deciding whether to keep the shoes.',
+    ],
   },
 ]

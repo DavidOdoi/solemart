@@ -17,7 +17,7 @@ WordPress paused except the exact value `wordpress`.
 - `/blog`, local article URLs, local buying-guide URLs, search, `/robots.txt`, and
   `/sitemap.xml`, without a WordPress GraphQL or REST request.
 - The nine article **briefs** at `/template-preview/articles`; these remain
-  noindex draft previews, not complete 1,700-word buying guides.
+  noindex draft previews, not complete 1,850-word buying guides.
 
 The sitemap lists locally available pages and their recorded modification dates.
 It excludes draft preview URLs and does not invent URLs for unavailable CMS-only

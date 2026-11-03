@@ -227,12 +227,20 @@ export function ReviewGuideTemplate({ guide, products, preview = false, offers =
 
             {show.who && <section aria-labelledby="who-heading">
               <h2 id="who-heading" className="font-sans text-3xl font-black tracking-tight">Who This Guide Is For</h2>
-              <ul className="mt-4 list-disc space-y-2 pl-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{(guide.whoItsFor || ['Readers comparing shoes for the needs described in this guide.']).map((item) => <li key={item}>{item}</li>)}</ul>
+              <div className="mt-4 space-y-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{(guide.whoItsFor?.length ? guide.whoItsFor : [
+                'Use this guide when you are comparing options for the activity or routine described above. Start with your intended use and the details that matter to your own circumstances.',
+                'The product profiles can help organise your shortlist. Compare the exact model, sizing information and care requirements before deciding which options you want to investigate further.',
+                'Keep your personal preferences central to the decision. Use the comparison alongside the manufacturer’s guidance and the retailer’s current terms, rather than choosing from an award label alone.',
+              ]).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
             </section>}
 
             {show.mistakes && <section aria-labelledby="mistakes-heading">
               <h2 id="mistakes-heading" className="font-sans text-3xl font-black tracking-tight">Common Mistakes to Avoid</h2>
-              <ul className="mt-4 list-disc space-y-2 pl-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{(guide.mistakesToAvoid || ['Choosing by appearance alone before checking fit and intended use.', 'Assuming price, stock, or product details stay the same over time.']).map((item) => <li key={item}>{item}</li>)}</ul>
+              <div className="mt-4 space-y-4 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{(guide.mistakesToAvoid?.length ? guide.mistakesToAvoid : [
+                'Avoid choosing from an image or headline alone. Read the details for the exact product and variant you intend to buy, especially when similarly named versions appear together.',
+                'Do not assume that an option suits your needs because it works for someone else. Compare its intended use, fit guidance and relevant features with your own requirements.',
+                'Check the current return conditions before paying. Understand any deadlines, packaging requirements and try-on rules so you know what to do if your purchase proves unsuitable.',
+              ]).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
             </section>}
 
             {show.faqs && <section id="faqs" className="scroll-mt-36">

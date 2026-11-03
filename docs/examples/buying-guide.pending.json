@@ -17,8 +17,16 @@
   "quickAnswerBody": "",
   "howWeChose": [],
   "advice": "",
-  "whoItsFor": [],
-  "mistakesToAvoid": [],
+  "whoItsFor": [
+    "",
+    "",
+    ""
+  ],
+  "mistakesToAvoid": [
+    "",
+    "",
+    ""
+  ],
   "finalVerdict": "",
   "disclosure": "As an Amazon Associate, SOLEMART earns from qualifying purchases.",
   "faqs": [

@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto'
 import { editorialPlainText, sanitizeCmsArticleHtml, sanitizeEditorialHtml } from './cms-rich-text.ts'
 import { marketplaces, normalizedIdentity, publicHttpsUrl, validateAmazonAffiliateUrl, validateAmazonAsin, type AmazonMarketplace, type ClaimEvidence, type IngestionProduct } from './affiliate-products.ts'
 import { getAmazonProductOffers, isCurrentAmazonOffer, type AmazonProductOffer } from './amazon-creators.ts'
+import { GUIDE_WORD_TARGET, GUIDE_SECTION_PARAGRAPHS } from './guide-editorial-settings.ts'
 
 export type IngestionArticle = {
   version: 1
@@ -96,6 +97,7 @@ export async function validateBuyingGuide(input: unknown, options: Options = {})
   if (raw.version !== 1) add('FORMAT', 'version', 'Use ingestion format version 1.')
   for (const key of requiredArticle) if (!string(raw[key])) add('REQUIRED', key, 'Required editorial field is empty or invalid.')
   for (const key of ['howWeChose', 'whoItsFor', 'mistakesToAvoid']) if (!list(raw[key])) add('REQUIRED', key, 'Provide a nonempty list of text values.')
+  for (const key of ['whoItsFor', 'mistakesToAvoid']) if (Array.isArray(raw[key]) && raw[key].length !== GUIDE_SECTION_PARAGRAPHS) add('SECTION_PARAGRAPHS', key, 'Provide three explained paragraphs for this section.')
   if (!slugPattern.test(String(raw.slug || ''))) add('SLUG', 'slug', 'Use one lowercase hyphenated URL slug.')
   if (!Array.isArray(raw.products) || raw.products.length !== 4) add('PRODUCT_COUNT', 'products', 'The current template requires four distinct picks.')
   else for (const [index, value] of raw.products.entries()) {
@@ -126,7 +128,7 @@ export async function validateBuyingGuide(input: unknown, options: Options = {})
   for (const [index, evidence] of article.claimEvidence.entries()) if (!checkEvidence(evidence, String(record(evidence).key || ''), String(record(evidence).claim || ''), options.now ?? Date.now())) add('EDITORIAL_CLAIM', `claimEvidence.${index}`, 'A material editorial claim needs a current supported source and real review.')
   if (!article.claimEvidence.length) add('EDITORIAL_CLAIM', 'claimEvidence', 'Supply evidence for the material factual claims in the guide.')
   report.wordCount = editorialWordCount(article)
-  if (report.wordCount !== 1700) add('WORD_COUNT', 'content', `This batch requires 1,700 editorial words; found ${report.wordCount}.`)
+  if (report.wordCount !== GUIDE_WORD_TARGET) add('WORD_COUNT', 'content', `This batch requires ${GUIDE_WORD_TARGET.toLocaleString('en-US')} editorial words; found ${report.wordCount}.`)
   const configuredMarket = options.marketplace || process.env.AMAZON_MARKETPLACE || 'www.amazon.com'
   if (!Object.hasOwn(marketplaces, configuredMarket)) add('MARKETPLACE', 'marketplace', 'Configure a supported Amazon marketplace.')
   const marketplace = (Object.hasOwn(marketplaces, configuredMarket) ? configuredMarket : 'www.amazon.com') as AmazonMarketplace

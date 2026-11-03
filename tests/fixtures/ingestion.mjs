@@ -1,6 +1,7 @@
 // Synthetic test data only. These names, ASINs and source records are not real
 // recommendations and must never be sent to a live WordPress site.
 import { editorialWordCount } from '../../lib/guide-ingestion.ts'
+import { GUIDE_WORD_TARGET } from '../../lib/guide-editorial-settings.ts'
 
 export function fixtureArticle() {
   const now = Date.now()
@@ -35,12 +36,12 @@ export function fixtureArticle() {
     category: 'Test fixture', authorId: 7, featuredMediaId: 101, imageAltText: 'Synthetic fixture featured image for automated tests',
     intro: '<p>Best fixture shoes is a synthetic keyword used to exercise the editorial pipeline safely.</p>', quickAnswerTitle: 'Best fixture shoes: quick answer', quickAnswerBody: 'This is synthetic test copy, not a product recommendation.',
     howWeChose: ['Synthetic manufacturer records and API responses are injected only by tests.'],
-    advice: '', whoItsFor: ['Fixture test readers only.'], mistakesToAvoid: ['Do not publish this synthetic fixture.'], finalVerdict: '<p>Keep fixture data separate from real editorial research.</p>',
+    advice: '', whoItsFor: ['Fixture test readers only.', 'A second synthetic audience paragraph.', 'A third synthetic audience paragraph.'], mistakesToAvoid: ['Do not publish this synthetic fixture.', 'Do not treat fixture facts as real evidence.', 'Do not send this fixture to the live CMS.'], finalVerdict: '<p>Keep fixture data separate from real editorial research.</p>',
     disclosure: 'SOLEMART may earn a commission from qualifying purchases through affiliate links.',
     faqs: Array.from({ length: 4 }, (_, i) => ({ question: `Fixture question ${i + 1}?`, answer: '<p>A synthetic answer for this test fixture.</p>' })),
     products, claimEvidence: [evidence('editorial.example', 'Synthetic article claim for a test fixture.')], editorialReviewedBy: 'Fixture reviewer', editorialReviewedAt: new Date(now).toISOString(), handsOnTestingEvidence: [],
   }
-  const needed = 1700 - editorialWordCount(article)
+  const needed = GUIDE_WORD_TARGET - editorialWordCount(article)
   article.advice = `<p>${Array.from({ length: needed }, (_, i) => `fixtureword${i}`).join(' ')}</p>`
   const offers = products.map(product => ({ asin: product.asin, title: `${product.productName} Black 9`, brand: product.brand, variant: 'Black 9', imageUrl: 'https://m.media-amazon.com/images/I/FIXTURE.png', url: product.amazonAffiliateUrl, fetchedAt: new Date(now).toISOString(), expiresAt: new Date(now + 300000).toISOString(), marketplace: 'www.amazon.com' }))
   return { article, offers, now }

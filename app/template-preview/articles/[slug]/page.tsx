@@ -27,7 +27,7 @@ export default async function ArticleBriefPreview({ params }: { params: Promise<
     <h1 className="mt-3 font-sans text-4xl font-black leading-tight tracking-tight sm:text-5xl">{brief.title}</h1>
     <dl className="mt-7 grid gap-4 rounded-2xl border border-[#e5e4df] bg-[#fafaf8] p-5 text-sm sm:grid-cols-3 sm:p-6">
       <div><dt className="font-semibold text-[#68675f]">Focus keyword</dt><dd className="mt-1 font-bold">{brief.keyword}</dd></div>
-      <div><dt className="font-semibold text-[#68675f]">Article target</dt><dd className="mt-1 font-bold">1,700 words</dd></div>
+      <div><dt className="font-semibold text-[#68675f]">Article target</dt><dd className="mt-1 font-bold">{brief.targetWords.toLocaleString('en-US')} words</dd></div>
       <div><dt className="font-semibold text-[#68675f]">Current status</dt><dd className="mt-1 font-bold">Brief · Research pending</dd></div>
     </dl>
     <div className="mt-10 divide-y divide-[#e5e4df]">{brief.blocks.filter(block => block.label !== 'Slug').map(block => <section key={block.label} className="py-6 first:pt-0">

@@ -3,19 +3,20 @@ import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { validateBuyingGuide, sanitizeIngestionArticle, editorialWordCount } from '../lib/guide-ingestion.ts'
 import { fixtureArticle } from './fixtures/ingestion.mjs'
+import { GUIDE_WORD_TARGET } from '../lib/guide-editorial-settings.ts'
 
 const validate = ({ article, offers, now }, extra = {}) => validateBuyingGuide(article, { offers, now, partnerTag: 'fixture-20', ...extra })
 
-test('a complete synthetic 1,700-word article passes the evidence/identity gate and can only create a draft', async () => {
+test('a complete synthetic 1,850-word article passes the evidence/identity gate and can only create a draft', async () => {
   const fixture = fixtureArticle()
-  assert.equal(editorialWordCount(fixture.article), 1700)
+  assert.equal(editorialWordCount(fixture.article), GUIDE_WORD_TARGET)
   const result = await validate(fixture)
   assert.deepEqual(result.criticalErrors, [])
   assert.equal(result.status, 'PASS')
   assert.equal(result.wordpressAction, 'CREATE_DRAFT')
   assert.equal(result.productsChecked, 4)
   assert.equal(result.verifiedProducts.length, 4)
-  assert.equal(result.wordCount, 1700)
+  assert.equal(result.wordCount, GUIDE_WORD_TARGET)
 })
 
 test('missing/invalid ASIN, wrong affiliate tracking and duplicate picks block verification', async () => {
@@ -111,6 +112,16 @@ test('required fields, exact word count, selected keyword and existing canonical
   assert.ok(duplicate.criticalErrors.some(row => row.code === 'DUPLICATE_SLUG'))
 })
 
+test('audience and mistakes sections require three paragraphs each for new guides', async () => {
+  for (const field of ['whoItsFor', 'mistakesToAvoid']) {
+    const fixture = fixtureArticle()
+    fixture.article[field] = ['One short paragraph.', 'A second paragraph.']
+    const report = await validate(fixture)
+    assert.equal(report.status, 'FAIL')
+    assert.ok(report.criticalErrors.some(row => row.code === 'SECTION_PARAGRAPHS' && row.field === field))
+  }
+})
+
 test('substantially duplicate articles are blocked even if their titles and slugs differ', async () => {
   const fixture = fixtureArticle()
   const prior = [fixture.article.intro, fixture.article.quickAnswerBody, fixture.article.advice, fixture.article.finalVerdict].join(' ')
@@ -141,7 +152,7 @@ test('keyword queue includes only eight green rows plus the user-approved partia
   const queue = JSON.parse(await readFile(new URL('../data/ingestion/selected-keywords.json', import.meta.url), 'utf8'))
   assert.equal(queue.articles.length, 9)
   assert.ok(queue.articles.some(row => row.keyword === 'best hiking shoes for kids'))
-  assert.ok(queue.articles.every(row => row.targetWords === 1700 && row.productsRequired === 4))
+  assert.ok(queue.articles.every(row => row.targetWords === GUIDE_WORD_TARGET && row.productsRequired === 4))
   assert.equal(queue.articles.filter(row => row.searchIntentOverlap === 'forefoot-pain').length, 2)
   assert.ok(!queue.articles.some(row => /pickleball|achilles|morton|bowling|aqua/.test(row.keyword)))
   assert.equal(queue.autoPublish, false)

@@ -1,9 +1,8 @@
 import { guides, type Guide } from '@/data/guides'
 import { products, type Product } from '@/data/products'
 
-// Design fixtures only. Published guides continue to use the WordPress adapter.
+// Design fixtures only; these are not verified product recommendations.
 const originalGuide = guides.find(guide => guide.slug === 'best-walking-shoes-for-men')!
-const originalAdvice = guides.find(guide => guide.slug === 'best-shoes-for-standing-all-day')!
 const productOrder = [...new Set([...originalGuide.productSlugs, ...products.map(product => product.slug)])].slice(0, 4)
 
 export const previewProducts: Product[] = productOrder.map(slug => {
@@ -30,7 +29,7 @@ export const previewGuide: Guide = {
     productSlug: product.slug,
     cushioning: originalGuide.topPicks?.[index]?.cushioning || 'Compare the current cushioning profile',
     widthOptions: originalGuide.topPicks?.[index]?.widthOptions || 'Check current size and width availability',
-    mainStrength: product.shortReason || product.bestFor,
+    mainStrength: product.pros[0] || product.bestFor,
   })),
   howWeChose: [
     'Compare fit, cushioning, outsole construction and intended use when building the shortlist.',
@@ -42,8 +41,8 @@ export const previewGuide: Guide = {
     { heading: 'Fit and toe room', paragraphs: ['Look for a secure heel and enough room to move your toes. Compare width options and toe-box shape as well as shoe length.', 'Try shoes with the socks you normally wear and assess comfort while walking, rather than relying on the size label alone.'] },
     { heading: 'Match your walking routine', paragraphs: ['Consider the surfaces and distances you walk most often. Compare cushioning, outsole construction and care requirements with that routine.'] },
   ],
-  whoItsFor: ['Readers comparing shoes for daily walks, travel and errands.', 'People who want to compare fit, cushioning and available widths before choosing a pair.'],
-  mistakesToAvoid: originalAdvice.mistakesToAvoid,
+  whoItsFor: originalGuide.whoItsFor,
+  mistakesToAvoid: originalGuide.mistakesToAvoid,
   faqs: [
     ...originalGuide.faqs,
     { question: 'How should I check the fit before keeping a pair?', answer: 'Follow the brand’s guidance, try the shoes with your usual socks and check toe room, heel security and comfort. Confirm the retailer’s current return terms.' },

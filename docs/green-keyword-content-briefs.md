@@ -2,9 +2,12 @@
 
 These nine briefs are selected from the uploaded CSV, including the approved
 “some green” kids hiking row. They are not completed or source-verified articles.
-Use the 1,700-word budget in `buying-guide-automation.md`, four genuinely researched
-products and four FAQs per guide. Do not invent a fourth pick if only three can
-be verified: pause that guide and report the gap.
+Use the 1,850-word budget in `buying-guide-automation.md`, four genuinely researched
+products and four FAQs per guide. Write both “Who This Guide Is For” and
+“Common Mistakes to Avoid” as three explained, topic-specific paragraphs. Expand
+the short product summaries with practical buying considerations; keep the
+complete article close to the revised 1,850-word target. Do not invent a fourth
+pick if only three can be verified: pause that guide and report the gap.
 
 Use the current template in this order: H1; introduction; quick-answer H2; top
 picks; comparison; selection method; full reviews with product H3s; buying advice;
@@ -227,7 +230,7 @@ The prepared briefs can be viewed directly on the Next.js frontend at
 `/template-preview/articles/[slug]`. They are labelled draft briefs, use
 `noindex, nofollow, noarchive`, and are excluded from the sitemap and public
 navigation. These are accessible by URL; no password protection is claimed.
-The full 1,700-word articles remain pending writing and product verification.
+The full 1,850-word articles remain pending writing and product verification.
 
 Preview data is kept in `data/ingestion/article-briefs.json`, preserving only the
 nine selected topics and their existing planning notes. These pages do not query
