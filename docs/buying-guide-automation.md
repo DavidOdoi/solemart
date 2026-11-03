@@ -213,13 +213,13 @@ live offers. FAQ questions are included. Inline links do not add hidden words.
 
 | Section | Words |
 | --- | ---: |
-| Introduction | 100 |
-| Quick answer | 60 |
+| Introduction | 150 |
+| Quick answer | 100 |
 | Selection method | 90 |
 | Four products, 250 each | 1,000 |
-| Buying advice | 180 |
-| Who it suits, three paragraphs | 125 |
-| Mistakes to avoid, three paragraphs | 125 |
+| Buying advice | 160 |
+| Who it suits, three paragraphs | 90 |
+| Mistakes to avoid, three paragraphs | 90 |
 | Final verdict | 70 |
 | Four FAQs including questions | 100 |
 | **Total** | **1,850** |
@@ -230,6 +230,14 @@ The focus phrase goes in the H1, SEO title, slug, intro and the quick-answer H2
 (`quickAnswerTitle`). Use short paragraphs and relevant internal/editorial source
 links. WYSIWYG HTML is sanitized with the existing trusted allowlist; plain-text
 content remains supported. Affiliate URLs stay in their structured fields.
+
+For Rank Math's on-page checks, place the focus phrase naturally in the opening
+paragraph and write a descriptive quick-answer heading. Open the answer with a
+practical recommendation, then explain fit, intended use and the checks needed
+before buying. Keep the introduction in three short paragraphs. Trim repeated
+advice in later sections to retain the total budget; do not add keyword repetition
+just to reach a density target. These are writing guidelines, not a measured
+Rank Math score or a guarantee of rankings.
 
 ## Images, offers and caching
 
