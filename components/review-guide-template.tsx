@@ -4,12 +4,12 @@ import type { ReactNode } from 'react'
 import { ArrowRight, Check, X } from 'lucide-react'
 import type { Guide } from '@/data/guides'
 import type { Product } from '@/data/products'
-import { Breadcrumbs } from '@/components/affiliate-site'
+import { Breadcrumbs, RelatedGuides } from '@/components/affiliate-site'
 import { affiliateUrl } from '@/lib/content'
 import { PickActions } from '@/components/pick-actions'
 import { EditorialRichText } from '@/components/editorial-rich-text'
 import { EditorialFaqList } from '@/components/editorial-faq-list'
-import { editorialPlainText } from '@/lib/cms-rich-text'
+import { editorialPlainText, sanitizeCmsArticleHtml } from '@/lib/cms-rich-text'
 import { AmazonPrice } from '@/components/amazon-price'
 import { isCurrentAmazonOffer, type AmazonProductOffer } from '@/lib/amazon-creators'
 import { isAmazonProductImage, marketplaces } from '@/lib/affiliate-products'
@@ -173,8 +173,9 @@ export function ReviewGuideTemplate({ guide, products, preview = false, offers =
         </header>
 
         {(!guide.cmsManaged || guide.quickAnswerBody) && <section aria-labelledby="quick-answer-heading" className="mx-auto mt-8 max-w-4xl rounded-2xl border border-[#e5e4df] bg-[#f3f2ee] p-5 sm:p-7">
-          <h2 id="quick-answer-heading" className="font-sans text-xl font-black sm:text-2xl">{guide.quickAnswerTitle}</h2>
-          <p className="mt-2 font-serif text-base leading-7 text-[#4f4e49] sm:text-lg">{guide.quickAnswerBody}</p>
+          <span className="text-xs font-bold uppercase tracking-[0.14em] text-[#c65325]">Quick answer</span>
+          <h2 id="quick-answer-heading" className="mt-2 font-sans text-xl font-black sm:text-2xl">{guide.quickAnswerTitle}</h2>
+          <EditorialRichText value={guide.quickAnswerBody} className="mt-3 font-serif text-base leading-7 text-[#4f4e49] sm:text-lg" />
         </section>}
 
         {show.picks && <section id="top-picks" aria-labelledby="top-picks-heading" className="relative mx-auto mt-14 max-w-5xl scroll-mt-36 overflow-visible rounded-sm border-[3px] border-[#e86d35] bg-white pt-4 shadow-sm">
@@ -221,7 +222,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false, offers =
 
             {show.buying && <section id="buying-guide" className="scroll-mt-36">
               <p className="text-xs font-bold tracking-[0.16em] text-[#c65325]">BUYING GUIDE</p><h2 className="mt-2 font-sans text-3xl font-black tracking-tight sm:text-4xl">What to Look For Before Buying</h2>
-              {guide.contentHtml && <div className="wordpress-content mt-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" dangerouslySetInnerHTML={{ __html: guide.contentHtml }} />}
+              {guide.contentHtml && <div className="wordpress-content mt-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" dangerouslySetInnerHTML={{ __html: sanitizeCmsArticleHtml(guide.contentHtml, picks.flatMap(product => product.affiliateUrl ? [product.affiliateUrl] : [])) }} />}
               {guide.buyingGuideSections?.length ? <div className="mt-5 space-y-6">{guide.buyingGuideSections.map((section) => <section key={section.heading}><h3 className="text-lg font-bold">{section.heading}</h3><div className="mt-2 space-y-3 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]">{section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div></section>)}</div> : <EditorialRichText value={guide.adviceHtml || guide.advice.join('\n')} plainFormat="list" className="mt-5 font-serif text-[17px] leading-8 text-[#4f4e49] sm:text-[19px]" />}
             </section>}
 
@@ -262,6 +263,7 @@ export function ReviewGuideTemplate({ guide, products, preview = false, offers =
           </aside>}
         </div>
       </article>
+      {(!guide.cmsManaged || preview) && <RelatedGuides slugs={guide.relatedGuideSlugs.filter(slug => slug !== guide.slug)} />}
       {!preview && <>
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(articleSchema)} />
         {picks.length > 0 && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(itemListSchema)} />}

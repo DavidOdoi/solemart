@@ -64,18 +64,26 @@ not verify the public deployment or image host connectivity.
 
 Both sections now render as paragraphs in the existing body font, with three
 paragraphs authored for the preview and each local guide. Supporting copy is
-trimmed to make room for a fuller introduction and quick answer, with practical
-fit and buying guidance. Introductions use three short paragraphs and put the
-focus phrase near the start; quick-answer headings include it naturally.
+trimmed to avoid repetition. Introductions use two short paragraphs and put the
+focus phrase near the start. Quick-answer headings ask the searcher's question,
+with a short direct answer and two paragraphs covering relevant use cases.
+Final verdicts explain a starting point, alternatives and a buying decision.
+Contextual links connect to existing advice articles and AAOS fitting guidance;
+the template also displays the existing related-guide selections.
 Product-card summaries include practical comparison/try-on guidance.
 The four illustrative product profiles and preview status remain unchanged.
 
 The selected-guide editorial target is now 1,850 words, allowing roughly 150 more
 words than the original plan. Each future guide needs three topic-specific
 paragraphs in `whoItsFor` and three in `mistakesToAvoid`; the ingestion gate checks
-that structure. The flexible budget allows 150 introductory words, 100 quick-answer
-words and 90 words for each of those two supporting sections. Existing CMS arrays
-retain their field names and are rendered in
+that structure. The flexible budget allows 90 introductory words, 80 quick-answer
+words, 150 verdict words and 90 words for each supporting section. Existing CMS
+arrays retain their field names and are rendered in
 full, so the display change does not truncate previously saved editorial content.
 The common target and paragraph requirement live in
 `lib/guide-editorial-settings.ts`.
+
+A homepage-first crawl of the local production build reaches all 29 sitemap
+pages through ordinary internal links, with no orphan pages, broken internal
+destinations or public links to previews. External citation destinations could
+not be rechecked live because the workspace network blocks those hosts.

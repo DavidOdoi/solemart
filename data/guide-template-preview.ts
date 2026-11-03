@@ -36,7 +36,7 @@ export const previewGuide: Guide = {
     'Document the sources behind product details and separate desk research from hands-on testing.',
     'This preview uses sample profiles to demonstrate the page layout; it does not report product testing.',
   ],
-  contentHtml: '<h3>Start with your daily routine</h3><p>Think about how far you walk, the surfaces you use and the fit that feels comfortable to you. These considerations help explain how a longer article body sits within the existing buying-guide layout.</p><p>Check the manufacturer’s current fit guidance and the retailer’s return terms before choosing a pair. This paragraph demonstrates an inline <a href="/how-we-review">methodology link</a> inside the article body.</p>',
+  contentHtml: originalGuide.contentHtml,
   buyingGuideSections: [
     { heading: 'Fit and toe room', paragraphs: ['Look for a secure heel and enough room to move your toes. Compare width options and toe-box shape as well as shoe length.', 'Try shoes with the socks you normally wear and assess comfort while walking, rather than relying on the size label alone.'] },
     { heading: 'Match your walking routine', paragraphs: ['Consider the surfaces and distances you walk most often. Compare cushioning, outsole construction and care requirements with that routine.'] },
@@ -47,5 +47,5 @@ export const previewGuide: Guide = {
     ...originalGuide.faqs,
     { question: 'How should I check the fit before keeping a pair?', answer: 'Follow the brand’s guidance, try the shoes with your usual socks and check toe room, heel security and comfort. Confirm the retailer’s current return terms.' },
   ],
-  finalVerdict: 'Start with a comfortable fit and a shoe suited to the surfaces and distances you walk. Use the comparison and detailed profiles to narrow the options, then confirm current model details, sizing and retailer terms before buying.',
+  finalVerdict: originalGuide.finalVerdict,
 }

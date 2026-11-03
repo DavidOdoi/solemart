@@ -8,11 +8,17 @@ products and four FAQs per guide. Write both “Who This Guide Is For” and
 the short product summaries with practical buying considerations; keep the
 complete article close to the revised 1,850-word target. Do not invent a fourth
 pick if only three can be verified: pause that guide and report the gap.
-Allow around 150 words for the introduction and 100 for the quick answer, with
-the focus phrase naturally in the opening paragraph. Answer the buyer's question
-immediately in the quick answer, then give practical selection checks. Trim
+Allow around 90 words for the introduction, 80 for the quick answer and 150 for
+the final verdict, with the focus phrase naturally in the opening paragraph.
+Answer the actual search question immediately: identify the verified pick and
+who it suits, then give useful alternatives. Use a question heading and short
+paragraphs. The verdict should help readers choose between use cases. Trim
 repetition in supporting sections; keep the audience and mistakes sections at
 three paragraphs each, around 90 words per section.
+Add relevant internal article links and authoritative external citations in
+context. Before publishing each guide, link to it from a public category or hub
+and a relevant existing article, then crawl from the homepage to check that the
+new page is reachable. Brief/template previews remain private and noindex.
 
 Use the current template in this order: H1; introduction; quick-answer H2; top
 picks; comparison; selection method; full reviews with product H3s; buying advice;

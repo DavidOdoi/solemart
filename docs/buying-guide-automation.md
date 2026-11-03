@@ -213,14 +213,14 @@ live offers. FAQ questions are included. Inline links do not add hidden words.
 
 | Section | Words |
 | --- | ---: |
-| Introduction | 150 |
-| Quick answer | 100 |
+| Introduction | 90 |
+| Quick answer | 80 |
 | Selection method | 90 |
 | Four products, 250 each | 1,000 |
 | Buying advice | 160 |
 | Who it suits, three paragraphs | 90 |
 | Mistakes to avoid, three paragraphs | 90 |
-| Final verdict | 70 |
+| Final verdict | 150 |
 | Four FAQs including questions | 100 |
 | **Total** | **1,850** |
 
@@ -233,11 +233,23 @@ content remains supported. Affiliate URLs stay in their structured fields.
 
 For Rank Math's on-page checks, place the focus phrase naturally in the opening
 paragraph and write a descriptive quick-answer heading. Open the answer with a
-practical recommendation, then explain fit, intended use and the checks needed
-before buying. Keep the introduction in three short paragraphs. Trim repeated
+direct answer to the search question, then explain the relevant use cases or
+exceptions. For a researched shortlist, name the verified pick and the specific
+buyer it suits; never invent a winner for a design fixture. Use a short lead and
+two brief supporting paragraphs instead of a returns-policy checklist. Keep the
+introduction in two short paragraphs. Expand the final verdict with a recommended
+starting point, meaningful alternatives and a clear decision rule. Trim repeated
 advice in later sections to retain the total budget; do not add keyword repetition
 just to reach a density target. These are writing guidelines, not a measured
 Rank Math score or a guarantee of rankings.
+
+Every published guide needs contextual links to relevant existing SoleMart
+articles and an authoritative source supporting the specific advice. Use
+descriptive anchor text. Source citations remain ordinary editorial links;
+retailer links retain sponsored/nofollow attributes. Before publishing a new
+guide, add an incoming link from a relevant public category or guide hub and
+another relevant article when useful. An XML sitemap entry alone does not remove
+an orphan page. Keep private brief/template previews unlinked from public pages.
 
 ## Images, offers and caching
 
