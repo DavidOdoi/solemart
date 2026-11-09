@@ -1,0 +1,77 @@
+Research the first five SoleMart buying guides below. Return evidence and product
+matrices, not finished articles or a new page design. We will write original copy
+and populate an existing four-product buying-guide template.
+
+1. Best Cowhide Boots — /best-shoes/best-cowhide-boots
+2. Best Exotic Leather Boots — /best-shoes/best-exotic-leather-boots
+3. Best Cowboy Boots — /best-shoes/best-cowboy-boots
+4. Best Work Boots for Men — /best-shoes/best-work-boots-for-men
+5. Best Steel Toe Work Boots — /best-shoes/best-steel-toe-work-boots
+
+FIRST: CHECK FOR EXISTING SOLEMART CONTENT
+Inspect https://thesolemart.com/sitemap.xml and relevant public pages. Where
+accessible, inspect published content from https://cms.thesolemart.com using its
+public sitemap or REST listing; paginate published listings beyond 100 records.
+Do not request credentials or private/draft content.
+
+For each target, report any exact or same-intent existing guide, its title, final
+URL/canonical and evidence that it exists. Also distinguish related category,
+comparison and advice pages. Our local code has no exact match for these five,
+but the live site and CMS have not been verified. /work-boots is an existing
+broader category. A failed fetch or absent search result means UNKNOWN, not proof
+that a page is absent. If a matching guide exists, recommend updating its existing
+URL instead of creating a duplicate. Do not include spreadsheet status suffixes
+such as -TRUE in the actual keywords.
+
+SECOND: FOUR SUPPORTED PRODUCT CANDIDATES PER GUIDE
+Provide four actual, currently documented models for each topic. State the
+country/market checked. If fewer than four can be supported, report the gap.
+For EACH candidate provide:
+- Exact brand, model, style/SKU and relevant version, size system and variant.
+- Manufacturer product/specification URL and a short supporting excerpt for each
+  important fact. Record actual access dates. Distinguish retrieved evidence from
+  assumptions or search snippets.
+- Documented upper/vamp/shaft materials and leather source/finish, lining, outsole,
+  construction, closure, heel/shaft measurements if actually published, widths,
+  sizing guidance, care and intended use. Mark missing information NOT VERIFIED.
+- Documented cushioning/footbed details where available; never infer them.
+- A defensible reader/use-case category, why the features suit it, limitations and
+  who should consider a different option. Separate manufacturer facts from your
+  editorial inference. Do not invent testing or customer experience.
+- For work models: exact toe type, standard/edition and actual documented markings,
+  plus separately documented protective features. A safety toe does not prove
+  electrical, puncture or slip protection. Never call a composite cap steel.
+- A genuine matching Amazon product URL and ASIN ONLY if you can verify the exact
+  model/variant. Otherwise mark AMAZON MATCH PENDING. Tracking IDs and API access
+  are not available yet; do not fabricate tags, prices, offers or availability.
+
+TOPIC CHECKS
+Cowhide: confirm cattle leather explicitly and identify the boot parts using it;
+leather alone is insufficient. Cowhide and full-grain describe different things.
+Exotic leather: document the actual hide and distinguish real hide from an
+embossed pattern; include manufacturer care and any relevant product restrictions.
+Cowboy: verify intended use; do not assume all Western footwear is riding footwear
+or workplace PPE. Work: compare task-specific models, not universal protection.
+Steel toe: document steel specifically and confirm any safety-standard claim.
+Keep the five guides distinct; explain overlap if a product legitimately recurs.
+
+THIRD: REAL, EXACT IMAGES
+For each proposed product give a matching photo source page and direct asset URL
+if available, exact pictured model/version/colour, owner/credit, dimensions and a
+licence or explicit reuse-permission reference. Mark PERMISSION UNCONFIRMED when
+no evidence exists. A manufacturer listing alone does not grant image rights.
+Also suggest a rights-cleared hero/detail photo when available. No generated
+images, generic substitutes, watermarks removed from photos or assumed rights to
+Amazon listing images. Report image gaps rather than hiding them.
+
+FOURTH: SUPPORTING EVIDENCE
+Suggest four useful FAQs per guide with source-backed answers and authoritative
+sources for material, care, fit and workplace advice. For safety claims prefer
+official documentation and applicable workplace rules over retailer summaries.
+Suggest existing relevant SoleMart links only when their URLs are verified;
+label other linking ideas PLANNED. Suggest a suitable existing incoming-link page
+for each new guide so it will not be an orphan page.
+
+Return five clearly separated reports with duplicate findings, four candidate
+matrices, fact/source excerpts, image-rights status, conflicts and unresolved gaps.
+Do not invent facts or claim a source was opened when it was not retrievable.
