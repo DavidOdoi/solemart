@@ -31,14 +31,13 @@ export default async function ComparisonDraftPage({ params }: { params: Promise<
     <nav aria-label="Comparison draft navigation" className="mx-auto max-w-7xl px-5 pt-6 lg:px-8">
       <Link href="/template-preview/comparisons" className="inline-flex min-h-11 items-center text-sm font-bold underline underline-offset-4">← All five comparison drafts</Link>
     </nav>
-    <BlogPostPage post={comparisonBlogPost(draft.content)} preview />
+    <BlogPostPage post={comparisonBlogPost(draft.content, { imagePlaceholders: true })} preview />
     <aside aria-labelledby="draft-review-heading" className="mx-auto mb-12 max-w-6xl rounded-2xl border border-[#e5e4df] bg-[#faf9f6] p-5 sm:p-8">
       <h2 id="draft-review-heading" className="text-2xl font-bold">Editorial checks before publication</h2>
       <h3 className="mt-5 text-lg font-bold">Sources and existing content</h3>
       <ul className="mt-3 list-disc space-y-3 pl-5 text-base leading-7 text-[#4f4e49]">{draft.reviewNotes.map(note => <li key={note}>{note}</li>)}</ul>
-      <h3 className="mt-6 text-lg font-bold">Exact photographs needed</h3>
-      <ul className="mt-3 list-disc space-y-3 pl-5 text-base leading-7 text-[#4f4e49]">{draft.imageNeeds.map(need => <li key={need}>{need}</li>)}</ul>
-      <p className="mt-4 text-sm leading-6 text-[#68675f]">No image candidates from the research brief have confirmed reuse permission. No generated or substitute product photographs have been added.</p>
+      <h3 className="mt-6 text-lg font-bold">Replacing the placeholders</h3>
+      <p className="mt-3 text-base leading-7 text-[#4f4e49]">These previews use local drafts. After moving an article into WordPress, set its Featured Image and replace the image in the Quick Answer section. Published blog articles use those WordPress images.</p>
     </aside>
   </>
 }

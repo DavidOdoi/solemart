@@ -74,12 +74,32 @@ test('the blog article adapter preserves every draft section, answer and verdict
     assert.strictEqual(post.featuredImage, content.post.featuredImage)
     assert.equal(article.parts.filter(part => part.kind === 'quick-answer').length, 1)
     assert.equal(article.parts.find(part => part.kind === 'faqs').faqs.length, 4)
-    for (const text of [content.post.excerpt, content.fields.quickAnswer, content.fields.leftChooseIf, content.fields.rightChooseIf, content.post.contentHtml, content.fields.finalVerdict]) {
+    for (const text of [content.post.excerpt, content.fields.quickAnswer, content.fields.leftChooseIf, content.fields.rightChooseIf, ...content.post.contentHtml.split(/(?=<h2\b)/i), content.fields.finalVerdict]) {
       assert.ok(editorialPlainText(post.contentHtml).includes(editorialPlainText(text)))
     }
     assert.equal(article.headings.at(-1).label, 'Final verdict')
     assert.equal(article.headings.length, new Set(article.headings.map(heading => heading.id)).size)
+    const sections = article.headings.filter(heading => heading.level === 2)
+    assert.match(sections[0].label, /at a glance$/)
+    assert.equal(sections.at(-2).label, 'Frequently asked questions')
   }
+})
+
+test('all comparison previews can use one shared featured and inline placeholder without changing stored images', () => {
+  for (const { content } of comparisonDrafts) {
+    const post = comparisonBlogPost(content, { imagePlaceholders: true })
+    assert.equal(post.featuredImage.src, '/placeholder.svg')
+    assert.equal(post.featuredImage.alt, 'Featured image placeholder')
+    const article = getEditorialArticle(post.contentHtml, { quickAnswer: true })
+    const answer = article.parts.find(part => part.kind === 'quick-answer')
+    assert.match(answer.html, /<img src="\/placeholder\.svg" alt="Comparison image placeholder"/)
+    assert.equal((post.contentHtml.match(/<img\b/g) || []).length, 1)
+    assert.equal(content.post.featuredImage, undefined)
+    assert.doesNotMatch(content.post.contentHtml, /<img\b/)
+  }
+  const realImage = { src: 'https://cms.thesolemart.com/wp-content/uploads/real-photo.jpg', alt: 'An editor-selected photo', width: 1200, height: 675 }
+  const withPhoto = { ...comparisonDrafts[0].content, post: { ...comparisonDrafts[0].content.post, featuredImage: realImage } }
+  assert.strictEqual(comparisonBlogPost(withPhoto, { imagePlaceholders: true }).featuredImage, realImage)
 })
 
 test('the blog adapter escapes option labels, rejects unsafe guide links and retains plain paragraph bodies', () => {

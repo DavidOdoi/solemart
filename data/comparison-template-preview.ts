@@ -11,6 +11,7 @@ export const comparisonPreview: ComparisonTemplateContent = {
 <h2>What is the difference?</h2>
 <p><strong>“Sneakers” is a broad name for casual and athletic shoes. Walking shoes are designed and marketed for walking, and many are also sneakers.</strong> The useful comparison is between a casual, style-focused sneaker and a shoe selected for regular walking—not two completely separate kinds of footwear.</p>
 <p>A familiar brand name or a “walking” label does not tell you whether a particular pair fits your feet. Compare the actual model, your usual distances and the surfaces you walk on.</p>
+<h2>Sneakers vs walking shoes at a glance</h2>
 <div class="wp-block-table"><table><caption>Sneakers and walking shoes: a practical buying comparison</caption><thead><tr><th scope="col">What matters</th><th scope="col">Casual sneakers</th><th scope="col">Walking-focused shoes</th></tr></thead><tbody>
 <tr><th scope="row">Main priority</th><td>Everyday outfits, casual wear and shorter outings.</td><td>Comfort and a secure fit during regular or longer walks.</td></tr>
 <tr><th scope="row">Fit and toe room</th><td>Fashion cuts vary; check that the toe shape suits your foot.</td><td>Look for enough toe room, a secure heel and suitable width options.</td></tr>

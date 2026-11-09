@@ -19,12 +19,37 @@ guidance appears as ordinary headings and paragraphs rather than separate cards.
 Draft rendering suppresses Article schema; normal public blog rendering keeps
 its existing schema and behavior.
 
-The reference URL was blocked by the environment proxy before reaching the
-website (CONNECT 403). Reusing its route's renderer verifies layout consistency
-from the source code, not the live Derby article's exact wording or heading
-sequence. Its live section order still needs comparison with the actual article;
-it has not been guessed or claimed as verified. Existing public comparison
-records and the old design component are retained.
+The user has now supplied screenshots of the reference article. Follow their
+visible sequence: title/byline, featured image, contents, introduction, Quick
+Answer with an inline image, at-a-glance table, detailed differences and use
+cases, buying decision/checklist, FAQs, final verdict. The adapter moves existing
+sections into that flow without removing paragraphs or citations. Source lists
+sit before FAQs so the verdict follows the FAQ section directly. The separate
+live source-access limitation does not prevent following the supplied screenshots.
+
+## Image placeholders and WordPress editing
+
+The user requested placeholders in all comparison previews and will add final
+photos through WordPress. Both the five drafts and the original design preview
+pass `imagePlaceholders: true` to the adapter. They reuse `/placeholder.svg` for
+the featured image and the image inside the Quick Answer. Both display in a
+responsive 16:9 frame. No generated photo or substitute product image is used.
+A featured image already present on the source record takes precedence.
+
+This option is specific to the local previews. Public `/blog/[slug]` articles
+continue to use the WordPress Featured Image and images in the native article
+body; the adapter does not replace CMS photos with placeholders. When moving a
+draft into WordPress, set its Featured Image and add/replace the ordinary Image
+block immediately below the Quick Answer heading. Update alt text for the actual
+photo. No new ACF image field is required.
+
+The current preview drafts are still repository records, not WordPress records.
+Editing a WordPress post does not edit a local preview. This change performs no
+CMS import or write, and does not create public duplicate article URLs.
+
+Validation: all 141 automated tests pass, including content retention after
+reordering, reference section order, opt-in placeholders and preservation of an
+editor-selected featured image. Browser/build checks cover the rendered previews.
 
 ## Earlier separate design
 

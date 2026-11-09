@@ -15,6 +15,6 @@ export default function ComparisonTemplatePreview() {
     <aside aria-label="Template preview" className="border-b border-[#e5e4df] bg-[#f3f2ee] px-5 py-4 text-sm leading-6 text-[#4f4e49]">
       <p className="mx-auto max-w-7xl"><strong className="text-[#161616]">Comparison template preview</strong> — Sample article for design review. This is not a published comparison or a report of product testing.</p>
     </aside>
-    <BlogPostPage post={comparisonBlogPost(comparisonPreview)} preview />
+    <BlogPostPage post={comparisonBlogPost(comparisonPreview, { imagePlaceholders: true })} preview />
   </>
 }

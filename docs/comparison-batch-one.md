@@ -9,13 +9,13 @@ separate from the old single sample at `/template-preview/comparison`.
 
 The requested reference is the existing Derby vs Oxford article at
 `https://www.thesolemart.com/blog/shoes-derby-vs-oxford-which-should-you-buy`.
-Its route uses the same blog renderer. A fresh live request was blocked by the
-environment proxy, so the reference article's exact section sequence and wording
-have not been independently read or claimed to match. Matching those requires
-the actual article text/headings. The supplied title, **Shoes Derby vs Oxford:
-Which Should You Buy?**, is confirmed by the user; all five draft headlines now
-follow that buying-question pattern without changing their slugs. See
-`comparison-template.md` for the adapter.
+Its route uses the same blog renderer. The user supplied screenshots showing the
+actual layout and section order, plus the title **Shoes Derby vs Oxford: Which
+Should You Buy?** All five draft headlines follow that buying-question pattern
+without changing their slugs. The adapter now places the at-a-glance table after
+the Quick Answer, details/use cases before the buying decision/checklist, and
+the final verdict directly after FAQs. Citations are retained. See
+`comparison-template.md` for the adapter and WordPress image replacement.
 
 ## Current state
 
@@ -24,10 +24,11 @@ research has not passed independent live source checks. Fresh requests to OSHA,
 NIOSH and SoleMart were denied by the environment proxy (CONNECT 403). This does
 not establish a failure of the destination websites.
 
-All image leads in the supplied brief have unconfirmed reuse permission. No
-photographs were downloaded, no generated images or unrelated stock photos were
-added, and no product model was invented to fill an image slot. Each preview lists
-two specific photographic requirements outside the reader-facing article.
+At the user's request, each preview now uses the existing `/placeholder.svg` in
+two positions: the featured image and an inline image inside the Quick Answer.
+Final photographs will be added in WordPress. No photographs were downloaded,
+no generated images or unrelated stock photos were added, and no product model
+was invented to fill an image slot.
 
 The preview layout supplies noindex, nofollow and noarchive metadata. Preview
 URLs are absent from the public sitemap and navigation, and the existing public
@@ -71,9 +72,10 @@ instruction to copy its wording or claim its sources were independently checked.
 2. Reopen the primary sources, confirm what each citation supports and amend the
    draft where needed. Record actual source-check dates; do not reuse the
    research provider's date as an independent verification date.
-3. Obtain exact-model photographs and documented usage rights. Record each source
-   page, model/version/variant, image URL or asset file, owner, dimensions and
-   permission/credit terms. All ten required image slots currently remain pending.
+3. After moving each draft into WordPress, replace its Featured Image and the
+   ordinary Image block below the Quick Answer heading. Use alt text and any
+   caption that describe the actual photograph. Local previews retain their
+   temporary images; this change does not import drafts into WordPress.
 4. Review the text, images and metadata together, then use the existing public
    comparison path and sitemap only for approved, complete articles.
 5. Add an incoming link from a relevant public hub/article and useful links among
@@ -86,15 +88,17 @@ request. It asks for missing evidence and approved images, not rewritten article
 
 ## Existing article layout validation
 
-All 140 automated tests, standalone TypeScript checking and the production build
+All 141 automated tests, standalone TypeScript checking and the production build
 pass. Adapter tests confirm that the introduction, quick answer, option guidance,
 body, FAQs, citations and verdict survive the conversion without changing the
 stored source records. Browser checks cover all five drafts and the original
 single preview at 360, 390, 768 and 1440 px, matching blog typography, one contents
-list, working FAQ toggles, keyboard-scrollable tables, unique anchors and content
-without JavaScript. Previews retain their noindex metadata and omit Article
+list, loaded placeholders, reference section order, working FAQ toggles,
+keyboard-scrollable tables, unique anchors and content without JavaScript.
+Previews retain their noindex metadata and omit Article
 schema; ordinary public blog pages retain their schema. These are local checks,
-not confirmation that the live reference article's section order was inspected.
+not confirmation of live source facts or Vercel deployment status. The supplied
+screenshots establish the reference's visible article layout.
 
 ## Original draft validation
 
