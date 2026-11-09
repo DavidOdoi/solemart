@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import { ComparisonTemplate } from '@/components/comparison-template'
+import { BlogPostPage } from '@/components/page-templates'
 import { comparisonPreview } from '@/data/comparison-template-preview'
+import { comparisonBlogPost } from '@/lib/comparison-article'
 
 export const metadata: Metadata = {
   title: 'Sneakers vs Walking Shoes — comparison template preview',
@@ -14,6 +15,6 @@ export default function ComparisonTemplatePreview() {
     <aside aria-label="Template preview" className="border-b border-[#e5e4df] bg-[#f3f2ee] px-5 py-4 text-sm leading-6 text-[#4f4e49]">
       <p className="mx-auto max-w-7xl"><strong className="text-[#161616]">Comparison template preview</strong> — Sample article for design review. This is not a published comparison or a report of product testing.</p>
     </aside>
-    <ComparisonTemplate content={comparisonPreview} preview />
+    <BlogPostPage post={comparisonBlogPost(comparisonPreview)} preview />
   </>
 }

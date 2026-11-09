@@ -3,6 +3,34 @@
 Preview: `https://thesolemart.com/template-preview/comparison`.
 Example: **Sneakers vs Walking Shoes: Which Should You Buy?**
 
+## Existing article layout is the reference
+
+The user selected
+`https://www.thesolemart.com/blog/shoes-derby-vs-oxford-which-should-you-buy`
+as the reference for comparisons. The design preview and five draft previews now
+reuse `BlogPostPage`, the same renderer used by `/blog/[slug]`, instead of the
+separate `ComparisonTemplate` design. This shares the existing headline, byline,
+reading width, contents list, quick-answer treatment, tables and FAQ rendering.
+
+`comparisonBlogPost` in `lib/comparison-article.ts` combines the stored excerpt,
+quick answer, option guidance, detailed body and verdict into one article body.
+Existing wording, metadata, image fields and citations are retained. Option
+guidance appears as ordinary headings and paragraphs rather than separate cards.
+Draft rendering suppresses Article schema; normal public blog rendering keeps
+its existing schema and behavior.
+
+The reference URL was blocked by the environment proxy before reaching the
+website (CONNECT 403). Reusing its route's renderer verifies layout consistency
+from the source code, not the live Derby article's exact wording or heading
+sequence. Its live section order still needs comparison with the actual article;
+it has not been guessed or claimed as verified. Existing public comparison
+records and the old design component are retained.
+
+## Earlier separate design
+
+The following describes the earlier separate design, whose component remains in
+the repository. Current preview routes use the existing blog layout above.
+
 This is a complete frontend design preview, not a newly published article or a
 new WordPress integration. Existing buying guides, comparison routes, their
 stored content and their publishing behavior remain unchanged. The preview is
@@ -89,9 +117,10 @@ Recognized retailer links keep sponsored/nofollow protection. Guide CTA paths
 are restricted to same-site relative paths. No new client-side runtime or CMS
 credentials are introduced.
 
-Preview copy lives in `data/comparison-template-preview.ts`; change the shared
-`components/comparison-template.tsx` to refine the layout. Existing routes do
-not fall back to this preview's sample content.
+Preview copy lives in `data/comparison-template-preview.ts`. Current previews
+use the shared `components/page-templates.tsx` article renderer; avoid changing
+the site's article design just to format a comparison. Existing public routes
+do not fall back to this preview's sample content.
 
 Validation: production build and TypeScript passed; all 61 automated tests passed.
 Browser checks at 360, 390, 768, 1024, 1440 and 1920 px verified readable table

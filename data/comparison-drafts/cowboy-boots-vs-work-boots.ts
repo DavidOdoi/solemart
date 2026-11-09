@@ -2,7 +2,7 @@ import type { ComparisonTemplateContent } from '../comparison-template'
 
 export const cowboyBootsComparison: ComparisonTemplateContent = {
   post: {
-    title: 'Cowboy Boots vs Work Boots: Which Suits Your Job?',
+    title: 'Cowboy Boots vs Work Boots: Which Should You Buy?',
     slug: 'cowboy-boots-vs-work-boots', category: 'WORK AND WESTERN BOOTS',
     date: '', author: 'SOLEMART', authorType: 'Organization', modifiedAt: '2026-11-09',
     seoTitle: 'Cowboy Boots vs Work Boots: What to Choose',

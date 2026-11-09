@@ -2,9 +2,20 @@
 
 The five complete article drafts are available at
 `/template-preview/comparisons`, with a child URL for each slug below. They use
-`ComparisonTemplate`, including its accessible tables, contents links, choice
-cards, shared FAQ accordion and final verdict. They are separate from the old
-single sample at `/template-preview/comparison`.
+the existing `BlogPostPage` renderer used by `/blog/[slug]`, including its
+headline, byline, contents list, quick answer, accessible tables, shared FAQ
+accordion and final verdict. Option guidance is ordinary article text. They are
+separate from the old single sample at `/template-preview/comparison`.
+
+The requested reference is the existing Derby vs Oxford article at
+`https://www.thesolemart.com/blog/shoes-derby-vs-oxford-which-should-you-buy`.
+Its route uses the same blog renderer. A fresh live request was blocked by the
+environment proxy, so the reference article's exact section sequence and wording
+have not been independently read or claimed to match. Matching those requires
+the actual article text/headings. The supplied title, **Shoes Derby vs Oxford:
+Which Should You Buy?**, is confirmed by the user; all five draft headlines now
+follow that buying-question pattern without changing their slugs. See
+`comparison-template.md` for the adapter.
 
 ## Current state
 
@@ -25,9 +36,10 @@ for these draft previews. Unknown preview slugs produce a real 404. The private
 index links to all five articles, and each article links back to the index.
 These controls exclude previews from normal discovery; they are not authentication.
 
-WordPress remains paused. No CMS writes, record replacements or changes to the
-frontend content-source selection were made. The old public comparison routes
-and design preview retain their current content.
+These comparison drafts remain local even with hybrid WordPress blog reads
+enabled. No CMS writes, record replacements or changes to the frontend
+content-source selection were made for this layout update. The old public
+comparison routes and design preview retain their current article content.
 
 ## Drafts and remaining review
 
@@ -72,7 +84,19 @@ instruction to copy its wording or claim its sources were independently checked.
 Use `comparison-batch-one-research-request.txt` for a targeted follow-up research
 request. It asks for missing evidence and approved images, not rewritten articles.
 
-## Validation
+## Existing article layout validation
+
+All 140 automated tests, standalone TypeScript checking and the production build
+pass. Adapter tests confirm that the introduction, quick answer, option guidance,
+body, FAQs, citations and verdict survive the conversion without changing the
+stored source records. Browser checks cover all five drafts and the original
+single preview at 360, 390, 768 and 1440 px, matching blog typography, one contents
+list, working FAQ toggles, keyboard-scrollable tables, unique anchors and content
+without JavaScript. Previews retain their noindex metadata and omit Article
+schema; ordinary public blog pages retain their schema. These are local checks,
+not confirmation that the live reference article's section order was inspected.
+
+## Original draft validation
 
 All 127 automated tests, TypeScript and the production build pass. Browser checks
 cover all five drafts at 360, 390, 768 and 1440 px, FAQ toggles, keyboard-accessible

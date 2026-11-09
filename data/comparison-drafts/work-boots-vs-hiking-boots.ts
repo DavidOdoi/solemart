@@ -2,7 +2,7 @@ import type { ComparisonTemplateContent } from '../comparison-template'
 
 export const hikingBootsComparison: ComparisonTemplateContent = {
   post: {
-    title: 'Work Boots vs Hiking Boots: Can One Pair Do Both?',
+    title: 'Work Boots vs Hiking Boots: Which Should You Buy?',
     slug: 'work-boots-vs-hiking-boots', category: 'WORK AND OUTDOOR FOOTWEAR',
     date: '', author: 'SOLEMART', authorType: 'Organization', modifiedAt: '2026-11-09',
     seoTitle: 'Work Boots vs Hiking Boots: Can One Pair Do Both?',

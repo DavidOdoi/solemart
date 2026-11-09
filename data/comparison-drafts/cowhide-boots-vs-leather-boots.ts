@@ -2,7 +2,7 @@ import type { ComparisonTemplateContent } from '../comparison-template'
 
 export const cowhideBootsComparison: ComparisonTemplateContent = {
   post: {
-    title: 'Cowhide Boots vs Leather Boots: What Is the Difference?',
+    title: 'Cowhide Boots vs Leather Boots: Which Should You Buy?',
     slug: 'cowhide-boots-vs-leather-boots',
     category: 'BOOT MATERIALS',
     date: '',

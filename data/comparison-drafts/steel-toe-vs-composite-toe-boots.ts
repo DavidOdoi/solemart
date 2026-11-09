@@ -2,7 +2,7 @@ import type { ComparisonTemplateContent } from '../comparison-template'
 
 export const safetyToeComparison: ComparisonTemplateContent = {
   post: {
-    title: 'Steel Toe vs Composite Toe Boots: How to Choose',
+    title: 'Steel Toe vs Composite Toe Boots: Which Should You Buy?',
     slug: 'steel-toe-vs-composite-toe-boots', category: 'SAFETY FOOTWEAR',
     date: '', author: 'SOLEMART', authorType: 'Organization', modifiedAt: '2026-11-09',
     seoTitle: 'Steel Toe vs Composite Toe Boots: A Practical Guide',

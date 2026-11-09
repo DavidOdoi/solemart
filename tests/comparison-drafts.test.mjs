@@ -6,7 +6,9 @@ import { comparisons } from '../data/comparisons.ts'
 import { blogPosts } from '../data/blog.ts'
 import { guides } from '../data/guides.ts'
 import { categories } from '../data/categories.ts'
-import { comparisonArticle } from '../lib/comparison-article.ts'
+import { comparisonArticle, comparisonBlogPost } from '../lib/comparison-article.ts'
+import { getEditorialArticle } from '../lib/editorial-article.ts'
+import { editorialPlainText } from '../lib/cms-rich-text.ts'
 import sitemap from '../app/sitemap.ts'
 
 function anchors(html) {
@@ -58,6 +60,44 @@ test('draft citations retain editorial semantics and internal links resolve to e
     for (const href of [content.fields.leftGuideUrl, content.fields.rightGuideUrl].filter(Boolean)) assert.ok(publicPaths.has(href))
     assert.doesNotMatch(html, /xxbrits|30%|we (?:tested|wore)|guaranteed.*(?:protection|injury)/i)
   }
+})
+
+test('the blog article adapter preserves every draft section, answer and verdict without changing source records', () => {
+  for (const { content } of comparisonDrafts) {
+    const snapshot = JSON.stringify(content)
+    const post = comparisonBlogPost(content)
+    const article = getEditorialArticle(post.contentHtml, { quickAnswer: true })
+    assert.equal(JSON.stringify(content), snapshot)
+    assert.equal(post.slug, content.post.slug)
+    assert.equal(post.seoTitle, content.post.seoTitle)
+    assert.equal(post.publishedAt, undefined)
+    assert.strictEqual(post.featuredImage, content.post.featuredImage)
+    assert.equal(article.parts.filter(part => part.kind === 'quick-answer').length, 1)
+    assert.equal(article.parts.find(part => part.kind === 'faqs').faqs.length, 4)
+    for (const text of [content.post.excerpt, content.fields.quickAnswer, content.fields.leftChooseIf, content.fields.rightChooseIf, content.post.contentHtml, content.fields.finalVerdict]) {
+      assert.ok(editorialPlainText(post.contentHtml).includes(editorialPlainText(text)))
+    }
+    assert.equal(article.headings.at(-1).label, 'Final verdict')
+    assert.equal(article.headings.length, new Set(article.headings.map(heading => heading.id)).size)
+  }
+})
+
+test('the blog adapter escapes option labels, rejects unsafe guide links and retains plain paragraph bodies', () => {
+  const source = comparisonDrafts[0].content
+  const post = comparisonBlogPost({
+    post: { ...source.post, contentHtml: undefined, paragraphs: ['A retained paragraph.'] },
+    fields: {
+      ...source.fields,
+      leftName: 'Work <img src=x onerror=bad()> & boots',
+      leftGuideUrl: 'javascript:bad()', rightGuideUrl: '/work-boots?source=compare&part=two',
+      quickAnswer: '<p>Useful answer.</p><script>bad()</script>',
+    },
+  })
+  const article = getEditorialArticle(post.contentHtml, { quickAnswer: true })
+  assert.doesNotMatch(article.html, /<img\b|<script\b|href="javascript:/)
+  assert.match(article.html, /Work &lt;img src=x onerror=bad\(\)&gt; &amp; boots/)
+  assert.match(article.html, /A retained paragraph\./)
+  assert.match(article.html, /href="\/work-boots\?source=compare&amp;part=two"/)
 })
 
 test('pending comparisons never enter the public comparison inventory or sitemap', async () => {

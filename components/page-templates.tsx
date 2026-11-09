@@ -99,7 +99,7 @@ export function ComparisonPage({ comparison }: { comparison: Comparison }) {
   )
 }
 
-export function BlogPostPage({ post }: { post: BlogPost }) {
+export function BlogPostPage({ post, preview = false }: { post: BlogPost; preview?: boolean }) {
   const publishedAt = post.publishedAt || (post.date ? new Date(post.date).toISOString() : undefined)
   const url = `https://thesolemart.com/blog/${encodeURIComponent(post.slug)}`
   const contents = getEditorialArticle(post.contentHtml || '', { quickAnswer: true })
@@ -150,7 +150,7 @@ export function BlogPostPage({ post }: { post: BlogPost }) {
           </div>
         </div>
       </article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
+      {!preview && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />}
     </main>
   )
 }

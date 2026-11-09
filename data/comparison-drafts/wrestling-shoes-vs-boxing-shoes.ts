@@ -2,7 +2,7 @@ import type { ComparisonTemplateContent } from '../comparison-template'
 
 export const combatShoesComparison: ComparisonTemplateContent = {
   post: {
-    title: 'Wrestling Shoes vs Boxing Shoes: Can You Use Either?',
+    title: 'Wrestling Shoes vs Boxing Shoes: Which Should You Buy?',
     slug: 'wrestling-shoes-vs-boxing-shoes', category: 'SPORT-SPECIFIC FOOTWEAR',
     date: '', author: 'SOLEMART', authorType: 'Organization', modifiedAt: '2026-11-09',
     seoTitle: 'Wrestling Shoes vs Boxing Shoes: What to Choose',
