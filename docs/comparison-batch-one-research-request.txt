@@ -1,0 +1,50 @@
+Follow up on the five comparison briefs already supplied. Do not rewrite them.
+Provide evidence only for the remaining gaps, and mark unavailable evidence NOT
+VERIFIED rather than guessing.
+
+Topics:
+1. Cowhide Boots vs Leather Boots
+2. Cowboy Boots vs Work Boots
+3. Steel Toe vs Composite Toe Boots
+4. Work Boots vs Hiking Boots
+5. Wrestling Shoes vs Boxing Shoes
+
+A. Obtain two usable real-photo candidates per comparison. For each, provide:
+- The exact manufacturer, model/version, variant and colour shown.
+- A manufacturer specification supporting the material or intended-use label.
+- Source page, direct asset URL or downloadable asset, image dimensions and owner.
+- The permission/licence page or written reuse terms, including required credit.
+- If permission is not explicitly documented, mark PERMISSION UNCONFIRMED. A
+  product listing or a press photo without reuse terms is not sufficient.
+No generated images, unrelated stock substitutes or assumed Amazon image rights.
+For cowhide/leather, the photos must explain the overlap, not falsely imply that
+cowhide is non-leather. For safety toes, appearance alone does not prove cap type.
+
+B. Verify the safety-footwear claims from official sources:
+- Current applicable OSHA foot-protection provisions; distinguish employer
+  requirements and US rules from other jurisdictions.
+- What the cited ASTM F2413 reference actually establishes, including scope,
+  impact/compression and separately specified protections. Do not confuse
+  electrical-hazard protection with dielectric insulation or a non-metallic cap.
+- Primary manufacturer sources for complete-boot metal content, cap materials,
+  and any proposed weight/temperature claims. Give only model-specific numerical
+  measurements, with size and single-boot/pair measurement basis.
+For each claim, provide the exact supporting page, a short excerpt, document
+version/date where relevant, access date and any important qualification.
+
+C. Replace the weak sports source with primary documentation:
+- Official manufacturer pages for one named wrestling model and one named boxing
+  model, establishing intended sport, materials, closure and outsole information.
+- Current official USA Wrestling and USA Boxing footwear provisions, with exact
+  document version, rule number/page and short supporting excerpt.
+Do not generalise one organisation, discipline or event's rules to every sport
+or competition. If you cannot retrieve the rule text, mark it NOT VERIFIED.
+Do not make claims that collar height prevents injury or every shoe in a category
+has the same height, grip or construction.
+
+D. Check whether this URL already exists and record any final redirect/canonical:
+https://thesolemart.com/comparisons/cowhide-boots-vs-leather-boots/
+A failed fetch means UNKNOWN, not proof that the article is absent.
+
+Return separate evidence and image tables per topic. Do not invent an excerpt,
+licence, live price, product specification or successful page fetch.
