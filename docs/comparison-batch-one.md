@@ -49,6 +49,13 @@ Live import remains blocked by this session's unapplied network settings and
 missing CMS writing credentials; these local previews are not proof of a live
 WordPress import.
 
+The uploadable **SoleMart Comparison Draft Import** package now provides a second
+path using the user's normal WordPress admin session. Its download is linked on
+the comparison index. It creates only missing drafts after the user reviews the
+matches and submits a nonce-protected admin form. No Codex password setup is
+needed for this path. Installation/import on the live CMS remains a user action;
+the local package tests do not establish that it has happened.
+
 ## Drafts and remaining review
 
 | Slug | Review needed |

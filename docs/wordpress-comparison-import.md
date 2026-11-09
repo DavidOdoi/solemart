@@ -5,6 +5,45 @@ drafts**, preserving the existing `/blog/[slug]` article layout and native CMS
 editing. This is separate from the Buying Guide/Shoe ingestion system. It needs
 neither ACF nor the old ingestion plugin, and works in hybrid mode.
 
+## Use your existing WordPress login
+
+For this batch, the downloadable plugin avoids configuring Codex credentials.
+Download `/template-preview/wordpress-import/solemart-comparisons.zip` from the
+frontend, or use the download button on `/template-preview/comparisons`.
+
+1. In the CMS, open **Plugins → Add New → Upload Plugin**, upload the ZIP, and
+   activate **SoleMart Comparison Draft Import**.
+2. Open **Tools → SoleMart Comparison Import**. The page lists all five topics
+   and matching existing Posts before any write.
+3. Click **Create missing drafts**. The page returns actual editor links. Open
+   the articles, replace the images, edit and publish when ready.
+
+Activation only registers the admin page. Imports require an administrator's
+authenticated session, permissions and nonce. No anonymous import endpoint,
+application password or outbound request is used. The package includes the five
+Gutenberg bodies; no article content is downloaded from another server. Existing
+Posts are preserved, even under older canonical slugs; matches include slug,
+title, Rank Math focus keywords and markers from previous imports. Conflicts stop creation.
+The importer reads the complete native Post inventory without a 100-post limit.
+New Posts receive a source marker so changing their titles/slugs does not create
+duplicates on a later run. A short-lived import lock blocks concurrent button
+submissions. Confirmed IDs are recorded after each creation for partial recovery.
+All insertions explicitly request draft status; publication is manual.
+
+The plugin can be deactivated and deleted after use; imported Posts remain. The
+frontend's existing CMS reader handles publication without depending on this
+import plugin. It does not give the Codex agent ongoing authenticated CMS access.
+
+Rebuild the deterministic ZIP with `pnpm package:comparisons` after article or
+plugin changes. Source is in
+`wordpress/solemart-comparison-import/solemart-comparison-import.php`; the packager
+generates `articles.json` from the existing draft exporter at build time. PHP
+syntax and isolated WordPress API tests are in
+`tests/wordpress-comparison-plugin.php`. They cover access/nonce checks, no
+activation writes, draft creation, duplicates beyond 100 Posts, manual edits,
+concurrency, partial failures and actual editor-link output. These tests do not
+claim a successful import on the live CMS.
+
 ## Current connection boundary
 
 The importer, five complete payloads and frontend reader are implemented and
