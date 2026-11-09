@@ -465,10 +465,11 @@ function avatarUrl(value: unknown): string | undefined {
 /** Public core WordPress profiles only. Optional profile failures must not hide an article. */
 export const getWordPressAuthorProfile = cache(async (id: number): Promise<BlogPost['authorProfile'] | undefined> => {
   const endpoint = getWordPressBlogGraphqlUrl()
-  if (!endpoint || !Number.isSafeInteger(id) || id < 1) return undefined
+  if (!Number.isSafeInteger(id) || id < 1) return undefined
   try {
     const restBase = process.env.WORDPRESS_API_URL
-      || new URL('/wp-json/wp/v2/', endpoint).href
+      || (endpoint ? new URL('/wp-json/wp/v2/', endpoint).href : '')
+    if (!restBase) return undefined
     const base = new URL(restBase.endsWith('/') ? restBase : `${restBase}/`)
     if (!['https:', 'http:'].includes(base.protocol) || base.username || base.password) return undefined
     const url = new URL(`users/${id}`, base)

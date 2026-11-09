@@ -71,8 +71,8 @@ test('variant-specific evidence stays separate and missing assets or retailer ma
 })
 
 test('unapproved best guides never enter the public inventory or sitemap', async () => {
-  const original = process.env.SOLEMART_CONTENT_SOURCE
-  process.env.SOLEMART_CONTENT_SOURCE = 'local'
+  const original = process.env.WORDPRESS_GRAPHQL_URL
+  delete process.env.WORDPRESS_GRAPHQL_URL
   try {
     const entries = await sitemap()
     for (const draft of bestGuideDrafts) {
@@ -81,7 +81,7 @@ test('unapproved best guides never enter the public inventory or sitemap', async
     }
     assert.ok(entries.every(entry => !new URL(entry.url).pathname.startsWith('/template-preview/')))
   } finally {
-    if (original === undefined) delete process.env.SOLEMART_CONTENT_SOURCE
-    else process.env.SOLEMART_CONTENT_SOURCE = original
+    if (original === undefined) delete process.env.WORDPRESS_GRAPHQL_URL
+    else process.env.WORDPRESS_GRAPHQL_URL = original
   }
 })

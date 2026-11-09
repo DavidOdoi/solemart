@@ -19,13 +19,14 @@ documentation and the CMS are blocked by this workspace's current network policy
 Amazon and WordPress credentials have not been configured. Those are live rollout
 blockers, not test failures. Do not replace research with invented specifications.
 
-**Published blog reads now reconnect in hybrid mode.** Local guides and previews
-remain independent of the CMS. Full CMS guide reads and authenticated draft
-writes still require `SOLEMART_CONTENT_SOURCE=wordpress`; see
-[content source modes](frontend-only-mode.md).
+**The original WordPress connection is restored.** The existing GraphQL URL
+enables published Posts and ACF/legacy guides again. The temporary
+`SOLEMART_CONTENT_SOURCE` switch is ignored. The pre-existing draft writer uses
+its original REST credentials and editorial checks; see
+[connection details](frontend-only-mode.md).
 
-**Authenticated WordPress writing remains deferred.** The user authorized
-restoring published blog reads to repair older article URLs. Keep preparing local
+**Authenticated WordPress writing remains deferred.** This restoration re-enables
+the original published-content connection without running CMS writes. Keep preparing local
 guide payloads without requiring a WordPress login, installing a snippet or
 writing live CMS records. Product research still requires
 access to public manufacturer sources. The tracking ID can be added later.
@@ -130,7 +131,6 @@ credentials in `NEXT_PUBLIC_*`, payloads, commits, screenshots or chat.
 
 | Variable | Purpose |
 | --- | --- |
-| `SOLEMART_CONTENT_SOURCE` | Default `hybrid` for public blog reads; `local` for offline use; `wordpress` for CMS guides/writes |
 | `WORDPRESS_GRAPHQL_URL` | Existing public endpoint, `https://cms.thesolemart.com/graphql` |
 | `WORDPRESS_API_URL` | `https://cms.thesolemart.com/wp-json/wp/v2/` |
 | `WORDPRESS_USERNAME` | Dedicated draft writer |

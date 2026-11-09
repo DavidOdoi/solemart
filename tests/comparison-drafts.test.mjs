@@ -121,8 +121,8 @@ test('the blog adapter escapes option labels, rejects unsafe guide links and ret
 })
 
 test('pending comparisons never enter the public comparison inventory or sitemap', async () => {
-  const originalMode = process.env.SOLEMART_CONTENT_SOURCE
-  process.env.SOLEMART_CONTENT_SOURCE = 'local'
+  const originalUrl = process.env.WORDPRESS_GRAPHQL_URL
+  delete process.env.WORDPRESS_GRAPHQL_URL
   try {
     const entries = await sitemap()
     for (const { content } of comparisonDrafts) {
@@ -131,7 +131,7 @@ test('pending comparisons never enter the public comparison inventory or sitemap
     }
     assert.ok(entries.every(entry => !new URL(entry.url).pathname.startsWith('/template-preview/')))
   } finally {
-    if (originalMode === undefined) delete process.env.SOLEMART_CONTENT_SOURCE
-    else process.env.SOLEMART_CONTENT_SOURCE = originalMode
+    if (originalUrl === undefined) delete process.env.WORDPRESS_GRAPHQL_URL
+    else process.env.WORDPRESS_GRAPHQL_URL = originalUrl
   }
 })

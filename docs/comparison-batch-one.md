@@ -37,24 +37,16 @@ for these draft previews. Unknown preview slugs produce a real 404. The private
 index links to all five articles, and each article links back to the index.
 These controls exclude previews from normal discovery; they are not authentication.
 
-These comparison drafts remain local even with hybrid WordPress blog reads
+These comparison drafts remain local even with the restored WordPress readers
 enabled. No CMS writes, record replacements or changes to the frontend
 content-source selection were made for this layout update. The old public
 comparison routes and design preview retain their current article content.
 
-The [native Post importer](wordpress-comparison-import.md) now exports all five
-Gutenberg bodies and can create missing WordPress drafts using an authenticated,
-paginated duplicate check. Existing articles and editor changes are preserved.
-Live import remains blocked by this session's unapplied network settings and
-missing CMS writing credentials; these local previews are not proof of a live
-WordPress import.
-
-The uploadable **SoleMart Comparison Draft Import** package now provides a second
-path using the user's normal WordPress admin session. Its download is linked on
-the comparison index. It creates only missing drafts after the user reviews the
-matches and submits a nonce-protected admin form. No Codex password setup is
-needed for this path. Installation/import on the live CMS remains a user action;
-the local package tests do not establish that it has happened.
+The original WordPress connection from before the temporary bypass has been
+restored. Published WordPress Posts use the existing `/blog/[slug]` path and
+normal CMS editor. The new custom importer/plugin and native import CLI have
+been removed. Restoring the readers does not insert these repository drafts into
+WordPress or change existing CMS records.
 
 ## Drafts and remaining review
 

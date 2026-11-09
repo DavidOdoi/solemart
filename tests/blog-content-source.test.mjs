@@ -23,6 +23,7 @@ function post(overrides = {}) {
 
 beforeEach(() => {
   for (const key of keys) delete process.env[key]
+  process.env.WORDPRESS_GRAPHQL_URL = endpoint
   globalThis.fetch = async () => { throw new Error('Fixture CMS unavailable') }
 })
 afterEach(() => {
@@ -33,7 +34,7 @@ afterEach(() => {
   }
 })
 
-test('a published CMS-only slug resolves in default hybrid mode using public variable-based requests', async () => {
+test('the restored URL-based connection resolves a published CMS-only slug using public variable-based requests', async () => {
   assert.ok(!blogPosts.some(row => row.slug === slug))
   globalThis.fetch = async (url, options) => {
     assert.equal(String(url), endpoint)
@@ -74,8 +75,8 @@ test('draft and missing comparison Posts cannot expose the local preview article
   }
 })
 
-test('hybrid outages retain local published articles but never turn an unavailable CMS-only article into a false 404', async () => {
-  assert.strictEqual(await getPublicBlogPost(blogPosts[0].slug), blogPosts[0])
+test('the original CMS-first behavior preserves upstream errors instead of disguising them as missing content', async () => {
+  await assert.rejects(getPublicBlogPost(blogPosts[0].slug), /temporarily unavailable/)
   await assert.rejects(getPublicBlogPost(slug), /temporarily unavailable/)
 })
 
@@ -86,43 +87,47 @@ test('missing, draft and private CMS records remain unavailable without invented
   }
 })
 
-test('explicit local mode remains fully offline and full wordpress mode retains strict upstream errors', async () => {
+test('an absent URL retains local articles while the obsolete local switch cannot pause configured reads', async () => {
+  delete process.env.WORDPRESS_GRAPHQL_URL
   process.env.SOLEMART_CONTENT_SOURCE = 'local'
-  globalThis.fetch = async () => assert.fail('Explicit local mode must not fetch')
+  globalThis.fetch = async () => assert.fail('No GraphQL URL means no CMS read')
   assert.strictEqual(await getPublicBlogPost(blogPosts[0].slug), blogPosts[0])
   assert.equal(await getPublicBlogPost(slug), undefined)
-  process.env.SOLEMART_CONTENT_SOURCE = 'wordpress'
   process.env.WORDPRESS_GRAPHQL_URL = endpoint
   globalThis.fetch = async () => { throw new Error('Fixture connection refused') }
   await assert.rejects(getPublicBlogPost(blogPosts[0].slug), /temporarily unavailable/)
 })
 
-test('hybrid archive outages can show the local first page, but cannot turn older-page failures into missing pages', async () => {
-  assert.equal(await getPublicBlogArchive(), null)
+test('CMS archive failures remain errors rather than becoming local or missing pages', async () => {
+  await assert.rejects(getPublicBlogArchive(), /temporarily unavailable/)
   await assert.rejects(getPublicBlogArchive('YXJyYXljb25uZWN0aW9uOjEy'), /temporarily unavailable/)
   await assert.rejects(getPublicBlogArchive('invalid cursor'), /Invalid article cursor/)
 })
 
-test('hybrid sitemap paginates CMS posts beyond 100 while retaining local guides and excluding previews', async () => {
+test('the restored sitemap paginates CMS posts beyond 100 and includes published CMS guides', async () => {
   let calls = 0
   globalThis.fetch = async (url, options) => {
     assert.equal(String(url), endpoint)
     const { query, variables } = JSON.parse(options.body)
+    calls++
+    if (query.includes('Sitemap_buyingGuides')) return Response.json({ data: { buyingGuides: {
+      nodes: [{ slug: 'restored-cms-guide', status: 'publish', modifiedGmt: '2026-11-09T09:00:00' }],
+      pageInfo: { hasNextPage: false, endCursor: null },
+    } } })
     assert.match(query, /Sitemap_posts/)
-    assert.doesNotMatch(query, /buyingGuides/)
     const offset = variables.after ? Number(Buffer.from(variables.after, 'base64').toString()) : 0
     const size = Math.min(100, 205 - offset)
     const next = offset + size
-    calls++
     return Response.json({ data: { posts: {
       nodes: Array.from({ length: size }, (_, index) => ({ slug: `cms-fixture-${offset + index}`, status: 'publish', modifiedGmt: '2026-11-09T08:00:00' })),
       pageInfo: { hasNextPage: next < 205, endCursor: next < 205 ? Buffer.from(String(next)).toString('base64') : null },
     } } })
   }
   const entries = await sitemap()
-  assert.equal(calls, 3)
+  assert.equal(calls, 4)
   assert.equal(entries.filter(entry => entry.url.includes('/blog/cms-fixture-')).length, 205)
   assert.equal(entries.find(entry => entry.url.endsWith('/cms-fixture-204')).lastModified, '2026-11-09T08:00:00.000Z')
-  for (const guide of guides) assert.ok(entries.some(entry => entry.url.endsWith(`/best-shoes/${guide.slug}`)))
+  assert.equal(entries.find(entry => entry.url.endsWith('/best-shoes/restored-cms-guide')).lastModified, '2026-11-09T09:00:00.000Z')
+  for (const guide of guides) assert.ok(!entries.some(entry => entry.url.endsWith(`/best-shoes/${guide.slug}`)))
   assert.ok(entries.every(entry => !entry.url.includes('/template-preview/')))
 })

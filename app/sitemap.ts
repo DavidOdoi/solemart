@@ -36,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categories.map(({ slug }) => `/${encodeURIComponent(slug)}`),
     ...products.map(({ slug }) => `/reviews/${encodeURIComponent(slug)}`),
     ...comparisons.map(({ slug }) => `/comparisons/${encodeURIComponent(slug)}`),
-    // Hybrid mode restores CMS posts while keeping the existing local guides.
+    // As before the temporary bypass, configured CMS guides own these routes.
     ...(!getWordPressGraphqlUrl() ? guides.map(({ slug }) => `/best-shoes/${encodeURIComponent(slug)}`) : []),
   ]
   const entries: MetadataRoute.Sitemap = paths.map(path => ({ url: `${origin}${path === '/' ? '' : path}` }))

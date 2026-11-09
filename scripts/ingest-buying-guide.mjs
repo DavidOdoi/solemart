@@ -2,7 +2,6 @@ import { readFile, readdir, mkdir, writeFile, appendFile } from 'node:fs/promise
 import { resolve, extname, basename } from 'node:path'
 import { validateBuyingGuide } from '../lib/guide-ingestion.ts'
 import { getWordPressWriteConfig, saveWordPressBuyingGuideDraft } from '../lib/wordpress-drafts.ts'
-import { isWordPressEnabled } from '../lib/content-source.ts'
 
 const args = process.argv.slice(2)
 const value = name => { const index = args.indexOf(name); return index < 0 ? undefined : args[index + 1] }
@@ -18,10 +17,6 @@ if (!value('--file') && !value('--batch')) {
   process.exit(0)
 }
 const save = args.includes('--save') || args.includes('--save-incomplete-draft')
-if (save && !isWordPressEnabled()) {
-  console.error('WordPress is paused in local-content mode. Reconnect it explicitly before saving CMS drafts; no request was sent.')
-  process.exit(1)
-}
 if (save && !getWordPressWriteConfig()) {
   console.error('WordPress credentials are not configured. Set WORDPRESS_USERNAME and WORDPRESS_APPLICATION_PASSWORD securely; no request was sent.')
   process.exit(1)

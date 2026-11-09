@@ -9,26 +9,47 @@ import { blogPosts } from '../data/blog.ts'
 
 const originalFetch = globalThis.fetch
 const keys = ['SOLEMART_CONTENT_SOURCE', 'WORDPRESS_GRAPHQL_URL', 'WORDPRESS_API_URL', 'WORDPRESS_USERNAME', 'WORDPRESS_APPLICATION_PASSWORD']
-const environment = Object.fromEntries(keys.map(key => [key, process.env[key]]))
+const original = Object.fromEntries(keys.map(key => [key, process.env[key]]))
 beforeEach(() => {
-  process.env.SOLEMART_CONTENT_SOURCE = 'local'
-  process.env.WORDPRESS_GRAPHQL_URL = 'https://cms.thesolemart.com/graphql'
-  process.env.WORDPRESS_API_URL = 'https://cms.thesolemart.com/wp-json/wp/v2/'
-  process.env.WORDPRESS_USERNAME = 'fixture-writer'
-  process.env.WORDPRESS_APPLICATION_PASSWORD = 'not-a-real-password'
-  globalThis.fetch = async () => assert.fail('Local mode must not contact WordPress')
+  for (const key of keys) delete process.env[key]
+  globalThis.fetch = async () => assert.fail('Unconfigured development must not fetch')
 })
 afterEach(() => {
   globalThis.fetch = originalFetch
   for (const key of keys) {
-    if (environment[key] === undefined) delete process.env[key]
-    else process.env[key] = environment[key]
+    if (original[key] === undefined) delete process.env[key]
+    else process.env[key] = original[key]
   }
 })
 
-async function assertCmsIsPaused() {
+test('the original configured GraphQL URL enables posts and guides despite a stale temporary source switch', async () => {
+  process.env.WORDPRESS_GRAPHQL_URL = 'https://cms.thesolemart.com/graphql'
+  for (const value of [undefined, 'local', 'hybrid', 'wordpress', '', 'old-setting']) {
+    if (value === undefined) delete process.env.SOLEMART_CONTENT_SOURCE
+    else process.env.SOLEMART_CONTENT_SOURCE = value
+    assert.equal(getContentSource(), 'wordpress')
+    assert.equal(isWordPressEnabled(), true)
+    assert.equal(getWordPressGraphqlUrl(), process.env.WORDPRESS_GRAPHQL_URL)
+    assert.equal(getWordPressBlogGraphqlUrl(), process.env.WORDPRESS_GRAPHQL_URL)
+    let reads = 0
+    globalThis.fetch = async (url, options) => {
+      reads++
+      assert.equal(String(url), process.env.WORDPRESS_GRAPHQL_URL)
+      assert.equal(options.headers.Authorization, undefined, 'Public reads need no application password')
+      return Response.json({ data: { post: null, buyingGuide: null } })
+    }
+    assert.equal(await getWordPressPost('known-post'), null)
+    assert.equal(await getWordPressBuyingGuide('known-guide'), null)
+    assert.equal(await getWordPressAcfBuyingGuide('known-guide'), null)
+    assert.equal(await getWordPressGuideFields('known-guide'), null)
+    assert.equal(reads, 4)
+  }
+})
+
+test('without a GraphQL URL, ordinary local development remains offline as it did before the bypass', async () => {
+  process.env.SOLEMART_CONTENT_SOURCE = 'wordpress'
+  assert.equal(getContentSource(), 'local')
   assert.equal(isWordPressEnabled(), false)
-  assert.equal(getWordPressGraphqlUrl(), '')
   assert.equal(await getWordPressPost('known-post'), null)
   assert.equal(await getWordPressPosts(), null)
   assert.equal(await getWordPressBuyingGuide('known-guide'), null)
@@ -36,73 +57,35 @@ async function assertCmsIsPaused() {
   assert.equal(await getWordPressAcfBuyingGuide('known-guide'), undefined)
   assert.equal(await getWordPressSitemapArticles(), null)
   assert.equal(await getWordPressAuthorProfile(7), undefined)
-  assert.equal(getWordPressWriteConfig(), null)
-}
-
-test('explicit local mode keeps all CMS reads and writes paused despite configured credentials', async () => {
-  await assertCmsIsPaused()
 })
 
-test('the default hybrid mode restores public blog reads without activating CMS guides or draft writes', async () => {
-  delete process.env.SOLEMART_CONTENT_SOURCE
-  delete process.env.WORDPRESS_GRAPHQL_URL
-  assert.equal(getContentSource(), 'hybrid')
-  assert.equal(getWordPressBlogGraphqlUrl(), 'https://cms.thesolemart.com/graphql')
-  assert.equal(getWordPressGraphqlUrl(), '')
-  assert.equal(isWordPressEnabled(), false)
-  assert.equal(getWordPressWriteConfig(), null)
-  assert.equal(await getWordPressBuyingGuide('local-guide'), null)
-  assert.equal(await getWordPressAcfBuyingGuide('local-guide'), undefined)
-  let reads = 0
-  globalThis.fetch = async () => { reads++; return Response.json({ data: { post: null } }) }
-  assert.equal(await getWordPressPost('missing-post'), null)
-  assert.equal(reads, 1)
-})
-
-test('explicit local mode skips malformed CMS configuration without parsing or fetching it', async () => {
+test('the original optional REST writer follows its credentials rather than the temporary source switch', async () => {
   process.env.SOLEMART_CONTENT_SOURCE = 'local'
-  process.env.WORDPRESS_GRAPHQL_URL = 'not a URL'
-  process.env.WORDPRESS_API_URL = 'also invalid'
-  await assertCmsIsPaused()
+  assert.equal(getWordPressWriteConfig(), null)
+  process.env.WORDPRESS_USERNAME = 'fixture-writer'
+  process.env.WORDPRESS_APPLICATION_PASSWORD = 'not-a-real-password'
+  const config = getWordPressWriteConfig()
+  assert.equal(config.username, 'fixture-writer')
+  assert.equal(config.apiUrl, 'https://cms.thesolemart.com/wp-json/wp/v2/')
+  await assert.rejects(saveWordPressBuyingGuideDraft(null, { config, fetcher: async () => assert.fail('Invalid article validation must precede writes') }), /gate blocked|structurally incomplete/)
 })
 
-test('unrecognized source values cannot accidentally re-enable the CMS', async () => {
-  for (const source of ['', 'true', 'WordPress', 'cms']) {
-    process.env.SOLEMART_CONTENT_SOURCE = source
-    await assertCmsIsPaused()
-  }
-})
-
-test('local mode blocks even explicitly configured draft writes before validation or HTTP access', async () => {
-  await assert.rejects(saveWordPressBuyingGuideDraft(null, {
-    config: { apiUrl: 'https://cms.thesolemart.com/wp-json/wp/v2/', username: 'fixture', applicationPassword: 'not-real' },
-    fetcher: async () => assert.fail('A supplied writer config must not bypass local mode'),
-  }), /WordPress is paused/)
-})
-
-test('the local sitemap lists the available local articles and guides without CMS or draft-preview URLs', async () => {
+test('the local sitemap still includes existing local content when no CMS URL is configured', async () => {
   const entries = await sitemap()
   const urls = new Set(entries.map(entry => entry.url))
   for (const guide of guides) assert.ok(urls.has(`https://thesolemart.com/best-shoes/${guide.slug}`))
   for (const post of blogPosts) assert.ok(urls.has(`https://thesolemart.com/blog/${post.slug}`))
-  assert.ok(entries.every(entry => !entry.url.includes('/template-preview/')))
   assert.equal(urls.size, entries.length)
+  assert.ok(entries.every(entry => !entry.url.includes('/template-preview/')))
 })
 
-test('an explicit wordpress selection restores GraphQL and public REST profile reads', async () => {
-  process.env.SOLEMART_CONTENT_SOURCE = 'wordpress'
-  const calls = []
-  globalThis.fetch = async input => {
-    const url = new URL(input)
-    calls.push(url)
-    return url.pathname.includes('/users/')
-      ? Response.json({ id: 7, description: 'An actual fixture bio', avatar_urls: {} })
-      : Response.json({ data: { post: null } })
+test('the original public author profile URL remains independent of the temporary source switch', async () => {
+  process.env.SOLEMART_CONTENT_SOURCE = 'local'
+  process.env.WORDPRESS_API_URL = 'https://cms.thesolemart.com/wp-json/wp/v2/'
+  globalThis.fetch = async (url, options) => {
+    assert.equal(new URL(url).pathname, '/wp-json/wp/v2/users/7')
+    assert.equal(options.headers.Authorization, undefined)
+    return Response.json({ id: 7, description: 'An actual fixture biography', avatar_urls: {} })
   }
-  assert.equal(isWordPressEnabled(), true)
-  assert.equal(getWordPressGraphqlUrl(), process.env.WORDPRESS_GRAPHQL_URL)
-  assert.equal(await getWordPressPost('missing-post'), null)
-  assert.equal((await getWordPressAuthorProfile(7)).bio, 'An actual fixture bio')
-  assert.equal(calls.length, 2)
-  assert.ok(getWordPressWriteConfig())
+  assert.equal((await getWordPressAuthorProfile(7)).bio, 'An actual fixture biography')
 })

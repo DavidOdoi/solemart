@@ -47,9 +47,10 @@ photo. No new ACF image field is required.
 
 The current preview drafts are still repository records, not WordPress records.
 Editing a WordPress post does not edit a local preview. This change performs no
-CMS import or write, and does not create public duplicate article URLs. A separate
-[native Post importer](wordpress-comparison-import.md) now prepares the five
-Gutenberg bodies and can create drafts once CMS access and credentials are ready.
+CMS import or write, and does not create public duplicate article URLs. The
+original WordPress connection is restored; published Posts continue through the
+existing `/blog/[slug]` route. The newly proposed custom import workflows have
+been removed at the user's request.
 
 Validation: all 141 automated tests pass, including content retention after
 reordering, reference section order, opt-in placeholders and preservation of an
