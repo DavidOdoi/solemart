@@ -1,0 +1,366 @@
+{
+  "version": 1,
+  "source": "User-approved first five best keywords in DAVID'S LIST.xlsx",
+  "templateComponent": "components/review-guide-template.tsx",
+  "targetWords": 1850,
+  "stage": "SUPPORTING_COPY_WRITTEN_RESEARCH_PENDING",
+  "unresolved": [
+    "Live site/CMS duplicate check",
+    "Four source-supported product picks per guide",
+    "Quick answer naming verified picks",
+    "Evidence-based methodology and final verdict",
+    "Exact images and reuse permissions"
+  ],
+  "articles": [
+    {
+      "title": "Best Cowhide Boots",
+      "slug": "best-cowhide-boots",
+      "seoTitle": "Best Cowhide Boots: Materials, Fit and Buying Guide",
+      "metaDescription": "Find the best cowhide boots for your needs by comparing documented leather, construction, fit and care. Learn which details matter before choosing a pair.",
+      "intro": "The best cowhide boots should suit how you plan to wear them, with clear information about the leather used in each part of the boot. Cowhide is a leather source, so a cowhide label alone does not explain the finish, construction or fit.\n\nStart with your intended use, then compare the exact model’s material description, shape and care guidance. For work, check any required protective features separately. The useful choice is a well-described pair that fits your routine, rather than a material label treated as a guarantee of quality.",
+      "quickAnswerTitle": "What are the best cowhide boots for your needs?",
+      "buyingGuideSections": [
+        {
+          "heading": "Check which parts use cowhide",
+          "paragraphs": [
+            "Read the material description for the vamp, shaft, lining and other components where those details are supplied. A boot can use different materials in different places. Do not assume that a cowhide lining means the outside uses the same leather.",
+            "Keep the hide source separate from the finish. Cowhide, full-grain and suede do not answer the same question. Ask for clarification when a listing leaves the actual material or finish uncertain."
+          ]
+        },
+        {
+          "heading": "Match construction and fit to your routine",
+          "paragraphs": [
+            "Compare the sole, fastening and the manufacturer’s intended use alongside the shape and available widths. Use your usual socks for a permitted indoor try-on, and follow the specific brand’s fitting guidance. A material description cannot establish that a particular last will suit your foot."
+          ]
+        },
+        {
+          "heading": "Read care and protection details separately",
+          "paragraphs": [
+            "Follow the manufacturer’s care instructions for the exact finish. If your job requires protective footwear, verify those features on the specific model before considering appearance or comfort. Leather thickness, a Western shape and a work-inspired description do not establish a safety rating."
+          ]
+        }
+      ],
+      "whoItsFor": [
+        "This guide is for shoppers comparing clearly identified cowhide-leather boots for everyday or Western wear. Start with the activities you have in mind, then compare the actual materials and construction.",
+        "It also suits readers replacing a familiar pair and looking for a different fit or finish. Identify what you want to change before choosing from another product photo or brand.",
+        "If you need boots for work, use the material comparison alongside your employer’s requirements. Treat documented protection as a separate filter rather than assuming that cowhide makes a boot suitable."
+      ],
+      "mistakesToAvoid": [
+        "Do not treat a cowhide label as a complete description of the boot. Find out which components use the leather, which finish is specified and what information is still missing.",
+        "Avoid assuming that a higher price or a familiar grain label guarantees a better result. Compare the actual fit, construction, intended use and care requirements before deciding what suits you.",
+        "Do not rely on an uncomfortable pair stretching enough to solve a poor fit. Follow the manufacturer’s guidance and compare another size, width or shape when the try-on reveals pressure."
+      ],
+      "faqs": [
+        {
+          "question": "Are cowhide boots real leather?",
+          "answer": "Cowhide leather is leather made from cattle hide. Read the exact product description to identify which boot components use it."
+        },
+        {
+          "question": "Does cowhide mean full-grain leather?",
+          "answer": "No. Cowhide describes the source; grain and finish terminology describe other aspects. Check the complete material specification."
+        },
+        {
+          "question": "Can cowhide boots be used for work?",
+          "answer": "Check the exact model’s protective features and employer requirements. A material label alone does not establish workplace suitability."
+        },
+        {
+          "question": "How do I choose care products?",
+          "answer": "Use the manufacturer’s instructions for the exact finish. Do not assume one treatment suits smooth leather, suede and every other surface."
+        }
+      ],
+      "researchChecks": [
+        "Confirm the hide source for each component from a manufacturer page.",
+        "Verify four actual models and their fit, construction, care and image identity.",
+        "Keep material-led buying intent distinct from the broader cowboy-boot guide."
+      ],
+      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "quickAnswerBody": null,
+      "howWeChose": null,
+      "products": [],
+      "productsRequired": 4,
+      "finalVerdict": null,
+      "images": [],
+      "publicationApproved": false
+    },
+    {
+      "title": "Best Exotic Leather Boots",
+      "slug": "best-exotic-leather-boots",
+      "seoTitle": "Best Exotic Leather Boots: Materials and Buying Guide",
+      "metaDescription": "Compare the best exotic leather boots by documented hide, construction, fit and care. Learn how to distinguish actual leather from embossed patterns.",
+      "intro": "The best exotic leather boots should have a clearly documented material, a fit that suits your feet and care requirements you can follow. An animal-like pattern in a photograph is not enough to establish which leather a boot uses.\n\nRead the description for the actual vamp, shaft and lining, then compare construction and intended use. Different finishes may need different treatment, so care belongs in the buying decision alongside appearance. Choose from the complete model’s documented details rather than assuming that an unusual material automatically makes a better boot.",
+      "quickAnswerTitle": "What are the best exotic leather boots for your needs?",
+      "buyingGuideSections": [
+        {
+          "heading": "Identify the hide rather than the pattern",
+          "paragraphs": [
+            "Look for an explicit manufacturer description of the leather and the components that use it. A textured or embossed surface can resemble another material. Ask for clarification when a product name or photograph provides more detail than the actual specification.",
+            "Read the selected variant carefully. Different materials or colours grouped under one model name may have different descriptions. Record the version you intend to buy rather than carrying details across from another option."
+          ]
+        },
+        {
+          "heading": "Compare the complete boot",
+          "paragraphs": [
+            "Check the sole, lining, fastening, sizing and construction alongside the leather. Those features belong to the pair you will wear. An unfamiliar material does not establish comfort, suitability for work or a better fit than another boot."
+          ]
+        },
+        {
+          "heading": "Make care part of the purchase",
+          "paragraphs": [
+            "Read the exact manufacturer’s cleaning and care instructions before ordering. Consider whether they suit your normal routine and intended conditions. Do not apply a treatment simply because it worked on a different leather; resolve missing guidance before choosing products for the finish."
+          ]
+        }
+      ],
+      "whoItsFor": [
+        "This guide is for readers comparing boots with a specifically documented leather beyond a general material label. Start by identifying the hide and the part of the boot using it.",
+        "It also suits shoppers weighing appearance against practical ownership. Consider how often you will wear the pair, where it will be used and the care guidance attached to that finish.",
+        "If you are switching from a familiar leather, compare the whole boot rather than expecting the same feel. Use manufacturer specifications and a try-on to assess the fit you need."
+      ],
+      "mistakesToAvoid": [
+        "Do not identify a hide from a photograph or pattern alone. Read the manufacturer’s material statement and check the exact variant before treating an embossed texture as the claimed leather.",
+        "Avoid applying another boot’s care routine automatically. Confirm the instructions for the actual material and finish, including any products or conditions the manufacturer says to avoid during cleaning or storage.",
+        "Do not let an unusual material distract from poor fit or unclear construction details. Compare the sole, lining, shape and intended use before deciding whether the pair suits your routine."
+      ],
+      "faqs": [
+        {
+          "question": "Does an animal pattern prove the leather source?",
+          "answer": "No. Check the manufacturer’s explicit material description. An embossed pattern alone does not establish which hide is used."
+        },
+        {
+          "question": "Does the whole boot use one leather?",
+          "answer": "Not necessarily. Read the specification for the vamp, shaft, lining and other components rather than assuming one material throughout."
+        },
+        {
+          "question": "Are exotic leather boots always better?",
+          "answer": "A material label does not establish overall quality or fit. Compare the complete construction, intended use, care and your preferences."
+        },
+        {
+          "question": "Can I use my usual conditioner?",
+          "answer": "Follow instructions for the exact material and finish. Obtain the manufacturer’s guidance before applying a product intended for another leather."
+        }
+      ],
+      "researchChecks": [
+        "Identify genuine material and component placement; do not infer hide from an embossed print.",
+        "Verify four actual models, care instructions and any relevant product restrictions.",
+        "Obtain exact-variant photographs and documented usage rights."
+      ],
+      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "quickAnswerBody": null,
+      "howWeChose": null,
+      "products": [],
+      "productsRequired": 4,
+      "finalVerdict": null,
+      "images": [],
+      "publicationApproved": false
+    },
+    {
+      "title": "Best Cowboy Boots",
+      "slug": "best-cowboy-boots",
+      "seoTitle": "Best Cowboy Boots: Fit, Construction and Buying Guide",
+      "metaDescription": "Compare the best cowboy boots by intended use, toe shape, fit, construction and care. Find the details that matter for choosing a suitable Western pair.",
+      "intro": "The best cowboy boots should fit your feet and suit the reason you want a Western boot. A pair chosen for everyday outfits may need different features from one selected for a particular riding activity or workplace.\n\nStart with that use, then compare the exact model’s shape, materials, sole and sizing guidance. Toe shape and shaft height affect the comparison, but neither establishes comfort or protective performance. A useful shortlist explains what each pair offers, who it may suit and which details still need checking before you buy.",
+      "quickAnswerTitle": "What are the best cowboy boots for your intended use?",
+      "buyingGuideSections": [
+        {
+          "heading": "Choose for a defined use",
+          "paragraphs": [
+            "Decide whether you want Western styling for everyday wear or footwear for another specific activity. Read the manufacturer’s intended-use information and any relevant employer, instructor or equipment requirements. A familiar silhouette cannot answer those questions by itself.",
+            "If the boots are intended for work, check documented protection separately from style. A broad square toe, leather upper or tall shaft does not establish a safety toe or another required feature."
+          ]
+        },
+        {
+          "heading": "Compare shape and fit together",
+          "paragraphs": [
+            "Use the manufacturer’s sizing guidance for the exact model and compare available widths. Check pressure at the forefoot and instep and assess heel movement as the brand advises. Do not assume that a toe-shape name will fit the same way across different models."
+          ]
+        },
+        {
+          "heading": "Read the construction and care details",
+          "paragraphs": [
+            "Compare the stated sole, lining, leather components and fastening alongside the appearance. Follow care instructions for the exact finish. A product title may describe only part of the boot, so resolve missing information before using it to compare value or intended conditions."
+          ]
+        }
+      ],
+      "whoItsFor": [
+        "This guide is for readers choosing cowboy boots for everyday Western wear and comparing the actual shape and construction. Begin with how you intend to wear the pair most often.",
+        "It also suits shoppers trying a different brand or replacing a familiar model. Compare the exact sizing guidance and width options instead of relying on the size number you remember.",
+        "If you need boots for riding or work, bring the relevant activity requirements to the comparison. Keep them separate from appearance and confirm that the specific model meets your needs."
+      ],
+      "mistakesToAvoid": [
+        "Do not choose by toe shape or shaft height alone. Read the complete model details and use a permitted try-on to compare pressure points, heel movement and the overall fit.",
+        "Avoid assuming that every Western-looking boot is suitable for riding or workplace protection. Check the intended use and any required documented features before treating styling as proof of practical suitability.",
+        "Do not carry material and care details from one colour or version to another automatically. Check the exact selection, including the sole and lining, before comparing the pair or ordering."
+      ],
+      "faqs": [
+        {
+          "question": "Which cowboy-boot toe shape is best?",
+          "answer": "Choose by the fit of the exact model and your preferences. A toe-shape name alone does not establish comfort across brands."
+        },
+        {
+          "question": "Are all cowboy boots suitable for riding?",
+          "answer": "Check the manufacturer’s intended use and the requirements relevant to your activity and equipment. Styling alone is insufficient."
+        },
+        {
+          "question": "Can cowboy boots be safety footwear?",
+          "answer": "Some Western-style work models document protective features. Verify the exact model and the employer’s requirements before choosing for work."
+        },
+        {
+          "question": "Should I use my usual shoe size?",
+          "answer": "Start with the exact brand’s size guidance and compare fit. Do not assume that one size number works identically in every boot."
+        }
+      ],
+      "researchChecks": [
+        "Verify four actual Western models and the use cases supported by their specifications.",
+        "Keep riding and work-protection claims model-specific.",
+        "Give this guide a broader Western-use purpose than the material-focused cowhide/exotic guides."
+      ],
+      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "quickAnswerBody": null,
+      "howWeChose": null,
+      "products": [],
+      "productsRequired": 4,
+      "finalVerdict": null,
+      "images": [],
+      "publicationApproved": false
+    },
+    {
+      "title": "Best Work Boots for Men",
+      "slug": "best-work-boots-for-men",
+      "seoTitle": "Best Work Boots for Men: Protection and Fit Guide",
+      "metaDescription": "Compare the best work boots for men by documented protection, fit, surfaces and intended use. Check the features your job requires before choosing a pair.",
+      "intro": "The best work boots for men are the ones that meet the job’s requirements and fit the person wearing them. A boot for a dry workshop may need different features from one used on wet outdoor sites or around particular workplace hazards.\n\nStart with your employer’s footwear policy, then compare exact models for documented protection, sizing and intended conditions. Keep comfort and practical ownership in the decision, but do not let a soft first impression replace a required feature. A general work label is only the beginning of that comparison.",
+      "quickAnswerTitle": "What are the best work boots for men for your job?",
+      "buyingGuideSections": [
+        {
+          "heading": "Use the job requirements as the first filter",
+          "paragraphs": [
+            "Obtain the footwear requirements for your tasks and workplace before comparing brands. Identify which features must be documented on the exact model. A general work label does not tell you whether a particular safety toe, puncture protection or other feature is included.",
+            "Where a standard applies, compare the actual marking and relevant documentation with the employer’s requirements. Requirements and accepted editions can differ by location and task; ask the responsible safety person when a detail is unclear."
+          ]
+        },
+        {
+          "heading": "Check the complete boot",
+          "paragraphs": [
+            "Compare the stated outsole use, upper, lining, fastening and weather features with the conditions you encounter. Protection against one hazard does not establish protection against every other hazard. Verify each required feature rather than assuming that a work-style appearance covers the full list."
+          ]
+        },
+        {
+          "heading": "Assess fit with your normal work setup",
+          "paragraphs": [
+            "Follow the manufacturer’s guidance and use your normal work socks and permitted insoles during a try-on. Check toe room, pressure and heel movement while standing and walking. If the shape feels wrong, compare a different width or model rather than expecting discomfort to disappear."
+          ]
+        }
+      ],
+      "whoItsFor": [
+        "This guide is for men comparing work footwear against an actual task and workplace policy. Start with the conditions you encounter and any protective features the employer requires you to document.",
+        "It also suits readers replacing a familiar pair and looking for a better practical match. Identify what needs changing, such as the fit, fastening or stated suitability for the conditions.",
+        "If your role has no specialist footwear requirement, use the fit and construction information to compare options for that routine. Keep ordinary comfort preferences separate from claims about workplace protective performance."
+      ],
+      "mistakesToAvoid": [
+        "Do not assume every boot described as work footwear includes every protective feature. Confirm the actual model, marking and selected version before comparing it with the requirements for your job.",
+        "Avoid treating one feature as proof of another. A safety toe does not establish puncture, electrical or slip protection; check each required feature separately in the manufacturer’s documentation before buying.",
+        "Do not buy from a familiar size number without checking the exact model’s fit guidance. Use a permitted try-on with normal socks and inspect toe room, pressure points and heel movement."
+      ],
+      "faqs": [
+        {
+          "question": "Are all work boots safety boots?",
+          "answer": "Do not assume that from the category name. Check the exact model’s documented features and whether they meet the job requirements."
+        },
+        {
+          "question": "Does a safety toe cover every hazard?",
+          "answer": "No. Verify each required protective feature separately. A toe-cap description does not establish the complete boot’s protection against other hazards."
+        },
+        {
+          "question": "Should I choose a work boot by comfort first?",
+          "answer": "First establish any non-negotiable workplace requirements, then compare suitable models for fit and comfort. Neither step replaces the other."
+        },
+        {
+          "question": "Can I use the same boots for every job?",
+          "answer": "Compare each job’s tasks and requirements separately. A model suitable for one setting is not automatically suitable for another."
+        }
+      ],
+      "researchChecks": [
+        "Verify four task-specific men’s models, exact variants, applicable standards and markings.",
+        "Keep safety toe, electrical, puncture and outsole claims separate.",
+        "Do not assert employer acceptance or a universal best choice."
+      ],
+      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "quickAnswerBody": null,
+      "howWeChose": null,
+      "products": [],
+      "productsRequired": 4,
+      "finalVerdict": null,
+      "images": [],
+      "publicationApproved": false
+    },
+    {
+      "title": "Best Steel Toe Work Boots",
+      "slug": "best-steel-toe-work-boots",
+      "seoTitle": "Best Steel Toe Work Boots: Protection and Fit Guide",
+      "metaDescription": "Compare the best steel toe work boots by documented cap material, protection, fit and working conditions. Learn what to verify on the exact model before buying.",
+      "intro": "The best steel toe work boots need more than a steel cap: the complete model must suit your job and fit your feet. Start by confirming that the selected version actually uses steel, rather than a composite, alloy or unspecified safety toe.\n\nThen compare the documented protection against the employer’s requirements, alongside the outsole, weather features and fit. A steel-toe label does not establish every other protective feature. The useful shortlist explains what each complete boot offers and which working conditions or fit preferences may call for a different choice.",
+      "quickAnswerTitle": "What are the best steel toe work boots for your job?",
+      "buyingGuideSections": [
+        {
+          "heading": "Verify steel on the exact version",
+          "paragraphs": [
+            "Read the manufacturer’s specification for the selected model and variant. A brand may sell similarly named products with different toe types. Do not infer steel from an exterior photograph or a generic safety-toe description.",
+            "Keep the cap material separate from the documented performance requirements. Check the relevant marking and employer policy before deciding whether a particular model provides the protection required for the job."
+          ]
+        },
+        {
+          "heading": "Check additional protection separately",
+          "paragraphs": [
+            "Identify any requirements for electrical protection, puncture resistance, metatarsal protection or particular surfaces. A steel cap alone does not establish those features. Use the complete model’s documentation and seek clarification when a required detail is missing or inconsistent across listings."
+          ]
+        },
+        {
+          "heading": "Compare complete-boot fit and practical features",
+          "paragraphs": [
+            "Use the manufacturer’s size guidance and your normal socks during a permitted try-on. Check space around the protective cap, pressure points and heel security. Compare stated weather features, fastening, care and any published complete-boot weight rather than choosing from the cap material alone."
+          ]
+        }
+      ],
+      "whoItsFor": [
+        "This guide is for readers whose shortlist specifically needs a documented steel protective toe. Begin with the employer’s requirements and confirm the cap material on each exact model and variant.",
+        "It also suits workers replacing a familiar steel-toe pair while comparing fit and practical features. Identify what you want to improve and check that the alternative still meets the required protection.",
+        "If your workplace permits several toe materials, use this guide alongside that broader requirement. Do not assume steel is mandatory or that its presence establishes every other feature your tasks may need."
+      ],
+      "mistakesToAvoid": [
+        "Do not treat all safety-toe listings as steel-toe products. Verify the cap material on the selected version, especially when similarly named composite, alloy or soft-toe options appear beside it online.",
+        "Avoid judging protection from the toe alone. Check the complete boot’s documentation for every feature required by the job, including any separate electrical, puncture, metatarsal or surface-performance requirements that apply.",
+        "Do not keep a pair that presses against your toes because you expect the protective cap to stretch. Compare another fit, width or model and follow the manufacturer’s specific sizing guidance."
+      ],
+      "faqs": [
+        {
+          "question": "Does safety toe always mean steel toe?",
+          "answer": "No. Verify the actual cap material in the selected model’s specification. Safety-toe products may use different materials."
+        },
+        {
+          "question": "Does a steel toe make a boot electrically protective?",
+          "answer": "The cap material alone does not establish electrical protection. Check the specific complete-footwear documentation and workplace requirement."
+        },
+        {
+          "question": "Are steel-toe boots always heavier?",
+          "answer": "Compare complete models on the same measurement basis. The cap is only one part of the weight of a boot."
+        },
+        {
+          "question": "Should a steel-toe cap feel tight?",
+          "answer": "Follow the brand’s fit guidance and avoid pressure against the toes. Compare another size, width or model when the shape is unsuitable."
+        }
+      ],
+      "researchChecks": [
+        "Confirm an explicitly documented steel cap on all four product candidates.",
+        "Verify the complete model’s actual markings and separately claimed protection.",
+        "Do not copy specifications from composite, alloy or soft-toe versions."
+      ],
+      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "quickAnswerBody": null,
+      "howWeChose": null,
+      "products": [],
+      "productsRequired": 4,
+      "finalVerdict": null,
+      "images": [],
+      "publicationApproved": false
+    }
+  ]
+}

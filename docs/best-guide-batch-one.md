@@ -106,9 +106,44 @@ as unresolved. Do not fabricate prices, availability, shipping, testing or image
 permissions. Keep pending retailer controls inactive. No new guides, placeholder
 product pages or guessed recommendations have been published by this preparation.
 
-## Next input
+## Direct research and working copy
 
-`best-guide-batch-one-perplexity.txt` requests the live duplicate check first,
-then source-backed product matrices and exact-image evidence. The response should
-support writing the complete articles in the existing component. It is not a
-request for Perplexity to redesign the template or generate finished prose.
+The user subsequently requested proceeding without Perplexity. Direct
+manufacturer research is the active workflow; the earlier Perplexity request is
+retained only as a reference checklist. The additional uploaded report still
+covered the old five comparisons and has mismatched citations, so it is not
+evidence for this buying-guide batch.
+
+Supporting copy is now written for all five topics in
+`data/ingestion/best-guide-batch-one-editorial.json`, with a readable export at
+`docs/best-guide-batch-one-editorial-drafts.md`. Each has a short introduction,
+SEO metadata, question heading, buying-advice sections, three audience
+paragraphs, three mistakes paragraphs and four working FAQ answers.
+
+These are partial working drafts, not complete articles or CLI ingestion
+payloads. The verified-product list is empty; the direct answers naming picks,
+selection method and final verdict remain explicitly unset. No image was added,
+no source check was represented as completed and no new public or preview route
+was created. The shared template remains unchanged.
+
+## Saved website-access proposal
+
+The cloud-environment draft now preserves all 65 existing custom domain rules
+and adds 25 apex/WWW rules for these source families:
+
+- Ariat, Tecovas, Justin Boots, Tony Lama, Lucchese and Dan Post.
+- Thorogood, Red Wing, Irish Setter and Timberland.
+- OSHA, NIOSH's `wwwn.cdc.gov` and ASTM.
+
+Existing SoleMart, CMS and Shopify CDN rules are preserved. Setup scripts,
+repositories, credentials and selected package-manager presets are unchanged.
+The save returned `status: saved` and `requires_publish: true`; it has not
+activated those rules in the current runtime.
+
+The user must review/save the proposal in Codex environment settings and publish
+the environment. The runtime skill explicitly states: “The model saves draft
+proposals; the user reviews them in environment settings.” After activation,
+refresh environment status and require a fresh successful HTTPS request before
+claiming source access works. Then complete the live duplicate audit, verify
+four product positions per guide and resolve exact-photo rights before
+publishing anything.
