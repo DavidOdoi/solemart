@@ -4,7 +4,7 @@ SoleMart now defaults to **hybrid** mode. This restores published WordPress blog
 posts such as older `/blog/[slug]` URLs while keeping the local buying guides,
 reviews, comparisons and template previews independent of the CMS.
 
-| `SOLEMART_CONTENT_SOURCE` | Blog reads | Buying-guide source | Draft writes |
+| `SOLEMART_CONTENT_SOURCE` | Blog reads | Buying-guide source | Buying-guide draft writes |
 | --- | --- | --- | --- |
 | Unset or `hybrid` | Public WordPress posts with published local fallbacks | Local | Disabled |
 | `local` | Local only, with zero CMS requests | Local | Disabled |
@@ -45,9 +45,12 @@ sitemap.
 
 ## Full CMS and explicit offline mode
 
-`lib/content-source.ts` is the source selector. Full guide reads and server-side
+`lib/content-source.ts` is the source selector. Full guide reads and Buying Guide
 draft writes still require the exact value `wordpress`. Hybrid mode does not
-activate those writers even when old credentials remain configured.
+activate those Buying Guide/Shoe writers even when old credentials remain configured.
+The separate native Post importer supports explicitly requested CLI draft
+creation in hybrid mode; it requires writing credentials and performs a full
+duplicate check before writes. See [comparison import](wordpress-comparison-import.md).
 
 For completely offline frontend work, set `SOLEMART_CONTENT_SOURCE=local` and
 redeploy/restart. Even stale or malformed CMS URLs then cause no CMS read or

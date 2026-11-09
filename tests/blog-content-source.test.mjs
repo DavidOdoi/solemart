@@ -56,6 +56,24 @@ test('CMS content wins over local copy when the same published slug is available
   assert.equal((await getPublicBlogPost(local.slug)).title, 'Current CMS fixture title')
 })
 
+test('published comparison posts retain a temporary hero until an editor sets the real CMS Featured Image', async () => {
+  const comparisonSlug = 'cowboy-boots-vs-work-boots'
+  globalThis.fetch = async () => Response.json({ data: { post: post({ slug: comparisonSlug, content: '<p>Edited in WordPress.</p>' }) } })
+  const article = await getPublicBlogPost(comparisonSlug)
+  assert.equal(article.featuredImage.src, '/placeholder.svg')
+  assert.match(article.contentHtml, /Edited in WordPress/)
+  const sourceUrl = 'https://cms.thesolemart.com/wp-content/uploads/editor-photo.jpg'
+  globalThis.fetch = async () => Response.json({ data: { post: post({ slug: comparisonSlug, featuredImage: { node: { sourceUrl, altText: 'Editor photo', mediaDetails: { width: 1200, height: 675 } } } }) } })
+  assert.equal((await getPublicBlogPost(comparisonSlug)).featuredImage.src, sourceUrl)
+})
+
+test('draft and missing comparison Posts cannot expose the local preview article at the public blog URL', async () => {
+  for (const value of [null, post({ slug: 'cowboy-boots-vs-work-boots', status: 'draft' })]) {
+    globalThis.fetch = async () => Response.json({ data: { post: value } })
+    assert.equal(await getPublicBlogPost('cowboy-boots-vs-work-boots'), undefined)
+  }
+})
+
 test('hybrid outages retain local published articles but never turn an unavailable CMS-only article into a false 404', async () => {
   assert.strictEqual(await getPublicBlogPost(blogPosts[0].slug), blogPosts[0])
   await assert.rejects(getPublicBlogPost(slug), /temporarily unavailable/)

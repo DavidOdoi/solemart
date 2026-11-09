@@ -1,8 +1,10 @@
 # WordPress blog integration
 
 Published blog reads now reconnect in the default hybrid mode. Local buying
-guides and template previews stay independent; full CMS guide reads and draft
-writes still require `SOLEMART_CONTENT_SOURCE=wordpress`. Explicit `local` mode
+guides and template previews stay independent; full CMS guide reads and Buying
+Guide draft writes still require `SOLEMART_CONTENT_SOURCE=wordpress`. The native
+[comparison Post importer](wordpress-comparison-import.md) supports explicit CLI
+draft creation in hybrid mode. Explicit `local` mode
 remains fully offline; see [content source modes](frontend-only-mode.md).
 
 Buying-guide configuration uses ACF and WPGraphQL for ACF; see

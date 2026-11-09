@@ -36,16 +36,20 @@ the featured image and the image inside the Quick Answer. Both display in a
 responsive 16:9 frame. No generated photo or substitute product image is used.
 A featured image already present on the source record takes precedence.
 
-This option is specific to the local previews. Public `/blog/[slug]` articles
-continue to use the WordPress Featured Image and images in the native article
-body; the adapter does not replace CMS photos with placeholders. When moving a
+This option builds the local previews. Public `/blog/[slug]` articles use the
+WordPress Featured Image and images in the native article body. For these five
+known comparison slugs only, a published CMS article with no Featured Image uses
+the temporary hero until the editor selects one. An actual CMS photo takes
+precedence; missing/draft/private CMS records never expose local draft copy. When moving a
 draft into WordPress, set its Featured Image and add/replace the ordinary Image
 block immediately below the Quick Answer heading. Update alt text for the actual
 photo. No new ACF image field is required.
 
 The current preview drafts are still repository records, not WordPress records.
 Editing a WordPress post does not edit a local preview. This change performs no
-CMS import or write, and does not create public duplicate article URLs.
+CMS import or write, and does not create public duplicate article URLs. A separate
+[native Post importer](wordpress-comparison-import.md) now prepares the five
+Gutenberg bodies and can create drafts once CMS access and credentials are ready.
 
 Validation: all 141 automated tests pass, including content retention after
 reordering, reference section order, opt-in placeholders and preservation of an

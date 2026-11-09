@@ -42,6 +42,13 @@ enabled. No CMS writes, record replacements or changes to the frontend
 content-source selection were made for this layout update. The old public
 comparison routes and design preview retain their current article content.
 
+The [native Post importer](wordpress-comparison-import.md) now exports all five
+Gutenberg bodies and can create missing WordPress drafts using an authenticated,
+paginated duplicate check. Existing articles and editor changes are preserved.
+Live import remains blocked by this session's unapplied network settings and
+missing CMS writing credentials; these local previews are not proof of a live
+WordPress import.
+
 ## Drafts and remaining review
 
 | Slug | Review needed |
