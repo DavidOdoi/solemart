@@ -1,5 +1,7 @@
 # First five buying guides — working editorial copy
 
+The first three supporting-copy drafts below are now superseded by the complete text in `data/best-guide-drafts.ts`, reviewable at `/template-preview/best-guides`. The work-boots and steel-toe topics are on hold after the user reduced the active batch to three. All publication and image approvals remain pending.
+
 Working copy only. These files are not complete articles or publishable ingestion payloads. Product research, direct answers naming verified picks, selection methods, verdicts, images and live duplicate checks remain pending. The shared template is unchanged.
 
 # Best Cowhide Boots

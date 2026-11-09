@@ -1,5 +1,11 @@
 # First five buying guides from DAVID'S LIST
 
+Current active scope: the user reduced this batch to the first three topics.
+Complete text drafts now live in `data/best-guide-drafts.ts` and are reviewable at
+`/template-preview/best-guides`. See `three-best-guide-drafts.md` for the supplied
+research, variant boundaries and remaining checks. The other two topics are on
+hold; the five-topic plan and earlier audit below are retained as reference.
+
 The user selected the first five “best…” entries from DAVID'S LIST.xlsx for this
 batch. The earlier nine green-keyword briefs remain a separate queue. Comparison
 layout changes are deferred. Reuse `components/review-guide-template.tsx` and the
@@ -106,25 +112,19 @@ as unresolved. Do not fabricate prices, availability, shipping, testing or image
 permissions. Keep pending retailer controls inactive. No new guides, placeholder
 product pages or guessed recommendations have been published by this preparation.
 
-## Direct research and working copy
+## Research and current writing state
 
-The user subsequently requested proceeding without Perplexity. Direct
-manufacturer research is the active workflow; the earlier Perplexity request is
-retained only as a reference checklist. The additional uploaded report still
-covered the old five comparisons and has mismatched citations, so it is not
-evidence for this buying-guide batch.
+The user supplied a correct three-topic report after the earlier upgraded file
+still covered comparisons. The new material supports model-specific text drafts
+within a Tecovas men's Western dress/lifestyle scope. It is not an independently
+completed source check, an image reuse grant or a market-wide ranking.
 
-Supporting copy is now written for all five topics in
-`data/ingestion/best-guide-batch-one-editorial.json`, with a readable export at
-`docs/best-guide-batch-one-editorial-drafts.md`. Each has a short introduction,
-SEO metadata, question heading, buying-advice sections, three audience
-paragraphs, three mistakes paragraphs and four working FAQ answers.
-
-These are partial working drafts, not complete articles or CLI ingestion
-payloads. The verified-product list is empty; the direct answers naming picks,
-selection method and final verdict remain explicitly unset. No image was added,
-no source check was represented as completed and no new public or preview route
-was created. The shared template remains unchanged.
+All three complete text drafts now include direct answers naming candidates,
+four profiles, specifications and final verdicts in the existing template. The
+earlier partial-copy JSON and Markdown point to the complete draft module for
+those topics. Their other two topics remain on hold. Neither file is a
+publishable CLI ingestion payload. No image or guessed retailer URL has been
+added, and no source verification or live duplicate audit is marked complete.
 
 ## Saved website-access proposal
 

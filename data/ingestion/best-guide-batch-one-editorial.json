@@ -3,13 +3,13 @@
   "source": "User-approved first five best keywords in DAVID'S LIST.xlsx",
   "templateComponent": "components/review-guide-template.tsx",
   "targetWords": 1850,
-  "stage": "SUPPORTING_COPY_WRITTEN_RESEARCH_PENDING",
+  "stage": "THREE_TEXT_DRAFTS_FOR_REVIEW_TWO_TOPICS_ON_HOLD",
   "unresolved": [
     "Live site/CMS duplicate check",
-    "Four source-supported product picks per guide",
-    "Quick answer naming verified picks",
-    "Evidence-based methodology and final verdict",
-    "Exact images and reuse permissions"
+    "Independent source verification and broader-market scope",
+    "Exact images and reuse permissions",
+    "Current variant details and retailer matches",
+    "Cowhide/cowboy search-intent overlap"
   ],
   "articles": [
     {
@@ -73,14 +73,16 @@
         "Verify four actual models and their fit, construction, care and image identity.",
         "Keep material-led buying intent distinct from the broader cowboy-boot guide."
       ],
-      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "status": "SUPERSEDED_BY_COMPLETE_TEXT_DRAFT",
       "quickAnswerBody": null,
       "howWeChose": null,
       "products": [],
       "productsRequired": 4,
       "finalVerdict": null,
       "images": [],
-      "publicationApproved": false
+      "publicationApproved": false,
+      "textDraftModule": "data/best-guide-drafts.ts",
+      "previewPath": "/template-preview/best-guides/best-cowhide-boots"
     },
     {
       "title": "Best Exotic Leather Boots",
@@ -143,14 +145,16 @@
         "Verify four actual models, care instructions and any relevant product restrictions.",
         "Obtain exact-variant photographs and documented usage rights."
       ],
-      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "status": "SUPERSEDED_BY_COMPLETE_TEXT_DRAFT",
       "quickAnswerBody": null,
       "howWeChose": null,
       "products": [],
       "productsRequired": 4,
       "finalVerdict": null,
       "images": [],
-      "publicationApproved": false
+      "publicationApproved": false,
+      "textDraftModule": "data/best-guide-drafts.ts",
+      "previewPath": "/template-preview/best-guides/best-exotic-leather-boots"
     },
     {
       "title": "Best Cowboy Boots",
@@ -213,14 +217,16 @@
         "Keep riding and work-protection claims model-specific.",
         "Give this guide a broader Western-use purpose than the material-focused cowhide/exotic guides."
       ],
-      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "status": "SUPERSEDED_BY_COMPLETE_TEXT_DRAFT",
       "quickAnswerBody": null,
       "howWeChose": null,
       "products": [],
       "productsRequired": 4,
       "finalVerdict": null,
       "images": [],
-      "publicationApproved": false
+      "publicationApproved": false,
+      "textDraftModule": "data/best-guide-drafts.ts",
+      "previewPath": "/template-preview/best-guides/best-cowboy-boots"
     },
     {
       "title": "Best Work Boots for Men",
@@ -283,7 +289,7 @@
         "Keep safety toe, electrical, puncture and outsole claims separate.",
         "Do not assert employer acceptance or a universal best choice."
       ],
-      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "status": "ON_HOLD_AFTER_SCOPE_REDUCTION",
       "quickAnswerBody": null,
       "howWeChose": null,
       "products": [],
@@ -353,7 +359,7 @@
         "Verify the complete model’s actual markings and separately claimed protection.",
         "Do not copy specifications from composite, alloy or soft-toe versions."
       ],
-      "status": "PARTIAL_EDITORIAL_DRAFT",
+      "status": "ON_HOLD_AFTER_SCOPE_REDUCTION",
       "quickAnswerBody": null,
       "howWeChose": null,
       "products": [],
