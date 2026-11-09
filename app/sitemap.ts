@@ -5,6 +5,7 @@ import { comparisons } from '../data/comparisons.ts'
 import { guides } from '../data/guides.ts'
 import { products } from '../data/products.ts'
 import { getWordPressSitemapArticles } from '../lib/wordpress.ts'
+import { getWordPressGraphqlUrl } from '../lib/content-source.ts'
 
 // Generate XML per request so an unavailable CMS cannot fail the deployment.
 // WordPress fetches keep their explicit 60-second data cache.
@@ -35,8 +36,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categories.map(({ slug }) => `/${encodeURIComponent(slug)}`),
     ...products.map(({ slug }) => `/reviews/${encodeURIComponent(slug)}`),
     ...comparisons.map(({ slug }) => `/comparisons/${encodeURIComponent(slug)}`),
-    // Buying-guide fallbacks only exist when WordPress is not configured.
-    ...(articles === null ? guides.map(({ slug }) => `/best-shoes/${encodeURIComponent(slug)}`) : []),
+    // Hybrid mode restores CMS posts while keeping the existing local guides.
+    ...(!getWordPressGraphqlUrl() ? guides.map(({ slug }) => `/best-shoes/${encodeURIComponent(slug)}`) : []),
   ]
   const entries: MetadataRoute.Sitemap = paths.map(path => ({ url: `${origin}${path === '/' ? '' : path}` }))
   // Blog routes retain their local fallback even with WordPress configured.

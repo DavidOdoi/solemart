@@ -38,7 +38,7 @@ function evidenceJson(product: IngestionProduct) {
 }
 
 export async function saveWordPressBuyingGuideDraft(input: IngestionArticle, options: DraftOptions = {}) {
-  if (!isWordPressEnabled()) throw new Error('WordPress is paused in local-content mode. Re-enable SOLEMART_CONTENT_SOURCE=wordpress before saving CMS drafts.')
+  if (!isWordPressEnabled()) throw new Error('WordPress is paused for draft writes. Select SOLEMART_CONTENT_SOURCE=wordpress before saving CMS drafts.')
   const report = await validateBuyingGuide(input, { existingArticles: options.existingArticles })
   if (report.status !== 'PASS' && !options.allowIncomplete) throw new Error('Publication gate blocked this draft. Review the structured report or explicitly save an incomplete editorial draft.')
   if (!input || input.version !== 1 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(input.slug)

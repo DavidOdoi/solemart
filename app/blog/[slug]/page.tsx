@@ -1,26 +1,21 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { blogPosts } from '@/data/blog'
-import { getBlogPost } from '@/lib/content'
 import { BlogPostPage } from '@/components/page-templates'
-import { getWordPressPost } from '@/lib/wordpress'
-import { getWordPressGraphqlUrl } from '@/lib/content-source'
+import { getPublicBlogPost } from '@/lib/blog-content'
+import { getWordPressBlogGraphqlUrl } from '@/lib/content-source'
 
 export const revalidate = 60
 export const dynamicParams = true
 
-async function getPost(slug: string) {
-  // A migrated WordPress article must match the content shown in the listing.
-  return await getWordPressPost(slug) ?? getBlogPost(slug)
-}
-
 export function generateStaticParams() {
-  return getWordPressGraphqlUrl() ? [] : blogPosts.map(({ slug }) => ({ slug }))
+  // CMS content loads on request; an unavailable CMS must not block a build.
+  return getWordPressBlogGraphqlUrl() ? [] : blogPosts.map(({ slug }) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const post = await getPost(slug)
+  const post = await getPublicBlogPost(slug)
   if (!post) notFound()
   const url = `https://thesolemart.com/blog/${encodeURIComponent(post.slug)}`
   const title = post.seoTitle || post.title
@@ -43,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostRoute({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = await getPost(slug)
+  const post = await getPublicBlogPost(slug)
   if (!post) notFound()
   return <BlogPostPage post={post} />
 }

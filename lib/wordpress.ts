@@ -5,7 +5,7 @@ import { decodeHTML } from 'entities'
 import sanitizeHtml from 'sanitize-html'
 import type { BlogPost } from '@/data/blog'
 import { sanitizeCmsArticleHtml as articleHtml } from './cms-rich-text.ts'
-import { getWordPressGraphqlUrl, isWordPressEnabled } from './content-source.ts'
+import { getWordPressBlogGraphqlUrl, getWordPressGraphqlUrl } from './content-source.ts'
 
 type WordPressPost = {
   title: string | null
@@ -111,9 +111,7 @@ class MissingGuideFieldsError extends Error {
 class MissingGuideExcerptError extends Error {}
 class MissingShoeCommerceFieldsError extends Error {}
 
-async function queryWordPress<T>(query: string, variables: Record<string, string | null>, tags: string[]): Promise<T> {
-  const endpoint = getWordPressGraphqlUrl()
-
+async function queryWordPress<T>(query: string, variables: Record<string, string | null>, tags: string[], endpoint = getWordPressGraphqlUrl()): Promise<T> {
   let response: Response
   try {
     const url = new URL(endpoint || '')
@@ -185,8 +183,9 @@ function postPreview(post: WordPressPreview): BlogPostPreview {
 
 /** Published public posts only. React cache shares the metadata/page request. */
 export const getWordPressPost = cache(async (slug: string): Promise<BlogPost | null> => {
-  if (!getWordPressGraphqlUrl() || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
-  const data = await queryWordPress<{ post?: WordPressPost | null }>(postQuery, { slug }, ['wordpress:posts', `wordpress:post:${slug}`])
+  const endpoint = getWordPressBlogGraphqlUrl()
+  if (!endpoint || !/^[^\s/?#\u0000-\u001f]{1,200}$/u.test(slug)) return null
+  const data = await queryWordPress<{ post?: WordPressPost | null }>(postQuery, { slug }, ['wordpress:posts', `wordpress:post:${slug}`], endpoint)
   if (!Object.hasOwn(data, 'post')) throw new Error('WordPress could not return the requested article.')
   const post = data.post
   if (!post || post.status !== 'publish') return null
@@ -207,10 +206,11 @@ export const getWordPressPosts = cache(async (after?: string): Promise<{
   endCursor: string | null
 } | null> => {
   if (after !== undefined && !isWordPressCursor(after)) throw new RangeError('Invalid article cursor')
-  if (!getWordPressGraphqlUrl()) return null
+  const endpoint = getWordPressBlogGraphqlUrl()
+  if (!endpoint) return null
   const data = await queryWordPress<{
     posts?: { nodes?: (WordPressPreview | null)[]; pageInfo?: { hasNextPage: boolean; endCursor: string | null } }
-  }>(postsQuery, { after: after || null }, ['wordpress:posts', 'wordpress:archive'])
+  }>(postsQuery, { after: after || null }, ['wordpress:posts', 'wordpress:archive'], endpoint)
   const connection = data.posts
   if (!Array.isArray(connection?.nodes) || typeof connection.pageInfo?.hasNextPage !== 'boolean') {
     throw new Error('WordPress could not return the article listing.')
@@ -233,14 +233,15 @@ export type WordPressSitemapArticle = {
   modifiedAt?: string
 }
 
-/** Walk both public article connections; never truncate the sitemap at 100. */
+/** Walk public posts and, in full CMS mode, guides; never truncate at 100. */
 export async function getWordPressSitemapArticles(): Promise<WordPressSitemapArticle[] | null> {
-  if (!getWordPressGraphqlUrl()) return null
+  const endpoint = getWordPressBlogGraphqlUrl()
+  if (!endpoint) return null
   type SitemapNode = { slug?: string | null; status?: string | null; modifiedGmt?: string | null }
   type Connection = { nodes?: (SitemapNode | null)[]; pageInfo?: { hasNextPage?: boolean; endCursor?: string | null } }
   const collections = [
     { root: 'posts', type: 'post', tag: 'wordpress:posts' },
-    { root: 'buyingGuides', type: 'buyingGuide', tag: 'wordpress:buying-guides' },
+    ...(getWordPressGraphqlUrl() ? [{ root: 'buyingGuides', type: 'buyingGuide', tag: 'wordpress:buying-guides' } as const] : []),
   ] as const
   const articles = await Promise.all(collections.map(async ({ root, type, tag }) => {
     const entries = new Map<string, WordPressSitemapArticle>()
@@ -255,7 +256,7 @@ export async function getWordPressSitemapArticles(): Promise<WordPressSitemapArt
       }
     `
     while (true) {
-      const data: Record<string, Connection | null> = await queryWordPress(query, { after }, [tag, 'wordpress:sitemap'])
+      const data: Record<string, Connection | null> = await queryWordPress(query, { after }, [tag, 'wordpress:sitemap'], endpoint)
       const connection = data[root]
       if (!Array.isArray(connection?.nodes) || typeof connection.pageInfo?.hasNextPage !== 'boolean') {
         throw new Error('WordPress could not return the sitemap article listing.')
@@ -463,10 +464,11 @@ function avatarUrl(value: unknown): string | undefined {
 
 /** Public core WordPress profiles only. Optional profile failures must not hide an article. */
 export const getWordPressAuthorProfile = cache(async (id: number): Promise<BlogPost['authorProfile'] | undefined> => {
-  if (!isWordPressEnabled() || !Number.isSafeInteger(id) || id < 1) return undefined
+  const endpoint = getWordPressBlogGraphqlUrl()
+  if (!endpoint || !Number.isSafeInteger(id) || id < 1) return undefined
   try {
     const restBase = process.env.WORDPRESS_API_URL
-      || (process.env.WORDPRESS_GRAPHQL_URL ? new URL('/wp-json/wp/v2/', process.env.WORDPRESS_GRAPHQL_URL).href : '')
+      || new URL('/wp-json/wp/v2/', endpoint).href
     const base = new URL(restBase.endsWith('/') ? restBase : `${restBase}/`)
     if (!['https:', 'http:'].includes(base.protocol) || base.username || base.password) return undefined
     const url = new URL(`users/${id}`, base)

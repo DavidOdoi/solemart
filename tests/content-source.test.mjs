@@ -1,6 +1,6 @@
 import { test, beforeEach, afterEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { getWordPressGraphqlUrl, isWordPressEnabled } from '../lib/content-source.ts'
+import { getContentSource, getWordPressBlogGraphqlUrl, getWordPressGraphqlUrl, isWordPressEnabled } from '../lib/content-source.ts'
 import { getWordPressPost, getWordPressPosts, getWordPressBuyingGuide, getWordPressGuideFields, getWordPressAcfBuyingGuide, getWordPressSitemapArticles, getWordPressAuthorProfile } from '../lib/wordpress.ts'
 import { getWordPressWriteConfig, saveWordPressBuyingGuideDraft } from '../lib/wordpress-drafts.ts'
 import sitemap from '../app/sitemap.ts'
@@ -11,7 +11,7 @@ const originalFetch = globalThis.fetch
 const keys = ['SOLEMART_CONTENT_SOURCE', 'WORDPRESS_GRAPHQL_URL', 'WORDPRESS_API_URL', 'WORDPRESS_USERNAME', 'WORDPRESS_APPLICATION_PASSWORD']
 const environment = Object.fromEntries(keys.map(key => [key, process.env[key]]))
 beforeEach(() => {
-  delete process.env.SOLEMART_CONTENT_SOURCE
+  process.env.SOLEMART_CONTENT_SOURCE = 'local'
   process.env.WORDPRESS_GRAPHQL_URL = 'https://cms.thesolemart.com/graphql'
   process.env.WORDPRESS_API_URL = 'https://cms.thesolemart.com/wp-json/wp/v2/'
   process.env.WORDPRESS_USERNAME = 'fixture-writer'
@@ -39,8 +39,24 @@ async function assertCmsIsPaused() {
   assert.equal(getWordPressWriteConfig(), null)
 }
 
-test('frontend-only mode is the default despite stale CMS URLs and credentials', async () => {
+test('explicit local mode keeps all CMS reads and writes paused despite configured credentials', async () => {
   await assertCmsIsPaused()
+})
+
+test('the default hybrid mode restores public blog reads without activating CMS guides or draft writes', async () => {
+  delete process.env.SOLEMART_CONTENT_SOURCE
+  delete process.env.WORDPRESS_GRAPHQL_URL
+  assert.equal(getContentSource(), 'hybrid')
+  assert.equal(getWordPressBlogGraphqlUrl(), 'https://cms.thesolemart.com/graphql')
+  assert.equal(getWordPressGraphqlUrl(), '')
+  assert.equal(isWordPressEnabled(), false)
+  assert.equal(getWordPressWriteConfig(), null)
+  assert.equal(await getWordPressBuyingGuide('local-guide'), null)
+  assert.equal(await getWordPressAcfBuyingGuide('local-guide'), undefined)
+  let reads = 0
+  globalThis.fetch = async () => { reads++; return Response.json({ data: { post: null } }) }
+  assert.equal(await getWordPressPost('missing-post'), null)
+  assert.equal(reads, 1)
 })
 
 test('explicit local mode skips malformed CMS configuration without parsing or fetching it', async () => {

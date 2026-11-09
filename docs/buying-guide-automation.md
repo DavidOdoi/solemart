@@ -19,15 +19,15 @@ documentation and the CMS are blocked by this workspace's current network policy
 Amazon and WordPress credentials have not been configured. Those are live rollout
 blockers, not test failures. Do not replace research with invented specifications.
 
-**WordPress is paused by default.** The Next.js frontend uses local content until
-`SOLEMART_CONTENT_SOURCE=wordpress` is explicitly selected and redeployed. See
-[frontend-only mode](frontend-only-mode.md). The WordPress writer also respects
-this switch.
+**Published blog reads now reconnect in hybrid mode.** Local guides and previews
+remain independent of the CMS. Full CMS guide reads and authenticated draft
+writes still require `SOLEMART_CONTENT_SOURCE=wordpress`; see
+[content source modes](frontend-only-mode.md).
 
-**WordPress setup is deferred by the user's latest instruction.** Keep preparing
-local editorial payloads and testing the frontend. The WordPress instructions
-below are for a later rollout; do not require a WordPress login, install a snippet,
-or write to the live CMS to continue local work. Product research still requires
+**Authenticated WordPress writing remains deferred.** The user authorized
+restoring published blog reads to repair older article URLs. Keep preparing local
+guide payloads without requiring a WordPress login, installing a snippet or
+writing live CMS records. Product research still requires
 access to public manufacturer sources. The tracking ID can be added later.
 
 ## Data flow and files
@@ -130,7 +130,7 @@ credentials in `NEXT_PUBLIC_*`, payloads, commits, screenshots or chat.
 
 | Variable | Purpose |
 | --- | --- |
-| `SOLEMART_CONTENT_SOURCE` | Default `local`; select `wordpress` only when reconnecting |
+| `SOLEMART_CONTENT_SOURCE` | Default `hybrid` for public blog reads; `local` for offline use; `wordpress` for CMS guides/writes |
 | `WORDPRESS_GRAPHQL_URL` | Existing public endpoint, `https://cms.thesolemart.com/graphql` |
 | `WORDPRESS_API_URL` | `https://cms.thesolemart.com/wp-json/wp/v2/` |
 | `WORDPRESS_USERNAME` | Dedicated draft writer |

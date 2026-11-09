@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "ingest:guides": "node --env-file-if-exists=.env.local --conditions=react-server --experimental-strip-types scripts/ingest-buying-guide.mjs",
-    "test:wordpress": "node --conditions=react-server --experimental-strip-types --test tests/wordpress.test.mjs tests/guide-fields.test.mjs tests/article-details.test.mjs tests/acf-guides.test.mjs tests/rich-text.test.mjs tests/comparison-template.test.mjs tests/editorial-article.test.mjs tests/sitemap.test.mjs tests/blog-content.test.mjs tests/amazon-creators.test.mjs tests/guide-ingestion.test.mjs tests/wordpress-drafts.test.mjs tests/commerce-fields.test.mjs tests/content-source.test.mjs tests/comparison-drafts.test.mjs tests/best-guide-drafts.test.mjs"
+    "test:wordpress": "node --conditions=react-server --experimental-strip-types --test tests/wordpress.test.mjs tests/guide-fields.test.mjs tests/article-details.test.mjs tests/acf-guides.test.mjs tests/rich-text.test.mjs tests/comparison-template.test.mjs tests/editorial-article.test.mjs tests/sitemap.test.mjs tests/blog-content.test.mjs tests/amazon-creators.test.mjs tests/guide-ingestion.test.mjs tests/wordpress-drafts.test.mjs tests/commerce-fields.test.mjs tests/content-source.test.mjs tests/comparison-drafts.test.mjs tests/best-guide-drafts.test.mjs tests/blog-content-source.test.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

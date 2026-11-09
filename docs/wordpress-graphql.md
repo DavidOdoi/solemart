@@ -1,8 +1,9 @@
 # WordPress blog integration
 
-The CMS is currently paused by default. The frontend uses local content even if
-a WordPress URL remains configured. Set `SOLEMART_CONTENT_SOURCE=wordpress` and
-redeploy when reconnecting; see [frontend-only mode](frontend-only-mode.md).
+Published blog reads now reconnect in the default hybrid mode. Local buying
+guides and template previews stay independent; full CMS guide reads and draft
+writes still require `SOLEMART_CONTENT_SOURCE=wordpress`. Explicit `local` mode
+remains fully offline; see [content source modes](frontend-only-mode.md).
 
 Buying-guide configuration uses ACF and WPGraphQL for ACF; see
 [ACF setup](wordpress-acf-setup.md). The existing GraphQL connection remains in
@@ -19,10 +20,11 @@ Published **ordinary WordPress posts** supply the Shoe Advice listing at `/blog`
 3. For local development, copy `.env.example` to `.env.local` if that file does not already exist. Preserve any existing settings. Add:
 
    ```dotenv
+   SOLEMART_CONTENT_SOURCE=hybrid
    WORDPRESS_GRAPHQL_URL=https://cms.thesolemart.com/graphql
    ```
 
-4. Add the same variable to the Vercel project for Production and, if wanted, Preview. Redeploy after adding or changing it.
+4. Add the same variables to the Vercel project for Production and, if wanted, Preview. Hybrid is the default when the source is unset, with the public CMS endpoint above as its default. Replace any old explicit `local` setting and redeploy after changes.
 5. No WordPress administrator password, application password, Apollo client, or `NEXT_PUBLIC_` variable is required for published public posts.
 
 ## Behaviour
@@ -30,16 +32,16 @@ Published **ordinary WordPress posts** supply the Shoe Advice listing at `/blog`
 - A WordPress post with the slug `hey` is rendered at `/blog/hey`.
 - The listing shows only published CMS articles, newest first, when WordPress is configured. It requests twelve summaries at a time, with crawlable “Older articles” links and a “Latest articles” link back to the first page. Opaque cursors are encoded in the URL; malformed cursors and empty older pages return 404.
 - A published WordPress article takes precedence over a local sample with the same slug, so listing cards open the corresponding CMS content. Existing local sample routes remain a fallback when no published WordPress article matches, preserving older homepage links during the migration. They are not mixed into the configured CMS listing.
-- A successful but empty CMS listing shows a genuine empty state; it does not substitute sample posts. API failures show a retry screen rather than pretending no articles have been published.
+- A successful but empty CMS listing shows a genuine empty state; it does not substitute sample posts. Hybrid mode can retain the local first archive page during an outage. Full CMS mode and older-page failures retain the retry screen instead of inventing an empty collection or a missing page.
 - The server fetches content; primary article content does not depend on browser JavaScript.
 - The existing blog template displays the title, author, dates, sanitized HTML, and optional featured image. The WordPress excerpt supplies metadata; the full article body supplies the introduction, avoiding a duplicated first paragraph.
 - Featured media at `https://cms.thesolemart.com/wp-content/uploads/**` is permitted by Next.js image configuration. Unsupported featured-image hosts are omitted; additional media/CDN hosts require a deliberate configuration update in both the adapter and Next.js configuration.
 - Scripts, forms, event attributes, unsafe URL schemes, and unsupported embeds are removed from article HTML. Body H1 headings are rendered as H2 headings to retain one page H1. Standard paragraphs, headings, lists, links, tables, quotes, figures, and images are supported.
 - Canonical, Open Graph, Twitter, and Article metadata use the public frontend URL and real WordPress dates. Unavailable optional fields are omitted.
-- A genuine missing, private, or draft post returns not-found. Network, HTTP, or GraphQL failures raise a temporary-unavailability error instead of pretending the post is missing.
+- A missing, private or draft CMS post exposes no CMS content; an independently published local record can still be the existing fallback. Network/HTTP/GraphQL failures for a CMS-only slug remain temporary-unavailability errors. Hybrid mode can retain existing local article copy during an outage.
 - Requests have a ten-second timeout. Successful content is eligible for time-based revalidation after 60 seconds. The first request after expiry can receive cached content while regeneration happens; this is not an immediate publishing webhook.
 - React request caching shares the WordPress lookup between metadata generation and page rendering. Next.js caches the upstream response for subsequent visits.
-- Without `WORDPRESS_GRAPHQL_URL`, the first listing page and existing article routes use local samples; cursor pages and unknown blog slugs return 404.
+- Hybrid mode has a default public CMS endpoint, even without `WORDPRESS_GRAPHQL_URL`. Explicit `local` mode uses local articles only. Full `wordpress` mode still requires its configured endpoint.
 - Listing requests use the same 60-second data-cache revalidation window. Publishing a post does not require a frontend rebuild, but cache expiry and a subsequent request are required until on-demand revalidation is added.
 
 ## Local checks

@@ -4,7 +4,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { blogPosts } from '@/data/blog'
-import { getWordPressPosts, isWordPressCursor } from '@/lib/wordpress'
+import { isWordPressCursor } from '@/lib/wordpress'
+import { getPublicBlogArchive } from '@/lib/blog-content'
 
 export const revalidate = 60
 
@@ -32,7 +33,7 @@ export async function generateMetadata({ searchParams }: { searchParams: BlogSea
 
 export default async function BlogPage({ searchParams }: { searchParams: BlogSearchParams }) {
   const after = await getCursor(searchParams)
-  const listing = await getWordPressPosts(after)
+  const listing = await getPublicBlogArchive(after)
   if (after && !listing?.posts.length) notFound()
   const posts = listing?.posts ?? blogPosts
   const olderHref = listing?.hasNextPage && listing.endCursor
