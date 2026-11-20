@@ -102,7 +102,7 @@ export function ComparisonPage({ comparison }: { comparison: Comparison }) {
 }
 
 export function BlogPostPage({ post, preview = false }: { post: BlogPost; preview?: boolean }) {
-  const bestGuide = getBestGuideArticle(post.contentHtml || '')
+  const bestGuide = getBestGuideArticle(post.contentHtml || '', { title: post.title })
   if (bestGuide) return <BestGuidePostPage post={post} article={bestGuide} preview={preview} />
   const publishedAt = post.publishedAt || (post.date ? new Date(post.date).toISOString() : undefined)
   const url = `https://thesolemart.com/blog/${encodeURIComponent(post.slug)}`

@@ -26,6 +26,30 @@ WordPress plugin, extra custom fields or change to the WordPress API is required
 for this layout. The existing published-Post reader supplies title, author,
 actual dates, excerpt, featured image and body to `/blog/<post-slug>`.
 
+### Ordinary pasted articles
+
+The pattern is optional. A title such as **7 Best Curling Shoes** activates the
+buying-guide renderer directly. Use normal H2 product headings such as
+**1. Product Name: Best for Beginners**, with the product's description, image,
+Pros/Cons headings and lists beneath it. H3 product headings and bold numbered
+product labels are also supported. An unnumbered **Best …** title activates it
+when there are at least two recognizable product headings.
+
+Quick picks, Quick answer, How we chose, buying advice, FAQs and Final verdict
+headings receive the matching design. Only content actually present in the post
+is shown. Original images, captions, citations and URLs are retained. Standalone
+Amazon links become styled CTA buttons with their existing destinations/tags;
+missing purchase links, recommendations, claims and scores are not invented.
+Products without an image get the existing neutral placeholder; adding an Image
+block beneath that product heading replaces it on the next frontend refresh.
+
+Non-buying-guide articles retain the standard blog design. This transformation
+happens only while rendering; it does not rewrite the WordPress record or require
+a custom WordPress plugin. A numbered Best title with unstructured content gets
+the shared typography and page shell; individual cards require product headings.
+
+### Optional reusable pattern
+
 1. Download `/downloads/solemart-best-guide-pattern.json`. In WordPress's
    **Manage patterns**, choose **Import from JSON** and select the file. This is
    an **unsynced** pattern, so inserting it into a new Post makes an independent
@@ -55,13 +79,17 @@ created automatically by downloading them or importing a pattern.
 The top-level Group has the Additional CSS class `solemart-best-guide`.
 Product Groups and native Button blocks carry a small set of style hooks.
 Keep these classes when editing. `getBestGuideArticle` detects that explicit
-marker after sanitization; `BlogPostPage` selects the shared `BestGuidePostPage`
-renderer. Ordinary articles and the existing ACF guide renderer keep their
-existing layouts. There is no automatic migration or publishing of old articles.
+marker anywhere in WordPress wrappers after sanitization, or adapts an ordinary
+buying-guide post using `nativeBestGuideHtml`. `BlogPostPage` selects the shared
+`BestGuidePostPage` renderer. Other articles and the existing ACF guide renderer keep their
+existing layouts. Stored WordPress records are never rewritten or published by
+this adaptation.
 
 ## Implementation and verification
 
 - `lib/best-guide-blocks.ts`: native Gutenberg block serialization.
+- `lib/native-best-guide.ts`: ordinary Post heading/section adaptation, preserving
+  the editor's content rather than falling back to local sample copy.
 - `data/nike-best-guide-preview.ts`: supplied-draft design fixture, excluded from
   published post registries and sitemaps.
 - `scripts/export-best-guide-pattern.mjs`: regenerates both pattern/HTML pairs.

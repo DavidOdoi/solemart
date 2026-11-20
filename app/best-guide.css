@@ -35,12 +35,22 @@
 .sm-guide-content { font-size: var(--sm-body-size); line-height: 1.75; overflow-wrap: break-word; }
 .sm-guide-content p + p { margin-top: 16px; }
 .sm-guide-content a { color: var(--sm-rust); text-decoration: underline; text-underline-offset: 4px; }
+.sm-guide-content img { max-width: 100%; height: auto; }
 .sm-guide-content h2 { color: var(--sm-ink); font-size: clamp(27px, 3vw, 35px); line-height: 1.18; font-weight: 800; letter-spacing: -.035em; text-wrap: balance; }
 .sm-guide-content h3 { margin: 25px 0 10px; font-size: 17px; line-height: 1.4; font-weight: 750; letter-spacing: -.015em; }
 .sm-guide-content :is(h2, h3) { scroll-margin-top: 165px; }
 .solemart-best-guide > * + * { margin-top: 40px; }
 .solemart-best-guide > .sm-guide-intro { max-width: 780px; font: 400 var(--sm-body-size)/1.7 Georgia, 'Times New Roman', serif; color: #514c43; }
 .sm-guide-intro p:last-child { margin-top: 24px; padding: 18px 20px; border-left: 3px solid var(--sm-rust); background: #f8f5ef; font: 400 var(--sm-body-size)/1.75 Arial, Helvetica, sans-serif; }
+.sm-auto-guide > .sm-guide-intro p:last-child { margin-top: 16px; padding: 0; border: 0; background: none; font: inherit; }
+.sm-auto-guide > .sm-guide-intro p:first-child { margin-top: 0; }
+.sm-quick-answer { padding: 24px 26px; border-left: 3px solid var(--sm-rust); background: #f8f5ef; }
+.sm-quick-answer h2 { font-size: 23px; margin-bottom: 14px; }
+.sm-auto-guide .sm-product-image :is(img, figure) { width: 100%; }
+.sm-auto-guide .sm-pros-cons > :only-child { grid-column: 1 / -1; }
+.sm-buying-advice figure { max-width: 100%; overflow-x: auto; }
+.sm-buying-advice table { width: 100%; border-collapse: collapse; }
+.sm-buying-advice :is(th, td) { padding: 12px; border: 1px solid var(--sm-line); text-align: left; }
 .solemart-best-guide > .sm-disclosure { margin-top: 18px; color: var(--sm-muted); font-size: var(--sm-body-size); line-height: 1.6; }
 .sm-guide-content .sm-eyebrow { margin-bottom: 12px; color: var(--sm-rust); font-size: 10px; line-height: 1.4; letter-spacing: .16em; font-weight: 800; }
 .sm-quick-picks { padding-top: 26px; border-top: 2px solid var(--sm-ink); }

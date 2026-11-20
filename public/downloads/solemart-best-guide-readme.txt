@@ -2,7 +2,18 @@ SOLEMART — BEST BUYING-GUIDE TEMPLATE
 
 Preview: https://thesolemart.com/template-preview/buying-guide
 
-ONE-TIME WORDPRESS SETUP
+ORDINARY WORDPRESS POSTS
+You can paste a buying-guide article into a normal Post without importing a
+pattern. A title such as "7 Best Curling Shoes" selects this template. Use H2
+product headings such as "1. Product Name: Best for Beginners", followed by the
+description, image, Pros/Cons headings and lists, and any Amazon purchase link.
+Use ordinary headings for Quick picks, How we chose, FAQs and Final verdict.
+The website styles the content already in your post. Missing product text and
+purchase links are not invented. Add an image under each product heading to
+replace the automatic placeholder. Numbered Best titles with no product headings
+still get the page typography; individual product cards need product headings.
+
+OPTIONAL ONE-TIME PATTERN SETUP
 Open Manage patterns in WordPress and choose Import from JSON. Import
 solemart-best-guide-pattern.json. It is an unsynced pattern: each article gets
 its own independent content.

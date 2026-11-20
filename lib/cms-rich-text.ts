@@ -53,7 +53,7 @@ function clean(value: string, article: boolean, retailerUrls: string[]) {
     // Opt-in layout hooks for ordinary Gutenberg Posts. Arbitrary WordPress
     // classes, inline styles, scripts and event handlers remain disallowed.
     allowedClasses: article ? {
-      div: ['solemart-best-guide', 'sm-guide-intro', 'sm-quick-picks', 'sm-method', 'sm-pick', 'sm-pick-layout', 'sm-pick-visual', 'sm-pick-content', 'sm-pros-cons', 'sm-pros', 'sm-cons', 'sm-buying-advice', 'sm-faq', 'sm-verdict', 'wp-block-buttons', 'wp-block-button'],
+      div: ['solemart-best-guide', 'sm-auto-guide', 'sm-guide-intro', 'sm-quick-answer', 'sm-quick-picks', 'sm-method', 'sm-pick', 'sm-pick-layout', 'sm-pick-visual', 'sm-pick-content', 'sm-pros-cons', 'sm-pros', 'sm-cons', 'sm-buying-advice', 'sm-faq', 'sm-verdict', 'wp-block-buttons', 'wp-block-button'],
       p: ['sm-eyebrow', 'sm-pick-label', 'sm-pick-lede', 'sm-cta-note', 'sm-disclosure'],
       figure: ['sm-product-image'],
       a: ['wp-block-button__link'],

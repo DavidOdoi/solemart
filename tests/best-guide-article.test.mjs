@@ -5,13 +5,95 @@ import { getBestGuideArticle } from '../lib/best-guide-article.ts'
 import { sanitizeCmsArticleHtml, sanitizeEditorialHtml } from '../lib/cms-rich-text.ts'
 import { nikeBestGuidePreview } from '../data/nike-best-guide-preview.ts'
 
-test('only an explicit native Group layout activates the best-guide template', () => {
+test('without a post title, only an explicit native Group layout activates the template', () => {
   assert.equal(getBestGuideArticle('<h2>Best running shoes</h2><p>Ordinary article.</p>'), null)
   assert.equal(getBestGuideArticle('<div class="solemart-best-guide-fake"><p>Other.</p></div>'), null)
   assert.equal(getBestGuideArticle('<p>The class name solemart-best-guide is just text.</p>'), null)
   const result = getBestGuideArticle('<div class="wp-block-group solemart-best-guide"><h2>Shortlist</h2><p>Actual content.</p></div>')
   assert.match(result.html, /Actual content/)
   assert.equal(result.headings[0].label, 'Shortlist')
+})
+
+test('WordPress wrappers around the saved pattern do not disable the layout', () => {
+  const article = getBestGuideArticle('<div><div><div class="solemart-best-guide"><h2>My shortlist</h2><p>Saved content.</p></div></div></div>')
+  assert(article)
+  assert.match(article.html, /Saved content/)
+  assert.doesNotMatch(article.html, /sm-auto-guide/)
+})
+
+const curlingTitle = '7 Best Curling Shoes: Top Picks for Beginners, League Players, and Competitive Curlers'
+const nativeCurling = `<p>Choose a shoe for the ice and level you play at.</p>
+<h2 id="quick-picks">Quick picks</h2><table><tbody><tr><td>First pick</td><td><a href="#first-model">First model</a></td></tr></tbody></table>
+<h2 id="first-model">1. First Curling Model: Best for beginners</h2>
+<figure><img src="https://cms.thesolemart.com/wp-content/uploads/curling-model.jpg" alt="The editor's curling shoe" /><figcaption>The original image caption.</figcaption></figure>
+<p>A beginner-focused profile written in WordPress.</p><p>Check the manufacturer's fit information.</p>
+<h3>Pros</h3><ul><li>First documented benefit.</li></ul><h3>Cons</h3><ul><li>First documented limitation.</li></ul>
+<p><a href="https://www.amazon.com/dp/EDITOR123?tag=existing-20">Check price on Amazon</a></p>
+<h2>2. Second Curling Model — Best for league players</h2><p>The second original product description.</p>
+<p><strong>Pros:</strong></p><ul><li>Second documented benefit.</li></ul><p><strong>Cons:</strong></p><ul><li>Second documented limitation.</li></ul>
+<h2>How to choose curling shoes</h2><p>Compare handedness, fit and slider specifications.</p><p>Read <a href="https://reference.example/curling">the cited source</a>.</p>
+<h2>FAQs</h2><h3>What should a beginner check?</h3><p>Ask the club about the conditions and suitable equipment.</p>
+<h2>Final verdict</h2><p>Match your own routine and check the exact pair.</p>`
+
+test('ordinary WordPress best articles render as product cards without a pattern or custom fields', () => {
+  const article = getBestGuideArticle(nativeCurling, { title: curlingTitle })
+  assert(article)
+  assert.match(article.html, /class="solemart-best-guide sm-auto-guide"/)
+  assert.equal((article.html.match(/class="sm-pick"/g) || []).length, 2)
+  assert.equal((article.html.match(/class="sm-pros"/g) || []).length, 2)
+  assert.equal((article.html.match(/class="sm-cons"/g) || []).length, 2)
+  assert.match(article.html, /class="sm-quick-picks"/)
+  assert.match(article.html, /class="sm-faq"/)
+  assert.match(article.html, /class="sm-verdict"/)
+  assert(article.headings.some(heading => heading.id === 'first-model'))
+  assert.match(article.html, /href="#first-model"/)
+})
+
+test('automatic styling preserves original copy, photographs, captions, citations and exact affiliate links', () => {
+  const article = getBestGuideArticle(nativeCurling, { title: curlingTitle })
+  for (const copy of ['A beginner-focused profile written in WordPress.', 'Check the manufacturer\'s fit information.', 'The second original product description.', 'First documented benefit.', 'First documented limitation.', 'Second documented benefit.', 'Second documented limitation.', 'The original image caption.', 'Compare handedness, fit and slider specifications.', 'Ask the club about the conditions and suitable equipment.', 'Match your own routine and check the exact pair.']) {
+    const escaped = copy.replaceAll('&', '&amp;')
+    assert.equal(article.html.split(escaped).length - 1, 1, copy)
+  }
+  assert.match(article.html, /src="https:\/\/cms.thesolemart.com\/wp-content\/uploads\/curling-model.jpg"/)
+  assert.match(article.html, /href="https:\/\/www.amazon.com\/dp\/EDITOR123\?tag=existing-20"/)
+  assert.match(article.html, /class="wp-block-button__link" href="https:\/\/www.amazon.com/)
+  assert.match(article.html, /sponsored nofollow noopener noreferrer/)
+  assert.match(article.html, /href="https:\/\/reference.example\/curling" target="_blank" rel="noopener noreferrer"/)
+  assert.equal((article.html.match(/Product photograph placeholder/g) || []).length, 1)
+  assert.equal((article.html.match(/amazon\.com/g) || []).length, 1)
+  assert.doesNotMatch(article.html, /Nike|Pegasus|Metcon|\$\d|ratingValue/)
+})
+
+test('bold product labels and nested plain WordPress Groups can use the same layout', () => {
+  const source = '<div><p>Introduction.</p><p><strong>1. First model: Best overall</strong></p><p>First description.</p><p>Pros</p><ul><li>Original pro.</li></ul><p>Cons</p><ul><li>Original con.</li></ul><p><strong>2. Second model: Best budget</strong></p><p>Second description.</p><p>Final verdict</p><p>Original conclusion.</p></div>'
+  const article = getBestGuideArticle(source, { title: '2 Best Curling Shoes' })
+  assert.equal((article.html.match(/class="sm-pick"/g) || []).length, 2)
+  assert.match(article.html, /class="sm-verdict"/)
+  assert.match(article.html, /Original conclusion/)
+})
+
+test('unrelated advice/comparisons retain the ordinary layout, and incomplete content is never filled with sample copy', () => {
+  assert.equal(getBestGuideArticle(nativeCurling, { title: 'Curling shoes vs trainers' }), null)
+  assert.equal(getBestGuideArticle('<h2>Fit</h2><p>Advice.</p>', { title: 'Best time to buy shoes' }), null)
+  const partial = getBestGuideArticle('<p>Only the editor’s current introduction.</p>', { title: curlingTitle })
+  assert.match(partial.html, /Only the editor’s current introduction/)
+  assert.doesNotMatch(partial.html, /class="sm-pick"|amazon|Buy on|Nike|<img/)
+})
+
+test('numbered buying instructions and ordinary paragraphs do not become extra product cards', () => {
+  const source = nativeCurling.replace('<h2>How to choose curling shoes</h2>', '<h3>How to choose curling shoes</h3><h3>1. How to choose the right fit</h3><p>1. Measure both feet before ordering.</p>')
+  const article = getBestGuideArticle(source, { title: curlingTitle })
+  assert.equal((article.html.match(/class="sm-pick"/g) || []).length, 2)
+  assert.match(article.html, /Measure both feet before ordering/)
+})
+
+test('automatic transformation remains safe and stable after repeated CMS sanitization', () => {
+  const malicious = nativeCurling.replace('First documented benefit.', 'First documented benefit.<script>bad()</script><img src="x" onerror="bad()" />').replace('https://www.amazon.com/dp/EDITOR123?tag=existing-20', 'javascript:alert(1)')
+  const first = getBestGuideArticle(sanitizeCmsArticleHtml(malicious), { title: curlingTitle })
+  assert.doesNotMatch(first.html, /<script|onerror|javascript:|alert\(1\)|class="wp-block-button__link"/)
+  const second = getBestGuideArticle(sanitizeCmsArticleHtml(first.html), { title: curlingTitle })
+  assert.equal(first.html, second.html)
 })
 
 test('the seven-pick WordPress body survives upstream sanitization and preserves working jump links', () => {
