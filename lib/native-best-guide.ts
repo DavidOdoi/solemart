@@ -1,4 +1,5 @@
 import { parseDocument, DomUtils } from 'htmlparser2'
+import { isPurchaseBlock } from './best-guide-actions.ts'
 
 type ContentNode = ReturnType<typeof parseDocument>['children'][number]
 const text = (node: ContentNode) => DomUtils.textContent(node).replace(/\s+/g, ' ').trim()
@@ -54,18 +55,6 @@ function panelKind(node: ContentNode) {
   return undefined
 }
 
-function amazonAction(node: ContentNode) {
-  if (node.type !== 'tag' || !['p', 'a', 'div'].includes(node.name)) return false
-  const anchors = DomUtils.getElementsByTagName('a', [node], true)
-  if (anchors.length !== 1 || !text(anchors[0]) || text(node) !== text(anchors[0])) return false
-  try {
-    const url = new URL(anchors[0].attribs.href || '')
-    if (url.protocol !== 'https:' || !/^(?:[^.]+\.)*amazon\.com$|^(?:www\.)?amzn\.to$/i.test(url.hostname)) return false
-    anchors[0].attribs.class = 'wp-block-button__link'
-    return true
-  } catch { return false }
-}
-
 function mediaBlock(node: ContentNode) {
   if (node.type !== 'tag' || !['figure', 'p', 'a', 'img'].includes(node.name)) return false
   return DomUtils.getElementsByTagName('img', [node], true).length > 0
@@ -85,13 +74,13 @@ function productBody(nodes: ContentNode[]) {
         if (label.type === 'tag') label.name = 'h3'
         const content = [label]
         i++
-        while (i < nodes.length && !panelKind(nodes[i]) && !isHeading(nodes[i]) && !amazonAction(nodes[i]) && !sectionKind(nodes[i])) content.push(nodes[i++])
+        while (i < nodes.length && !panelKind(nodes[i]) && !isHeading(nodes[i]) && !isPurchaseBlock(nodes[i]) && !sectionKind(nodes[i])) content.push(nodes[i++])
         panels.push(group(kind, html(content)))
       }
       output.push(group('sm-pros-cons', panels.join('')))
       continue
     }
-    const action = amazonAction(node)
+    const action = isPurchaseBlock(node)
     if (!lead && !action && node.type === 'tag' && node.name === 'p' && text(node)) {
       node.attribs.class = [...classes(node), 'sm-pick-lede'].filter(Boolean).join(' ')
       lead = true

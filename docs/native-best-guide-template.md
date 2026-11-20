@@ -42,6 +42,12 @@ Amazon links become styled CTA buttons with their existing destinations/tags;
 missing purchase links, recommendations, claims and scores are not invented.
 Products without an image get the existing neutral placeholder; adding an Image
 block beneath that product heading replaces it on the next frontend refresh.
+Native WordPress Buttons blocks are recognized independently of the retailer
+URL. Buttons nested inside Pros/Cons or inserted before those panels are placed
+below the completed panels, in the same product's text column. The renderer
+preserves their labels, URLs and order, removes empty bullets left by relocation,
+and leaves inline citations in their original sentences. The same correction
+also applies to articles authored with the saved pattern.
 
 Non-buying-guide articles retain the standard blog design. This transformation
 happens only while rendering; it does not rewrite the WordPress record or require
@@ -90,6 +96,8 @@ this adaptation.
 - `lib/best-guide-blocks.ts`: native Gutenberg block serialization.
 - `lib/native-best-guide.ts`: ordinary Post heading/section adaptation, preserving
   the editor's content rather than falling back to local sample copy.
+- `lib/best-guide-actions.ts`: shared native-Button recognition and placement
+  below the Pros/Cons panels, including buttons nested in lists or Groups.
 - `data/nike-best-guide-preview.ts`: supplied-draft design fixture, excluded from
   published post registries and sitemaps.
 - `scripts/export-best-guide-pattern.mjs`: regenerates both pattern/HTML pairs.

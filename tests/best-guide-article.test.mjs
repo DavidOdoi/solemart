@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs'
 import { getBestGuideArticle } from '../lib/best-guide-article.ts'
 import { sanitizeCmsArticleHtml, sanitizeEditorialHtml } from '../lib/cms-rich-text.ts'
 import { nikeBestGuidePreview } from '../data/nike-best-guide-preview.ts'
+import { parseDocument, DomUtils } from 'htmlparser2'
 
 test('without a post title, only an explicit native Group layout activates the template', () => {
   assert.equal(getBestGuideArticle('<h2>Best running shoes</h2><p>Ordinary article.</p>'), null)
@@ -34,6 +35,77 @@ const nativeCurling = `<p>Choose a shoe for the ice and level you play at.</p>
 <h2>How to choose curling shoes</h2><p>Compare handedness, fit and slider specifications.</p><p>Read <a href="https://reference.example/curling">the cited source</a>.</p>
 <h2>FAQs</h2><h3>What should a beginner check?</h3><p>Ask the club about the conditions and suitable equipment.</p>
 <h2>Final verdict</h2><p>Match your own routine and check the exact pair.</p>`
+
+const originalPurchase = '<p><a href="https://www.amazon.com/dp/EDITOR123?tag=existing-20">Check price on Amazon</a></p>'
+const wordpressButton = (href, label = 'Buy in Amazon') => `<div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="${href}" rel="sponsored">${label}</a></div></div>`
+const byClass = (node, name) => DomUtils.findAll(item => item.type === 'tag' && (item.attribs.class || '').split(/\s+/).includes(name), node.children)
+function assertActionBelowPanels(article, expectedHrefs) {
+  const doc = parseDocument(article.html)
+  const card = byClass(doc, 'sm-pick')[0]
+  const content = byClass(card, 'sm-pick-content')[0]
+  const grids = byClass(content, 'sm-pros-cons')
+  const buttons = byClass(content, 'wp-block-button__link')
+  assert.deepEqual(buttons.map(button => button.attribs.href), expectedHrefs)
+  assert.equal(byClass(card, 'sm-cons').flatMap(panel => byClass(panel, 'wp-block-button__link')).length, 0)
+  assert.equal(byClass(card, 'sm-pros').flatMap(panel => byClass(panel, 'wp-block-button__link')).length, 0)
+  assert.equal(grids.flatMap(grid => byClass(grid, 'wp-block-button__link')).length, 0)
+  const order = DomUtils.findAll(() => true, content.children)
+  for (const button of buttons) assert(order.indexOf(button) > order.indexOf(grids.at(-1)))
+  return { card, content, buttons }
+}
+
+test('native WordPress Buttons belong below both panels regardless of their retailer URL', () => {
+  const url = 'https://www.amazon.co.uk/dp/EDITOR123?tag=existing-21'
+  const article = getBestGuideArticle(nativeCurling.replace(originalPurchase, wordpressButton(url)), { title: curlingTitle })
+  const { buttons } = assertActionBelowPanels(article, [url])
+  assert.equal(DomUtils.textContent(buttons[0]), 'Buy in Amazon')
+  assert.match(buttons[0].attribs.rel, /sponsored nofollow noopener noreferrer/)
+})
+
+test('buttons nested in Cons list items move beneath the panels without empty bullets or lost text', () => {
+  const first = 'https://www.amazon.com/dp/EDITOR123?tag=existing-20'
+  const second = 'https://shop.example/product?ref=editor'
+  const source = nativeCurling.replace(originalPurchase, '').replace('<li>First documented limitation.</li>', `<li>First documented limitation.${wordpressButton(first)}</li><li>${wordpressButton(second, 'See retailer')}</li>`)
+  const article = getBestGuideArticle(source, { title: curlingTitle })
+  const { card } = assertActionBelowPanels(article, [first, second])
+  const cons = byClass(card, 'sm-cons')[0]
+  const items = DomUtils.getElementsByTagName('li', cons.children, true)
+  assert.deepEqual(items.map(item => DomUtils.textContent(item)), ['First documented limitation.'])
+  assert.equal(article.html.split('First documented limitation.').length - 1, 1)
+  assert.equal(getBestGuideArticle(article.html, { title: curlingTitle }).html, article.html)
+})
+
+test('a WordPress Buttons block with several destinations stays together outside Cons', () => {
+  const urls = ['https://www.amazon.com/dp/FIRST?tag=first-20', 'https://www.amazon.co.uk/dp/SECOND?tag=second-21']
+  const block = `<div class="wp-block-buttons">${urls.map(url => `<div class="wp-block-button"><a class="wp-block-button__link" href="${url}" rel="sponsored">Buy on Amazon</a></div>`).join('')}</div>`
+  assertActionBelowPanels(getBestGuideArticle(nativeCurling.replace(originalPurchase, block), { title: curlingTitle }), urls)
+})
+
+test('a purchase button added before Pros is placed below the completed comparison', () => {
+  const url = 'https://www.amazon.com/dp/FIRST?tag=first-20'
+  const source = nativeCurling.replace(originalPurchase, '').replace('<h3>Pros</h3>', wordpressButton(url) + '<h3>Pros</h3>')
+  assertActionBelowPanels(getBestGuideArticle(source, { title: curlingTitle }), [url])
+})
+
+test('saved pattern content also keeps nested buttons below the panels and above their helper note', () => {
+  const url = 'https://www.amazon.com/dp/FIRST?tag=first-20'
+  const source = `<div class="solemart-best-guide"><div class="sm-pick"><h2>Original product</h2><div class="sm-pick-content"><div class="sm-pros-cons"><div class="sm-pros"><h3>Pros</h3><ul><li>Original pro.</li></ul></div><div class="sm-cons"><h3>Cons</h3><ul><li>Original con.${wordpressButton(url)}</li></ul></div></div><p class="sm-cta-note">Original helper note.</p></div></div></div>`
+  const { content } = assertActionBelowPanels(getBestGuideArticle(source), [url])
+  const children = content.children.filter(node => node.type === 'tag')
+  assert.deepEqual(children.map(node => node.attribs.class), ['sm-pros-cons', 'wp-block-buttons', 'sm-cta-note'])
+})
+
+test('inline Amazon citations stay in their original Cons sentence', () => {
+  const url = 'https://www.amazon.com/dp/SOURCE123'
+  const source = nativeCurling.replace('First documented limitation.', `Read <a href="${url}">the original listing</a> for its limitations.`)
+  const article = getBestGuideArticle(source, { title: curlingTitle })
+  const first = byClass(parseDocument(article.html), 'sm-pick')[0]
+  const cons = byClass(first, 'sm-cons')[0]
+  const citation = DomUtils.getElementsByTagName('a', cons.children, true)[0]
+  assert.equal(citation.attribs.href, url)
+  assert(!citation.attribs.class)
+  assert.equal(DomUtils.textContent(cons).trim(), 'ConsRead the original listing for its limitations.')
+})
 
 test('ordinary WordPress best articles render as product cards without a pattern or custom fields', () => {
   const article = getBestGuideArticle(nativeCurling, { title: curlingTitle })
