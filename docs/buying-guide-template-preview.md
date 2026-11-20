@@ -1,5 +1,10 @@
 # Fully populated buying-guide design reference
 
+> The preview at this URL now demonstrates the simpler native WordPress Post
+> layout described in [native-best-guide-template.md](native-best-guide-template.md).
+> The notes below document the earlier ACF layout, which existing ACF guides
+> continue to use.
+
 Open `https://thesolemart.com/template-preview/buying-guide` to review the complete
 template without editing or publishing WordPress records.
 

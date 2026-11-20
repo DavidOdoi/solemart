@@ -16,6 +16,8 @@ import { getReadingMinutes } from '@/lib/article-details'
 import { getEditorialArticle } from '@/lib/editorial-article'
 import { EditorialArticleBody } from '@/components/editorial-article-body'
 import { ReviewGuideTemplate, SpecsTable } from '@/components/review-guide-template'
+import { getBestGuideArticle } from '@/lib/best-guide-article'
+import { BestGuidePostPage } from '@/components/best-guide-post'
 
 const pageClass = 'mx-auto max-w-7xl px-5 py-12 sm:py-16 lg:px-8'
 
@@ -100,6 +102,8 @@ export function ComparisonPage({ comparison }: { comparison: Comparison }) {
 }
 
 export function BlogPostPage({ post, preview = false }: { post: BlogPost; preview?: boolean }) {
+  const bestGuide = getBestGuideArticle(post.contentHtml || '')
+  if (bestGuide) return <BestGuidePostPage post={post} article={bestGuide} preview={preview} />
   const publishedAt = post.publishedAt || (post.date ? new Date(post.date).toISOString() : undefined)
   const url = `https://thesolemart.com/blog/${encodeURIComponent(post.slug)}`
   const contents = getEditorialArticle(post.contentHtml || '', { quickAnswer: true })

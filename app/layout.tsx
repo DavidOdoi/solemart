@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { AffiliateDisclosure, SiteFooter, SiteHeader } from '@/components/affiliate-site'
 import './globals.css'
+import './best-guide.css'
 
 export const metadata: Metadata = {
   title: {

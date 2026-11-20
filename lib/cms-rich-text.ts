@@ -8,7 +8,7 @@ const siteHosts = new Set(['thesolemart.com', 'www.thesolemart.com'])
 const fieldTags = ['p', 'br', 'strong', 'b', 'em', 'i', 'ul', 'ol', 'li', 'a']
 const articleTags = [...fieldTags, 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 's', 'del', 'u', 'blockquote', 'pre', 'code', 'hr', 'table', 'caption', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'figure', 'figcaption', 'img', 'sup', 'sub', 'dl', 'dt', 'dd', 'span', 'div']
 
-function links(retailerUrls: string[]) {
+function links(retailerUrls: string[], article = false) {
   const retailers = new Set(['amazon.com', 'amzn.to'])
   for (const value of retailerUrls) {
     try {
@@ -19,6 +19,8 @@ function links(retailerUrls: string[]) {
   return (tagName: string, attributes: Record<string, string>): { tagName: string; attribs: Record<string, string> } => {
     const href = (attributes.href || '').trim()
     const title: Record<string, string> = attributes.title ? { title: attributes.title } : {}
+    // Only the native Button class survives the article allowlist below.
+    const button: Record<string, string> = article && attributes.class ? { class: attributes.class } : {}
     if (!href || /[\\\u0000-\u001f\u007f]/.test(href) || href.startsWith('//')) return { tagName, attribs: title }
     try {
       const url = new URL(href, 'https://thesolemart.com/')
@@ -27,10 +29,10 @@ function links(retailerUrls: string[]) {
       const external = web && (!siteHosts.has(url.hostname) || Boolean(url.port))
       const retailer = web && [...retailers].some(host => url.hostname === host || url.hostname.endsWith(`.${host}`))
       const sponsored = retailer || (attributes.rel || '').split(/\s+/).includes('sponsored')
-      if (sponsored) return { tagName, attribs: { ...title, href, target: '_blank', rel: 'sponsored nofollow noopener noreferrer' } }
-      if (external) return { tagName, attribs: { ...title, href, target: '_blank', rel: 'noopener noreferrer' } }
+      if (sponsored) return { tagName, attribs: { ...title, ...button, href, target: '_blank', rel: 'sponsored nofollow noopener noreferrer' } }
+      if (external) return { tagName, attribs: { ...title, ...button, href, target: '_blank', rel: 'noopener noreferrer' } }
       // Keep relative URLs, queries and fragment links exactly as entered.
-      return { tagName, attribs: { ...title, href } }
+      return { tagName, attribs: { ...title, ...button, href } }
     } catch { return { tagName, attribs: title } }
   }
 }
@@ -39,20 +41,29 @@ function clean(value: string, article: boolean, retailerUrls: string[]) {
   return sanitizeHtml(article ? normalizeRankMathFaq(value) : value, {
     allowedTags: article ? articleTags : fieldTags,
     allowedAttributes: {
-      a: ['href', 'title', 'target', 'rel'],
+      a: ['href', 'title', 'target', 'rel', ...(article ? ['class'] : [])],
       ...(article ? {
+        div: ['class'], p: ['class'], figure: ['class'],
         h2: ['id'], h3: ['id'],
         img: ['src', 'alt', 'width', 'height', 'loading', 'decoding'],
         th: ['scope', 'colspan', 'rowspan'], td: ['colspan', 'rowspan'],
       } : {}),
       ol: ['start', 'reversed'],
     },
+    // Opt-in layout hooks for ordinary Gutenberg Posts. Arbitrary WordPress
+    // classes, inline styles, scripts and event handlers remain disallowed.
+    allowedClasses: article ? {
+      div: ['solemart-best-guide', 'sm-guide-intro', 'sm-quick-picks', 'sm-method', 'sm-pick', 'sm-pick-layout', 'sm-pick-visual', 'sm-pick-content', 'sm-pros-cons', 'sm-pros', 'sm-cons', 'sm-buying-advice', 'sm-faq', 'sm-verdict', 'wp-block-buttons', 'wp-block-button'],
+      p: ['sm-eyebrow', 'sm-pick-label', 'sm-pick-lede', 'sm-cta-note', 'sm-disclosure'],
+      figure: ['sm-product-image'],
+      a: ['wp-block-button__link'],
+    } : {},
     allowedSchemes: ['https', 'http', 'mailto'],
     allowedSchemesByTag: { img: ['https', 'http'] },
     allowProtocolRelative: false,
     transformTags: {
       ...(article ? { h1: 'h2' } : { h1: 'p', h2: 'p', h3: 'p', h4: 'p', h5: 'p', h6: 'p' }),
-      a: links(retailerUrls),
+      a: links(retailerUrls, article),
       ...(article ? { img: (tagName: string, attributes: Record<string, string>) => ({ tagName, attribs: { ...attributes, loading: 'lazy', decoding: 'async' } }) } : {}),
     },
   })
