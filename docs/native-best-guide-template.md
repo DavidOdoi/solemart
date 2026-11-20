@@ -8,6 +8,9 @@ seven-row shortlist, research methodology, seven numbered product cards,
 pros/considerations, Amazon buttons, buying advice, questions and verdict.
 Desktop has a sticky contents sidebar; mobile uses an expandable contents list
 and stacked product cards. There is no four-product limit.
+Article paragraphs, product descriptions, lists, tables and supporting notes
+share the introduction's font size: 21px on desktop and 19px on small screens.
+The shared `--sm-body-size` token keeps those sizes aligned.
 
 The sample is **not a published article**. It has noindex/nofollow metadata,
 no sample Article/Product/Review schema, no fake ratings or dates, and generic
