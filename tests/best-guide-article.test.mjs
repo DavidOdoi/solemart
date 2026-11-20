@@ -107,6 +107,38 @@ test('inline Amazon citations stay in their original Cons sentence', () => {
   assert.equal(DomUtils.textContent(cons).trim(), 'ConsRead the original listing for its limitations.')
 })
 
+test('product CTAs receive a buying reminder underneath without inventing a search destination', () => {
+  const article = getBestGuideArticle(nativeCurling, { title: curlingTitle })
+  const cards = byClass(parseDocument(article.html), 'sm-pick')
+  const notes = byClass(cards[0], 'sm-cta-note')
+  assert.equal(notes.length, 1)
+  assert.equal(DomUtils.textContent(notes[0]), 'Check the exact version, size, seller and return terms.')
+  assert.equal(byClass(cards[1], 'sm-cta-note').length, 0)
+  const content = byClass(cards[0], 'sm-pick-content')[0]
+  const order = DomUtils.findAll(() => true, content.children)
+  assert(order.indexOf(notes[0]) > order.indexOf(byClass(content, 'wp-block-button__link')[0]))
+  assert.equal(getBestGuideArticle(article.html, { title: curlingTitle }).html, article.html)
+})
+
+test('only actual Amazon search buttons receive the original search wording', () => {
+  for (const url of ['https://www.amazon.com/s?k=exact+model', 'https://www.amazon.co.uk/s?k=exact+model&tag=existing-21']) {
+    const article = getBestGuideArticle(nativeCurling.replace(originalPurchase, wordpressButton(url)), { title: curlingTitle })
+    assert.equal(DomUtils.textContent(byClass(parseDocument(article.html), 'sm-cta-note')[0]), 'Search Amazon listings for this model. Check the exact version, size, seller and return terms.')
+  }
+  for (const url of ['https://amzn.to/editor-link', 'https://shop.example/product', 'https://www.amazon.com/', 'https://amazon.com.example.test/s?k=model']) {
+    const article = getBestGuideArticle(nativeCurling.replace(originalPurchase, wordpressButton(url)), { title: curlingTitle })
+    assert.equal(DomUtils.textContent(byClass(parseDocument(article.html), 'sm-cta-note')[0]), 'Check the exact version, size, seller and return terms.')
+  }
+})
+
+test('an ordinary WordPress paragraph below the CTA supplies its custom note without duplication', () => {
+  const article = getBestGuideArticle(nativeCurling.replace(originalPurchase, originalPurchase + '<p>My own size and returns reminder.</p>'), { title: curlingTitle })
+  const notes = byClass(parseDocument(article.html), 'sm-cta-note')
+  assert.equal(notes.length, 1)
+  assert.equal(DomUtils.textContent(notes[0]), 'My own size and returns reminder.')
+  assert.doesNotMatch(article.html, /Check the exact version, size, seller and return terms/)
+})
+
 test('ordinary WordPress best articles render as product cards without a pattern or custom fields', () => {
   const article = getBestGuideArticle(nativeCurling, { title: curlingTitle })
   assert(article)

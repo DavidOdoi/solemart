@@ -8,6 +8,9 @@ pattern. A title such as "7 Best Curling Shoes" selects this template. Use H2
 product headings such as "1. Product Name: Best for Beginners", followed by the
 description, image, Pros/Cons headings and lists, and any Amazon purchase link.
 Use ordinary headings for Quick picks, How we chose, FAQs and Final verdict.
+The website adds a buying reminder below product CTAs when no note was written.
+To supply custom wording, add a separate Paragraph block immediately below the
+button in the product section.
 The website styles the content already in your post. Missing product text and
 purchase links are not invented. Add an image under each product heading to
 replace the automatic placeholder. Numbered Best titles with no product headings

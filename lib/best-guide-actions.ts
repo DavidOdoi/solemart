@@ -1,4 +1,5 @@
 import { parseDocument, DomUtils } from 'htmlparser2'
+import { guideCtaNote } from './guide-cta-copy.ts'
 
 type ContentNode = ReturnType<typeof parseDocument>['children'][number]
 const hasClass = (node: ContentNode, name: string) => node.type === 'tag' && (node.attribs.class || '').split(/\s+/).includes(name)
@@ -17,6 +18,37 @@ export function isPurchaseBlock(node: ContentNode) {
     anchors[0].attribs.class = 'wp-block-button__link'
     return true
   } catch { return false }
+}
+
+function ensurePurchaseNote(content: ContentNode) {
+  if (!('children' in content)) return
+  const buttons = DomUtils.getElementsByTagName('a', content.children, true)
+    .filter(node => hasClass(node, 'wp-block-button__link') && node.attribs.href)
+  const lastButton = buttons.at(-1)
+  if (!lastButton) return
+  let block: ContentNode = lastButton
+  while (block.parent && block.parent !== content) block = block.parent
+  const notes = DomUtils.getElementsByTagName('p', content.children, true)
+    .filter(node => hasClass(node, 'sm-cta-note'))
+  const authored = notes.find(node => text(node))
+  if (authored) {
+    const order = DomUtils.findAll(() => true, content.children)
+    if (order.indexOf(authored) < order.indexOf(lastButton)) {
+      DomUtils.removeElement(authored)
+      DomUtils.append(block, authored)
+    }
+    return
+  }
+  // A paragraph already written immediately below the button is the editor's
+  // note. Preserve its wording rather than adding a second reminder.
+  const next = DomUtils.nextElementSibling(block)
+  if (next?.name === 'p' && text(next) && !DomUtils.getElementsByTagName('img', next.children, true).length) {
+    next.attribs.class = [next.attribs.class, 'sm-cta-note'].filter(Boolean).join(' ')
+    return
+  }
+  const note = parseDocument(`<p class="sm-cta-note">${guideCtaNote(buttons.map(button => button.attribs.href))}</p>`).children[0]
+  for (const empty of notes) DomUtils.removeElement(empty)
+  DomUtils.append(block, note)
 }
 
 /** Move only misplaced CTAs; retain already-correct buttons and helper notes. */
@@ -62,5 +94,6 @@ export function normalizeBestGuideActions(source: string) {
       insertionPoint = action
     }
   }
+  for (const content of contents) ensurePurchaseNote(content)
   return document.children.map(node => DomUtils.getOuterHTML(node)).join('')
 }

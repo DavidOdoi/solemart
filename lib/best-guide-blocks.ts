@@ -1,4 +1,5 @@
 import { escapeAttribute, escapeText } from 'entities'
+import { guideCtaNote } from './guide-cta-copy.ts'
 
 export type BestGuidePick = {
   id: string; name: string; award: string; summary: string; bestFor: string
@@ -39,7 +40,7 @@ export function bestGuideBlocks(copy: BestGuideCopy) {
           heading('Why it makes the shortlist', undefined, 3), paragraph(pick.explanation),
           group('sm-pros-cons', [group('sm-pros', [heading('Pros', undefined, 3), list(pick.pros)]), group('sm-cons', [heading('Consider', undefined, 3), list(pick.cons)])]),
           block('buttons', `<div class="wp-block-buttons">${block('button', `<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="${escapeAttribute(pick.amazonUrl || 'https://www.amazon.com/s?' + new URLSearchParams({ k: pick.name + ' men' }))}" target="_blank" rel="sponsored nofollow noopener noreferrer">Buy on Amazon</a></div>`)}</div>`),
-          paragraph('Search Amazon listings for this model. Check the exact version, size, seller and return terms.', 'sm-cta-note'),
+          paragraph(guideCtaNote([pick.amazonUrl || 'https://www.amazon.com/s?' + new URLSearchParams({ k: pick.name + ' men' })]), 'sm-cta-note'),
         ]),
       ]),
     ])),

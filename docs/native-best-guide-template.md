@@ -48,6 +48,12 @@ below the completed panels, in the same product's text column. The renderer
 preserves their labels, URLs and order, removes empty bullets left by relocation,
 and leaves inline citations in their original sentences. The same correction
 also applies to articles authored with the saved pattern.
+Each product with a CTA gets a buying reminder underneath when none was authored.
+The original "Search Amazon listings" wording is used only for an actual Amazon
+search URL; direct product and short links get the neutral version/size/seller/
+returns reminder. A custom paragraph immediately below the button is used as
+the note, preserving the editor's wording and avoiding duplicates. Existing
+explicit notes remain editable in WordPress and keep their text.
 
 Non-buying-guide articles retain the standard blog design. This transformation
 happens only while rendering; it does not rewrite the WordPress record or require
